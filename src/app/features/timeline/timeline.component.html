@@ -1,0 +1,176 @@
+<div class="container py-4">
+  <!-- header -->
+  <header class="mb-4">
+    <h2>
+      <i class="fas fa-chart-line me-2 text-success"></i>
+      Nutrition Timeline
+    </h2>
+    <p class="text-muted">
+      View your food and weight entries over time.
+    </p>
+  </header>
+
+  <!-- filter card -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form [formGroup]="filterForm" class="row gy-3 align-items-end">
+        <div class="col-6">
+          <label for="startDate" class="form-label">From</label>
+          <input id="startDate" type="date" class="form-control" formControlName="startDate"
+            (change)="onDateRangeChange()" />
+        </div>
+        <div class="col-6">
+          <label for="endDate" class="form-label">To</label>
+          <input id="endDate" type="date" class="form-control" formControlName="endDate"
+            (change)="onDateRangeChange()" />
+        </div>
+        <div class="col-12 justify-content-center d-flex">
+          <button type="button" class="btn btn-outline-primary me-2 px-4" (click)="setRange(7)">
+            7d
+          </button>
+          <button type="button" class="btn btn-outline-primary me-2 px-4" (click)="setRange(30)">
+            30d
+          </button>
+          <button type="button" class="btn btn-outline-primary px-4" (click)="setRange(90)">
+            3m
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading; else loadingTpl">
+    <ng-container *ngIf="timelineData.length; else emptyTpl">
+      <!-- summary grid -->
+      <div class="row row-cols-1 row-cols-md-4 g-3 mb-4 text-center">
+        <div class="col" *ngFor="let s of [
+            { v: averages.calories|number:'1.0-0', label:'Avg Calories/Day' },
+            { v: averages.protein|number:'1.1-1', label:'Avg Protein/Day' },
+            { v: totalEntries, label:'Total Food Entries' },
+            { v: weightEntries, label:'Weight Recordings' }
+          ]">
+          <div class="card h-100">
+            <div class="card-body">
+              <h3 class="card-title">{{ s.v }}</h3>
+              <p class="card-text small text-uppercase">{{ s.label }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- accordion for each day -->
+      <div class="accordion" id="timelineAcc">
+        <div class="accordion-item" *ngFor="let day of timelineData; let i = index" style="border-radius: 0;">
+          <h2 class="accordion-header" id="h{{i}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              style="background-color: transparent;" [attr.data-bs-target]="'#c'+i" aria-expanded="false"
+              [attr.aria-controls]="'c'+i">
+              <span class="me-auto badge bg-primary">
+                {{ day.totalCalories|number:'1.0-0' }} Cal
+              </span>
+              {{ formatDayHeader(day.date) }}
+            </button>
+          </h2>
+          <div [id]="'c'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'h'+i"
+            data-bs-parent="#timelineAcc">
+            <div class="accordion-body">
+
+              <!-- Macro Summary -->
+              <h6>Macros</h6>
+              <div class="d-flex flex-wrap gap-3 small text-muted">
+                <span><span class="badge bg-success me-1">&nbsp;</span>{{ day.totalProtein|number:'1.1-1' }}g
+                  Protein</span>
+                <span><span class="badge bg-info me-1">&nbsp;</span>{{ (day.totalCarbohydrates -
+                  day.totalSugar)|number:'1.1-1' }}g Carbs</span>
+                <span><span class="badge bg-primary me-1">&nbsp;</span>{{ day.totalSugar|number:'1.1-1' }}g Sugar</span>
+                <span><span class="badge bg-warning me-1">&nbsp;</span>{{ day.totalFat|number:'1.1-1' }}g Fat</span>
+                <span><span class="badge bg-secondary me-1">&nbsp;</span>{{ day.totalFiber|number:'1.1-1' }}g
+                  Fiber</span>
+              </div>
+
+              <!-- Combined Macros Progress Bar -->
+              <h6 class="mt-3">Calorie Breakdown</h6>
+              <div class="progress mb-3" style="height: 24px;">
+                <!-- Protein -->
+                <div class="progress-bar bg-success"
+                  [style.width.%]="getMacroPercentage(day.totalProtein*4, day.totalCalories)" data-bs-toggle="tooltip"
+                  [title]="(day.totalProtein | number:'1.1-1' ) + 'g Protein'">
+                </div>
+
+                <!-- Complex Carbs -->
+                <div class="progress-bar bg-info"
+                  [style.width.%]="getMacroPercentage((day.totalCarbohydrates - day.totalSugar)*4, day.totalCalories)"
+                  data-bs-toggle="tooltip"
+                  [title]="((day.totalCarbohydrates - day.totalSugar) | number:'1.1-1' ) + 'g Complex Carbs'">
+                </div>
+
+                <!-- Sugar -->
+                <div class="progress-bar bg-primary"
+                  [style.width.%]="getMacroPercentage(day.totalSugar*4, day.totalCalories)" data-bs-toggle="tooltip"
+                  [title]="(day.totalSugar | number:'1.1-1' ) + 'g Sugar'">
+                </div>
+
+                <!-- Fat -->
+                <div class="progress-bar bg-warning"
+                  [style.width.%]="getMacroPercentage(day.totalFat*9, day.totalCalories)" data-bs-toggle="tooltip"
+                  [title]="(day.totalFat | number:'1.1-1' ) + 'g Fat'">
+                </div>
+
+                <!-- Unaccounted/Other calories -->
+                <div class="progress-bar progress-bar-striped" style="background-color: #ccc;"
+                  [style.width.%]="getUnaccountedPercentage(day)" data-bs-toggle="tooltip"
+                  title="Other/Unaccounted calories">
+                </div>
+
+                <!-- Fiber (overlay - doesn't contribute to calories) -->
+                <div class="progress-bar bg-secondary" style="position: absolute; height: 4px; bottom: 0; opacity: 0.8;"
+                  [style.width.%]="getMacroPercentage(day.totalFiber*4, day.totalCalories)" data-bs-toggle="tooltip"
+                  [title]="day.totalFiber + 'g Fiber'">
+                </div>
+              </div>
+
+              <!-- entries list -->
+              <ul class="list-group">
+                <li class="list-group-item d-flex align-items-center" *ngFor="let entry of day.foodEntries">
+                  <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="rounded me-3" width="40"
+                    alt="{{entry.foodName}}" />
+                  <span *ngIf="!entry.imageUrl" class="badge bg-light text-dark rounded-circle me-3">
+                    <i class="fas fa-utensils"></i>
+                  </span>
+                  <div>
+                    <div><strong>{{ entry.foodName }}</strong></div>
+                    <small class="text-muted">
+                      <span (click)="startEditing(entry)" class="pointer" *ngIf="!entry.editing">{{ entry.gramsConsumed
+                        }}g</span>
+                      <span *ngIf="entry.editing">
+                        <input #editInput type="number" class="form-control form-control-sm d-inline-block w-auto"
+                          [(ngModel)]="entry.gramsConsumed" (keyup.enter)="finishEditing(entry, day)"
+                          (blur)="finishEditing(entry, day)">
+                      </span>
+                    </small>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <!-- empty / loading states -->
+  <ng-template #emptyTpl>
+    <div class="text-center text-muted py-5">
+      <i class="fas fa-chart-pie fa-3x mb-3"></i>
+      <h4 class="mt-3">No data for this period</h4>
+      <p>Try selecting a different date range or start logging your food and weight.</p>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingTpl>
+    <div class="text-center py-5">
+      <app-loading-spinner size="large"></app-loading-spinner>
+      <p class="mt-3">Loading your timeline data…</p>
+    </div>
+  </ng-template>
+</div>

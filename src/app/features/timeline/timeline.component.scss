@@ -1,0 +1,17 @@
+:host {
+  .card,
+  .accordion-item {
+    border-radius: 0.75rem;
+  }
+
+  .accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
+  }
+
+  .accordion-button {
+    background-color: var(--card-bg) !important;
+    color: var(--bs-body-color);
+    border-color: var(--card-border);
+    transition: all 0.3s ease;
+  }
+}

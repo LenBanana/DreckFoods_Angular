@@ -1,0 +1,292 @@
+.food-search {
+  .scanner-container {
+    min-height: 400px;
+    background-color: #000;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    position: relative;
+
+    @media (max-width: 768px) {
+      min-height: 300px;
+    }
+  }
+
+  .scanner-viewport {
+    width: 100%;
+    height: 400px;
+    
+    @media (max-width: 768px) {
+      height: 300px;
+    }
+  }
+
+  .scanner-overlay {
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .scanner-frame {
+    border-style: dashed !important;
+    border-width: 3px !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+
+    @media (max-width: 768px) {
+      width: 200px !important;
+      height: 120px !important;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 0, 0.1) 50%, transparent 70%);
+      border-radius: inherit;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+  }
+
+  .scanner-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(0, 255, 0, 0.3) 25%, 
+      #00ff00 50%, 
+      rgba(0, 255, 0, 0.3) 75%, 
+      transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    animation: scan 2.5s linear infinite;
+
+    @media (max-width: 768px) {
+      animation: scan-mobile 2.5s linear infinite;
+    }
+  }
+
+  // Barcode scanner button styles
+  .btn-barcode {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // Modal enhancements
+  .modal {
+    z-index: 1060;
+
+    .modal-content {
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border-radius: 1rem;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 1rem 1rem 0 0;
+
+      .modal-title {
+        font-weight: 600;
+        color: #495057;
+      }
+    }
+
+    .modal-footer {
+      background: #f8f9fa;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 0 0 1rem 1rem;
+    }
+  }
+
+  // Camera switch button
+  .btn-camera-switch {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: rotate(180deg);
+    }
+  }
+
+  // Search input enhancements
+  .search-input-container {
+    position: relative;
+
+    .form-control {
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+      }
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  // Card hover effects
+  .food-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+      .add-btn {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      }
+    }
+
+    .add-btn {
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      border: none;
+    }
+  }
+
+  // Loading states
+  .scanning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+
+    .scanning-content {
+      text-align: center;
+      color: white;
+
+      .scanning-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: pulse 2s infinite;
+      }
+    }
+  }
+
+  // Animations
+  @keyframes scan {
+    0% { 
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% { 
+      transform: translateY(147px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scan-mobile {
+    0% { 
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% { 
+      transform: translateY(117px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shimmer {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  // Responsive improvements
+  @media (max-width: 576px) {
+    .search-options {
+      .col-md-auto {
+        margin-bottom: 1rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .modal-dialog {
+      margin: 1rem;
+    }
+  }
+}

@@ -1,0 +1,123 @@
+<div class="container py-4">
+    <!-- Welcome -->
+    <div class="text-center mb-3">
+        <h1>
+            Welcome back,
+            {{ currentUser?.firstName || 'there' }}!
+            <i class="fas fa-hand-wave"></i>
+        </h1>
+        <p class="text-muted">Here's your nutrition overview for today</p>
+    </div>
+    <!-- Quick Stats -->
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-2 fs-1 text-danger">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h6 class="card-title">Today's Calories</h6>
+                    <h3 class="card-text">{{ todaysCalories | number : "1.0-0" }}</h3>
+                    <small class="text-muted">kcal consumed</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-2 fs-1 text-success">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h6 class="card-title">Protein</h6>
+                    <h3 class="card-text">{{ todaysProtein | number : "1.1-1" }}g</h3>
+                    <small class="text-muted">of protein</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-2 fs-1 text-warning">
+                        <i class="fas fa-weight"></i>
+                    </div>
+                    <h6 class="card-title">Current Weight</h6>
+                    <h3 class="card-text">{{ currentWeight || "--" }}</h3>
+                    <small class="text-muted">{{ currentWeight ? "kg" : "not set" }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-2 fs-1 text-info">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h6 class="card-title">Food Entries</h6>
+                    <h3 class="card-text">{{ todaysFoodEntries.length }}</h3>
+                    <small class="text-muted">today</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="text-center my-3 mt-4">
+        <h2 class="mb-4">Quick Actions</h2>
+        <div class="row gx-4 gy-3 justify-content-center">
+            <div class="col-sm-6 col-md-3" *ngFor="let a of navs">
+                <a [routerLink]="a.path" class="card h-100 text-decoration-none shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-{{ a.icon }} fa-2x mb-3 text-primary"></i>
+                        <h5>{{ a.title }}</h5>
+                        <p class="small text-muted">{{ a.desc }}</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Food Entries -->
+    <div *ngIf="todaysFoodEntries.length" class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Today's Food Entries</h5>
+            <a routerLink="/food" class="text-decoration-none">View All</a>
+        </div>
+        <div class="list-group list-group-flush">
+            <div class="list-group-item d-flex align-items-center" *ngFor="let entry of todaysFoodEntries.slice(0,5)">
+                <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="rounded me-3" width="48"
+                    (error)="onImageError($event)" />
+                <div *ngIf="!entry.imageUrl"
+                    class="rounded-circle bg-light me-3 d-flex align-items-center justify-content-center"
+                    style="width:48px;height:48px;">
+                    <i class="fas fa-utensils text-muted"></i>
+                </div>
+                <div class="flex-fill">
+                    <h6 class="mb-1">{{ entry.foodName }}</h6>
+                    <p *ngIf="entry.brand" class="mb-1 small text-muted">{{ entry.brand }}</p>
+                    <small class="text-muted">{{ entry.gramsConsumed }}g</small>
+                </div>
+                <div>
+                    <span class="fw-bold">{{ entry.calories|number:'1.0-0' }}</span> cal
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!isLoading && !todaysFoodEntries.length" class="text-center py-5">
+        <i class="fas fa-utensils fa-3x text-muted"></i>
+        <h4 class="mt-3">No food entries yet today</h4>
+        <p>Start tracking your nutrition by adding your first meal!</p>
+        <a routerLink="/food/search" class="btn btn-primary">Add Your First Meal</a>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-5">
+        <app-loading-spinner size="large"></app-loading-spinner>
+        <p class="mt-3">Loading your dashboard…</p>
+    </div>
+</div>

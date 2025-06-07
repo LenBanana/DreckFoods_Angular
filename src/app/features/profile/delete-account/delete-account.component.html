@@ -1,0 +1,56 @@
+<div class="delete-account-container">
+  <h3>Delete Account</h3>
+  
+  <div *ngIf="message" 
+       class="message" 
+       [ngClass]="{'success': isSuccess, 'error': !isSuccess}">
+    {{ message }}
+  </div>
+
+  <div *ngIf="!showConfirmation && !isSuccess" class="warning-section">
+    <div class="warning-box">
+      <h4>⚠️ Warning</h4>
+      <p>Deleting your account is a permanent action and cannot be undone. This will:</p>
+      <ul>
+        <li>Permanently delete all your data</li>
+        <li>Remove all your food entries and weight tracking</li>
+        <li>Log you out of all devices</li>
+      </ul>
+      <p><strong>Are you sure you want to continue?</strong></p>
+    </div>
+    
+    <button 
+      type="button" 
+      class="btn btn-danger"
+      (click)="showDeleteConfirmation()">
+      Delete My Account
+    </button>
+  </div>
+
+  <div *ngIf="showConfirmation" class="confirmation-section">
+    <div class="confirmation-box">
+      <h4>Final Confirmation</h4>
+      <p>This action cannot be undone. Your account and all associated data will be permanently deleted.</p>
+      <p><strong>Do you really want to delete your account?</strong></p>
+    </div>
+    
+    <div class="button-group">
+      <button 
+        type="button" 
+        class="btn btn-secondary"
+        (click)="cancelDelete()"
+        [disabled]="isLoading">
+        Cancel
+      </button>
+      
+      <button 
+        type="button" 
+        class="btn btn-danger"
+        (click)="confirmDelete()"
+        [disabled]="isLoading">
+        <span *ngIf="isLoading">Deleting...</span>
+        <span *ngIf="!isLoading">Yes, Delete My Account</span>
+      </button>
+    </div>
+  </div>
+</div>

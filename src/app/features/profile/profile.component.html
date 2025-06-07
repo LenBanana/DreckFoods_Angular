@@ -1,0 +1,137 @@
+<div class="container py-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2><i class="fas fa-user me-2"></i>My Profile</h2>
+        <p class="text-muted">Manage your profile and account settings</p>
+    </div>
+
+    <div class="row gy-4">
+        <!-- Profile Card -->
+        <div class="col-lg-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="me-3">
+                            <div
+                                class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-3 fw-bold">
+                                {{ getUserInitials() }}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="mb-1">
+                                {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+                            </h4>
+                            <p class="mb-1 text-muted">{{ currentUser?.email }}</p>
+                            <small class="text-muted">
+                                Member since {{ formatMemberSince() }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <h5>Update Profile Information</h5>
+                    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input class="form-control" formControlName="firstName" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input class="form-control" formControlName="lastName" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Current Weight (kg)
+                                <small class="text-muted">(Optional)</small>
+                            </label>
+                            <input type="number" class="form-control" formControlName="currentWeight" step="0.1" />
+                            <div class="form-text">
+                                Displayed on dashboard & used for tracking
+                            </div>
+                        </div>
+
+                        <div *ngIf="successMessage" class="alert alert-success">
+                            {{ successMessage }}
+                        </div>
+                        <div *ngIf="errorMessage" class="alert alert-danger">
+                            {{ errorMessage }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary me-2"
+                            [disabled]="profileForm.invalid || isSubmitting || !hasChanges()">
+                            <app-loading-spinner *ngIf="isSubmitting" size="small"></app-loading-spinner>
+                            <span *ngIf="!isSubmitting">Save Changes</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="resetForm()"
+                            [disabled]="isSubmitting || !hasChanges()">
+                            Reset
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Card -->
+        <div class="col-lg-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5>Account Settings</h5>
+                    <div class="list-group list-group-flush">
+                        <!-- Email -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Email Address</h6>
+                                <small class="text-muted">{{ currentUser?.email }}</small>
+                            </div>
+                            <span class="badge bg-success">Verified</span>
+                        </div>                        <!-- Security -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Account Security</h6>
+                                <small class="text-muted">Change your password</small>
+                            </div>
+                            <button class="btn btn-outline-secondary" (click)="toggleChangePassword()">
+                                {{ showChangePassword ? 'Hide' : 'Change Password' }}
+                            </button>
+                        </div>
+                        <!-- Delete -->
+                        <div
+                            class="list-group-item d-flex justify-content-between align-items-center border-danger bg-danger bg-opacity-10">
+                            <div>
+                                <h6 class="text-danger">Delete Account</h6>
+                                <small class="text-muted">
+                                    Permanently delete your account & data
+                                </small>
+                            </div>
+                            <button class="btn btn-danger" (click)="toggleDeleteAccount()">
+                                {{ showDeleteAccount ? 'Cancel' : 'Delete' }}
+                            </button>
+                        </div>
+                    </div>                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Section -->
+    <div class="row" *ngIf="showChangePassword">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <app-change-password></app-change-password>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Section -->
+    <div class="row" *ngIf="showDeleteAccount">
+        <div class="col-12">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <app-delete-account></app-delete-account>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

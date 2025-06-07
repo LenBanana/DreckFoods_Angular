@@ -1,0 +1,11 @@
+:host {
+  .card {
+    border-radius: .75rem;
+  }
+
+  .list-group-item {
+    border-radius: .75rem;
+    background-color: var(--card-bg);
+    transition: all 0.3s ease;
+  }
+}

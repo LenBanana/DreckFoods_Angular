@@ -1,0 +1,127 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-3">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Add to Food Log</h5>
+                <button type="button" class="btn-close" (click)="close.emit()"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Food Header -->
+                <div class="d-flex mb-4">
+                    <div class="me-3">
+                        <img *ngIf="food.imageUrl" [src]="food.imageUrl" class="img-fluid rounded"
+                            style="max-width:120px" [alt]="food.name" (error)="onImageError($event)" />
+                        <div *ngIf="!food.imageUrl"
+                            class="d-flex align-items-center justify-content-center bg-light rounded"
+                            style="width:120px;height:120px;">
+                            <i class="fas fa-utensils fa-2x text-muted"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h5>{{ food.name }}</h5>
+                        <p *ngIf="food.brand" class="text-muted mb-1">{{ food.brand }}</p>
+                        <div *ngIf="food.tags?.length">
+                            <span class="badge bg-secondary me-1" *ngFor="let t of food.tags.slice(0,5)">
+                                {{ t }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form [formGroup]="addFoodForm" (ngSubmit)="onSubmit()">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="gramsConsumed" class="form-label">Amount (g)</label>
+                            <input id="gramsConsumed" type="number" formControlName="gramsConsumed" class="form-control"
+                                min="0.1" max="10000" step="0.1" (input)="onAmountChange()" />
+                            <div *ngIf="
+                  addFoodForm.get('gramsConsumed')?.invalid &&
+                  addFoodForm.get('gramsConsumed')?.touched
+                " class="text-danger small mt-1">
+                                <div *ngIf="addFoodForm.get('gramsConsumed')?.errors?.['required']">
+                                    Amount is required
+                                </div>
+                                <div *ngIf="addFoodForm.get('gramsConsumed')?.errors?.['min']">
+                                    Minimum 0.1g
+                                </div>
+                                <div *ngIf="addFoodForm.get('gramsConsumed')?.errors?.['max']">
+                                    Max 10,000g
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="consumedAt" class="form-label">Date & Time</label>
+                            <input id="consumedAt" type="datetime-local" formControlName="consumedAt"
+                                class="form-control" />
+                            <div *ngIf="
+                  addFoodForm.get('consumedAt')?.invalid &&
+                  addFoodForm.get('consumedAt')?.touched
+                " class="text-danger small mt-1">
+                                Date & time required
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- Nutrition Preview -->
+                    <div class="bg-light p-3 pt-1 rounded mb-3">
+                        <h6>Nutrition Information</h6>
+                        <div class="row text-center small">
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.calories | number:'1.0-0' }}
+                                </div>
+                                Cal
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.protein | number:'1.1-1' }}g
+                                </div>
+                                Protein
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.carbs | number:'1.1-1' }}g
+                                </div>
+                                Carbs
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.fat | number:'1.1-1' }}g
+                                </div>
+                                Fat
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.fiber | number:'1.1-1' }}g
+                                </div>
+                                Fiber
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">
+                                    {{ calculatedNutrition.sugar | number:'1.1-1' }}g
+                                </div>
+                                Sugar
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{ errorMessage }}
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" (click)="close.emit()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" [disabled]="addFoodForm.invalid || isLoading">
+                            <span *ngIf="!isLoading">Add to Log</span>
+                            <app-loading-spinner *ngIf="isLoading" size="small"></app-loading-spinner>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
