@@ -1,45 +1,31 @@
 <div class="food-search-input">
   <!-- Search Input with Barcode Scanner -->
-  <div class="position-relative" [formGroup]="searchForm">
-    <input 
-      type="text" 
-      formControlName="query" 
-      class="form-control form-control-lg rounded-pill ps-4 pe-5"
-      [placeholder]="placeholder" 
-      (keyup.enter)="onSearch()" />
+  <div [formGroup]="searchForm">
+    <div class="input-group input-group-lg">
+      <input type="text" formControlName="query" class="form-control rounded-start-pill ps-4"
+        [placeholder]="placeholder" (keyup.enter)="onSearch()" />
 
-    <!-- Barcode Scanner Icon Button -->
-    <button 
-      *ngIf="showBarcodeScanner"
-      type="button" 
-      class="btn position-absolute top-0 end-0 rounded-0 h-100 px-3 me-5"
-      (click)="openBarcodeScanner()" 
-      [disabled]="isCurrentlyLoading || isScanningBarcode"
-      title="Scan Barcode">
-      <i class="fas fa-barcode"></i>
-    </button>
+      <div class="input-group-text p-0 rounded-end-pill">
+        <!-- Barcode Scanner Button -->
+        <button *ngIf="showBarcodeScanner" type="button" class="btn h-100 border-0 px-3"
+          (click)="openBarcodeScanner()" [disabled]="isCurrentlyLoading || isScanningBarcode" title="Scan Barcode">
+          <i class="fas fa-barcode"></i>
+        </button>
 
-    <!-- Search Icon Button -->
-    <button 
-      *ngIf="!hasQuery" 
-      type="button" 
-      class="btn position-absolute top-0 end-0 rounded-end-pill h-100 px-3"
-      (click)="onSearch()" 
-      [disabled]="isCurrentlyLoading" 
-      title="Search">
-      <span *ngIf="isCurrentlyLoading" class="spinner-border spinner-border-sm"></span>
-      <i *ngIf="!isCurrentlyLoading" class="fas fa-search"></i>
-    </button>
+        <!-- Search Button -->
+        <button *ngIf="!hasQuery" type="button" class="btn h-100 border-0 px-3 rounded-end-pill"
+          (click)="onSearch()" [disabled]="isCurrentlyLoading" title="Search">
+          <span *ngIf="isCurrentlyLoading" class="spinner-border spinner-border-sm"></span>
+          <i *ngIf="!isCurrentlyLoading" class="fas fa-search"></i>
+        </button>
 
-    <!-- Clear Button -->
-    <button 
-      *ngIf="hasQuery" 
-      type="button"
-      class="btn position-absolute top-50 end-0 translate-middle-y me-2"
-      (click)="clearSearch()" 
-      title="Clear search">
-      <i class="fas fa-times"></i>
-    </button>
+        <!-- Clear Button -->
+        <button *ngIf="hasQuery" type="button" class="btn h-100 border-0 px-3 rounded-end-pill"
+          (click)="clearSearch()" title="Clear search">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Barcode Scanner Modal -->
@@ -55,13 +41,8 @@
         <div class="modal-body p-0">
           <div class="scanner-container position-relative" style="min-height: 400px;">
             <!-- Scanner Component -->
-            <ngx-scanner-qrcode 
-              #scanner 
-              *ngIf="scannerEnabled" 
-              [config]="config" 
-              [vibrate]="0"
-              (event)="onScanResult($event)" 
-              (error)="onScanError($event)"
+            <ngx-scanner-qrcode #scanner *ngIf="scannerEnabled" [config]="config" [vibrate]="0"
+              (event)="onScanResult($event)" (error)="onScanError($event)"
               style="width: 100%; height: 400px; display: block;">
             </ngx-scanner-qrcode>
 
@@ -70,7 +51,7 @@
               class="scanner-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center pointer-events-none">
               <div class="scanner-frame position-relative"
                 style="width: 280px; height: 180px; border: 3px solid #fff; border-radius: 8px; background: transparent;">
-                
+
                 <!-- Corner indicators -->
                 <div class="position-absolute"
                   style="top: -3px; left: -3px; width: 30px; height: 30px; border-top: 6px solid #007bff; border-left: 6px solid #007bff; border-radius: 8px 0 0 0;">
@@ -99,7 +80,8 @@
             </div>
 
             <!-- Loading State -->
-            <div *ngIf="scannerStarting || !hasPermission" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
+            <div *ngIf="scannerStarting || !hasPermission"
+              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
               <div class="text-center text-white">
                 <div class="spinner-border mb-3" role="status">
                   <span class="visually-hidden">Loading...</span>
@@ -110,7 +92,8 @@
             </div>
 
             <!-- Processing State -->
-            <div *ngIf="isScanningBarcode" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
+            <div *ngIf="isScanningBarcode"
+              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
               <div class="text-center text-white">
                 <div class="spinner-border mb-3" role="status">
                   <span class="visually-hidden">Processing...</span>

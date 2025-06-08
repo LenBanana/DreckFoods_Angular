@@ -65,16 +65,14 @@
       (pageChange)="onPageChange($event)">
     </app-food-search-results>
   </div>
-
   <!-- Recent Foods Section -->
   <div *ngIf="showRecentSection">
     <div class="d-flex align-items-center justify-content-between mb-2">
       <h6 class="mb-0">Recently Added Foods</h6>
-      <small class="text-muted">{{ recentFoods.length }} foods</small>
+      <small class="text-muted" *ngIf="recentFoodsResponse">{{ recentFoodsResponse.totalCount }} foods total</small>
     </div>
-    
-    <app-food-search-results
-      [foods]="recentFoods"
+      <app-food-search-results
+      [searchResponse]="recentFoodsResponse"
       [layout]="layout"
       [isLoading]="isLoadingRecent"
       [actionButtonText]="actionButtonText"
@@ -82,7 +80,8 @@
       [showPagination]="true"
       [emptyMessage]="'No recently added foods'"
       [emptyIcon]="'fas fa-history'"
-      (foodSelected)="onFoodSelected($event)">
+      (foodSelected)="onFoodSelected($event)"
+      (pageChange)="onPageChange($event)">
     </app-food-search-results>
   </div>
 

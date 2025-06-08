@@ -81,4 +81,5 @@ export interface FoodEntryDto {
   consumedAt: string;
   createdAt: string;
   editing?: boolean;
+  showNutrition?: boolean;
 }

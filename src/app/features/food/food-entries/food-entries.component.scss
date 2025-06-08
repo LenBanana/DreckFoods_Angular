@@ -80,6 +80,54 @@
       }
     }
     
+    .nutrition-breakdown {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      margin-top: 1rem;
+
+      h6 {
+        color: var(--bs-body-color);
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .progress-section {
+        .entry-progress {
+          padding: 0.75rem;
+          background-color: rgba(var(--bs-primary-rgb), 0.05);
+          border-radius: 8px;
+          border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+
+          .fw-semibold {
+            color: var(--bs-body-color);
+            font-size: 0.875rem;
+          }
+
+          img {
+            object-fit: cover;
+          }
+
+          .badge {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            i {
+              font-size: 0.75rem;
+              color: var(--text-muted);
+            }
+          }
+
+          &:last-child {
+            margin-bottom: 0 !important;
+          }
+        }
+      }
+    }
+    
     @media (max-width: 767.98px) {
       .summary-item {
         padding: 0.75rem;
@@ -331,6 +379,31 @@
     }
   }
 
+  // Nutrition details section
+  .nutrition-details {
+    background: rgba(var(--bs-light-rgb), 0.5);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 16px;
+    animation: slideDown 0.3s ease-out;
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .text-muted {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+
   // Dark theme support
   [data-theme="dark"] & {
     .filter-card {
@@ -358,6 +431,10 @@
     
     .nutrition-info .calories {
       color: #f8f9fa;
+    }
+    
+    .nutrition-details {
+      background: rgba(255, 255, 255, 0.05);
     }
   }
 }

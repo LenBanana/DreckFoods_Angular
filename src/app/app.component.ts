@@ -5,8 +5,6 @@ import { filter } from 'rxjs';
 
 import { HeaderComponent } from './shared/components/header/header.component';
 import { AlertContainerComponent } from './shared/components/alert-container/alert-container.component';
-import { AuthService } from './core/services/auth.service';
-import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -54,8 +52,6 @@ import { ThemeService } from './core/services/theme.service';
   `]
 })
 export class AppComponent implements OnInit {
-  private authService = inject(AuthService);
-  private themeService = inject(ThemeService); // Initialize theme service
   private router = inject(Router);
 
   showHeader = false;

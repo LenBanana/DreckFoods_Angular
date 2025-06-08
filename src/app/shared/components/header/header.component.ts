@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService, Theme } from '../../../core/services/theme.service';
 import { User } from '../../../core/models/auth.models';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -13,12 +14,12 @@ import { User } from '../../../core/models/auth.models';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
-  private themeService = inject(ThemeService);  navLinks = [
+  private themeService = inject(ThemeService); navLinks = [
     { path: '/dashboard', label: 'Dashboard' },
-    { 
-      label: 'Food', 
+    {
+      label: 'Food',
       children: [
         { path: '/food/entries', label: 'Food Entries' },
         { path: '/food/meals', label: 'Meals' },
@@ -33,7 +34,7 @@ export class HeaderComponent {
   currentTheme: Theme = 'light';
   isUserMenuOpen = false;
 
-  constructor() {
+  constructor(private router: Router) {
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
     });
@@ -50,6 +51,33 @@ export class HeaderComponent {
         this.isUserMenuOpen = false;
       }
     });
+  }
+
+
+
+  ngOnInit() {
+    // Auto-collapse navbar on route change
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.collapseNavbar();
+      });
+  }
+
+  private collapseNavbar() {
+    const navbarCollapse = document.getElementById('mainNav');
+    const navbarToggler = document.querySelector('.navbar-toggler') as HTMLElement;
+
+    if (navbarCollapse?.classList.contains('show')) {
+      // Use Bootstrap's collapse method
+      const bsCollapse = new (window as any).bootstrap.Collapse(navbarCollapse, {
+        toggle: false
+      });
+      bsCollapse.hide();
+
+      // Update toggler button state
+      navbarToggler?.setAttribute('aria-expanded', 'false');
+    }
   }
 
   toggleUserMenu() {

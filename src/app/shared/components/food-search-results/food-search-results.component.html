@@ -15,9 +15,9 @@
     <div *ngIf="!isLoading && displayFoods.length > 0 && layout === 'grid'" class="row">
         <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let food of displayFoods; trackBy: trackByFoodId">
             <div class="card h-100 food-card" (click)="onFoodSelect(food)">
-                <img *ngIf="showImages && food.imageUrl" [src]="food.imageUrl" class="card-img-top" [alt]="food.name"
+                <img *ngIf="showImages && food.imageUrl && !food.imageUrl.startsWith('/static/image/nophoto')" [src]="food.imageUrl" class="card-img-top" [alt]="food.name"
                     style="object-fit: cover; height: 200px;" (error)="onImageError($event)" />
-                <div *ngIf="showImages && !food.imageUrl"
+                <div *ngIf="showImages && (!food.imageUrl || food.imageUrl.startsWith('/static/image/nophoto'))"
                     class="card-img-top d-flex align-items-center justify-content-center bg-light"
                     style="height: 200px;">
                     <i class="fas fa-utensils fa-2x text-muted"></i>
@@ -67,10 +67,10 @@
             class="list-group-item list-group-item-action d-flex align-items-center p-3 food-list-item"
             (click)="onFoodSelect(food)">
             <div *ngIf="showImages" class="flex-shrink-0 me-3">
-                <img *ngIf="food.imageUrl" [src]="food.imageUrl" class="rounded"
+                <img *ngIf="food.imageUrl&&!food.imageUrl.startsWith('/static/image/nophoto')" [src]="food.imageUrl" class="rounded"
                     style="width: 60px; height: 60px; object-fit: cover;" [alt]="food.name"
                     (error)="onImageError($event)" />
-                <div *ngIf="!food.imageUrl" class="d-flex align-items-center justify-content-center bg-light rounded"
+                <div *ngIf="!food.imageUrl||food.imageUrl.startsWith('/static/image/nophoto')" class="d-flex align-items-center justify-content-center bg-light rounded"
                     style="width: 60px; height: 60px;">
                     <i class="fas fa-utensils text-muted"></i>
                 </div>

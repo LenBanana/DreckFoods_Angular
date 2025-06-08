@@ -130,24 +130,54 @@
               </div>
 
               <!-- entries list -->
+              <div class="d-flex justify-content-between align-items-center mb-2" *ngIf="day.foodEntries.length > 0">
+                <h6 class="mb-0">Food Entries</h6>
+                <button class="btn btn-sm btn-outline-secondary" (click)="toggleAllNutritionDetails(day)"
+                  [title]="areAnyNutritionDetailsExpanded(day) ? 'Collapse all nutrition details' : 'Expand all nutrition details'">
+                  <i class="fas fa-chevron-down me-1" [class.fa-rotate-180]="areAnyNutritionDetailsExpanded(day)"></i> Nutritions
+                </button>
+              </div>
               <ul class="list-group">
                 <li class="list-group-item d-flex align-items-center" *ngFor="let entry of day.foodEntries">
-                  <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="rounded me-3" width="40"
+                  <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="rounded me-3 object-fit-cover" width="40" height="40"
                     alt="{{entry.foodName}}" />
-                  <span *ngIf="!entry.imageUrl" class="badge bg-light text-dark rounded-circle me-3">
-                    <i class="fas fa-utensils"></i>
+                  <span *ngIf="!entry.imageUrl" class="badge bg-light text-dark rounded me-3 d-flex" style="width: 40px; height: 40px;">
+                    <i class="fas fa-utensils text-primary m-auto"></i>
                   </span>
-                  <div>
-                    <div><strong>{{ entry.foodName }}</strong></div>
-                    <small class="text-muted">
-                      <span (click)="startEditing(entry)" class="pointer" *ngIf="!entry.editing">{{ entry.gramsConsumed
-                        }}g</span>
-                      <span *ngIf="entry.editing">
-                        <input #editInput type="number" class="form-control form-control-sm d-inline-block w-auto"
-                          [(ngModel)]="entry.gramsConsumed" (keyup.enter)="finishEditing(entry, day)"
-                          (blur)="finishEditing(entry, day)">
+                  <div class="w-100">
+                    <div><strong>{{ entry.foodName }}</strong></div> <small
+                      class="text-muted d-flex align-items-center justify-content-between">
+                      <span>
+                        <span (click)="startEditing(entry)" class="pointer" *ngIf="!entry.editing">{{
+                          entry.gramsConsumed | number:'1.0-1' }}g</span>
+                        <span *ngIf="entry.editing">
+                          <input #editInput type="number" class="form-control form-control-sm d-inline-block w-auto"
+                            [(ngModel)]="entry.gramsConsumed" (keyup.enter)="finishEditing(entry, day)"
+                            (blur)="finishEditing(entry, day)">
+                        </span>
                       </span>
-                    </small>
+                      <span class="d-flex align-items-center">
+                        <span class="me-2" *ngIf="!entry.showNutrition && getNutrientCount(entry) > 0">
+                          {{ getNutrientCount(entry) }} nutrients
+                        </span>
+                        <button class="btn btn-sm btn-link text-muted p-0" (click)="toggleNutritionDetails(entry)"
+                          [title]="entry.showNutrition ? 'Hide nutrition details' : 'Show nutrition details'">
+                          <i class="fas fa-chevron-down nutrition-toggle"
+                            [class.fa-rotate-180]="entry.showNutrition"></i>
+                        </button>
+                      </span>
+                    </small>                    <!-- Nutrition Info Progress Bars (Collapsible) -->
+                    <div class="mt-2 nutrition-details" [class.collapsed]="!entry.showNutrition"
+                      [class.expanded]="entry.showNutrition">
+                      <app-nutrition-progress-bars
+                        [nutritionData]="getEntryAsNutritionData(entry)"
+                        [totals]="getDayAsNutritionTotals(day)"
+                        [showSugar]="true"
+                        [height]="'6px'"
+                        [showValues]="true"
+                        [showLabels]="true">
+                      </app-nutrition-progress-bars>
+                    </div>
                   </div>
                 </li>
               </ul>

@@ -54,10 +54,6 @@ export class MealItemManagerComponent implements OnChanges {
   get validationErrors(): string[] {
     const errors: string[] = [];
 
-    if (this.items.length === 0) {
-      errors.push('At least one food item is required');
-    }
-
     const itemsWithoutFood = this.items.filter(item => !item.food);
     if (itemsWithoutFood.length > 0) {
       errors.push(`${itemsWithoutFood.length} item(s) need a food selected`);

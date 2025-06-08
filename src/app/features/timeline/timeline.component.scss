@@ -14,4 +14,43 @@
     border-color: var(--card-border);
     transition: all 0.3s ease;
   }
+  // Nutrition details styles
+  .nutrition-toggle {
+    transition: transform 0.2s ease;
+    
+    &.fa-rotate-180 {
+      transform: rotate(180deg);
+    }
+  }
+
+  .nutrition-details {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    
+    &.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0 !important;
+    }
+
+    &.expanded {
+      max-height: 400px;
+      opacity: 1;
+    }
+  }
+
+  // Collapse all button styling
+  .btn-outline-secondary {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .fa-chevron-down {
+      transition: transform 0.2s ease;
+    }
+  }
 }

@@ -33,9 +33,7 @@ export class FoodSearchResultsComponent {
 
   get displayFoods(): FoodSearchDto[] {
     return this.searchResponse?.foods || this.foods;
-  }
-
-  get hasPagination(): boolean {
+  }  get hasPagination(): boolean {
     return this.showPagination && this.searchResponse != null && this.searchResponse.totalPages > 1;
   }
 

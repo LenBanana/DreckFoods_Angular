@@ -10,29 +10,28 @@
                 <i class="fas fa-plus me-2"></i>Add Food
             </button>
         </div>
-    </div>    <!-- Filter Card -->
+    </div> <!-- Filter Card -->
     <div class="filter-card card border-0 shadow-sm mb-4 bg-light">
         <div class="card-body p-3 p-md-4">
             <form [formGroup]="filterForm">
                 <div class="row g-3 align-items-end">
                     <div class="col-12 col-md-6">
                         <label for="selectedDate" class="form-label fw-semibold">Filter by Date</label>
-                        <input id="selectedDate" type="date" formControlName="selectedDate" 
-                            class="form-control form-control-lg"
-                            (change)="onDateChange()" />
+                        <input id="selectedDate" type="date" formControlName="selectedDate"
+                            class="form-control form-control-lg" (change)="onDateChange()" />
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="btn-group w-100" role="group">
-                            <button type="button" class="btn btn-outline-primary flex-fill" 
-                                [class.active]="isToday" (click)="selectToday()">
+                            <button type="button" class="btn btn-outline-primary flex-fill" [class.active]="isToday"
+                                (click)="selectToday()">
                                 Today
                             </button>
-                            <button type="button" class="btn btn-outline-primary flex-fill" 
-                                [class.active]="isYesterday" (click)="selectYesterday()">
+                            <button type="button" class="btn btn-outline-primary flex-fill" [class.active]="isYesterday"
+                                (click)="selectYesterday()">
                                 Yesterday
                             </button>
-                            <button type="button" class="btn btn-outline-primary flex-fill" 
-                                [class.active]="showingAll" (click)="showAll()">
+                            <button type="button" class="btn btn-outline-primary flex-fill" [class.active]="showingAll"
+                                (click)="showAll()">
                                 All Time
                             </button>
                         </div>
@@ -44,11 +43,15 @@
 
     <!-- Entries / States -->
     <ng-container *ngIf="!isLoading; else loadingTpl">
-        <ng-container *ngIf="displayEntries.length; else emptyTpl">            <!-- Daily Summary -->
-            <div *ngIf="selectedDateEntries.length && !showingAll" class="summary-card card border-0 shadow-sm mb-4 bg-light shadow">
+        <ng-container *ngIf="displayEntries.length; else emptyTpl"> <!-- Daily Summary -->
+            <div *ngIf="selectedDateEntries.length && !showingAll"
+                class="summary-card card border-0 shadow-sm mb-4 bg-light shadow">
                 <div class="card-body p-3 p-md-4">
-                    <h5 class="card-title mb-3"><i class="fas fa-chart-line me-2 text-primary"></i>{{ getSelectedDateLabel() }} Summary</h5>
-                    <div class="row g-3 text-center">
+                    <h5 class="card-title mb-3"><i class="fas fa-chart-line me-2 text-primary"></i>{{
+                        getSelectedDateLabel() }} Summary</h5>
+
+                    <!-- Nutrition Summary Cards -->
+                    <div class="row g-3 text-center mb-4">
                         <div class="col-6 col-md" *ngFor="let s of [
                           { v: dailyTotals.calories|number:'1.0-0', l: 'Calories', icon: 'fas fa-fire', iconColor: 'text-danger' },
                           { v: dailyTotals.protein|number:'1.1-1', l: 'Protein', icon: 'fas fa-egg', iconColor: 'text-success' },
@@ -64,13 +67,21 @@
                         </div>
                     </div>
                 </div>
-            </div>            <!-- List Header -->
+            </div> <!-- List Header -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h4 mb-0">{{ getEntriesTitle() }}</h2>
-                <span class="badge bg-primary fs-6">{{ displayEntries.length }} entries</span>
-            </div>
-
-            <!-- Entries -->
+                <div class="d-flex align-items-center gap-2">
+                    <button *ngIf="!showingAll && selectedDateEntries.length > 1"
+                        class="btn btn-outline-secondary btn-sm" (click)="toggleAllNutritionDetails()"
+                        [title]="areAnyNutritionDetailsExpanded() ? 'Hide all nutrition details' : 'Show all nutrition details'">
+                        <i class="fas" [class.fa-chevron-up]="areAnyNutritionDetailsExpanded()"
+                            [class.fa-chevron-down]="!areAnyNutritionDetailsExpanded()"></i>
+                        <span class="d-none d-sm-inline ms-1">Nutritions
+                        </span>
+                    </button>
+                    <span class="badge bg-primary fs-6">{{ displayEntries.length }} entries</span>
+                </div>
+            </div> <!-- Entries -->
             <div class="entries-container">
                 <div class="entry-card card border-0 shadow-sm mb-3"
                     *ngFor="let entry of displayEntries; trackBy: trackByEntryId">
@@ -79,42 +90,40 @@
                             <!-- Food Image/Icon -->
                             <div class="col-auto">
                                 <div class="food-image-container">
-                                    <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" 
-                                        class="food-image rounded-3" 
+                                    <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="food-image rounded-3"
                                         (error)="onImageError($event)" alt="{{ entry.foodName }}" />
                                     <div *ngIf="!entry.imageUrl" class="food-placeholder rounded-3">
                                         <i class="fas fa-utensils"></i>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Food Details -->
                             <div class="col">
                                 <div class="food-details">
                                     <h6 class="food-name mb-1">{{ entry.foodName }}</h6>
                                     <p *ngIf="entry.brand" class="brand-name mb-2">{{ entry.brand }}</p>
                                     <div class="consumption-info">
-                                        <span (click)="startEditing(entry)" class="grams-display" 
+                                        <span (click)="startEditing(entry)" class="grams-display"
                                             *ngIf="!entry.editing">{{ entry.gramsConsumed | number:'1.0-0' }}g</span>
                                         <span *ngIf="entry.editing" class="grams-edit">
-                                            <input #editInput type="number"
-                                                class="form-control form-control-sm"
-                                                [(ngModel)]="entry.gramsConsumed" 
-                                                (keyup.enter)="finishEditing(entry)"
+                                            <input #editInput type="number" class="form-control form-control-sm"
+                                                [(ngModel)]="entry.gramsConsumed" (keyup.enter)="finishEditing(entry)"
                                                 (blur)="finishEditing(entry)">
                                         </span>
                                         <span class="time-info">
                                             {{ formatTime(entry.consumedAt) }}
-                                            <span *ngIf="showingAll" class="date-info">• {{ formatDate(entry.consumedAt) }}</span>
+                                            <span *ngIf="showingAll" class="date-info">• {{ formatDate(entry.consumedAt)
+                                                }}</span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Nutrition & Actions -->
                             <div class="col-12 col-md-auto">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="nutrition-info">
+                                    <div class="nutrition-info me-3">
                                         <div class="calories">{{ entry.calories|number:'1.0-0' }} cal</div>
                                         <div class="macros d-flex gap-2">
                                             <span class="macro protein">{{ entry.protein|number:'1.1-1' }}p</span>
@@ -122,23 +131,44 @@
                                             <span class="macro fat">{{ entry.fat|number:'1.1-1' }}f</span>
                                         </div>
                                     </div>
-                                    <button class="btn btn-outline-danger btn-sm ms-3" 
-                                        (click)="deleteEntry(entry)"
-                                        [disabled]="deletingEntryId === entry.id"
-                                        [attr.aria-label]="'Delete ' + entry.foodName">
-                                        <span *ngIf="deletingEntryId === entry.id" 
-                                            class="spinner-border spinner-border-sm" 
-                                            role="status" aria-hidden="true"></span>
-                                        <i *ngIf="deletingEntryId !== entry.id" class="fas fa-trash"></i>
-                                    </button>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button *ngIf="!showingAll && selectedDateEntries.length > 1"
+                                            class="btn btn-outline-secondary btn-sm"
+                                            (click)="toggleNutritionDetails(entry)"
+                                            [title]="entry.showNutrition ? 'Hide nutrition details' : 'Show nutrition details'">
+                                            <i class="fas" [class.fa-chevron-up]="entry.showNutrition"
+                                                [class.fa-chevron-down]="!entry.showNutrition"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" (click)="deleteEntry(entry)"
+                                            [disabled]="deletingEntryId === entry.id"
+                                            [attr.aria-label]="'Delete ' + entry.foodName">
+                                            <span *ngIf="deletingEntryId === entry.id"
+                                                class="spinner-border spinner-border-sm" role="status"
+                                                aria-hidden="true"></span>
+                                            <i *ngIf="deletingEntryId !== entry.id" class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Collapsible Nutrition Progress Bars -->
+                        <div *ngIf="!showingAll && selectedDateEntries.length > 1 && entry.showNutrition"
+                            class="nutrition-details mt-3 pt-3 border-top">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-chart-bar me-2 text-muted"></i>
+                                <small class="text-muted">Daily contribution</small>
+                            </div>
+                            <app-nutrition-progress-bars [nutritionData]="getEntryAsNutritionData(entry)"
+                                [totals]="dailyTotalsAsNutritionTotals" [height]="'6px'" [showValues]="true"
+                                [showLabels]="true">
+                            </app-nutrition-progress-bars>
                         </div>
                     </div>
                 </div>
             </div>
         </ng-container>
-    </ng-container>    <!-- Empty State -->
+    </ng-container> <!-- Empty State -->
     <ng-template #emptyTpl>
         <div class="empty-state text-center py-5">
             <div class="empty-icon mb-4">

@@ -5,8 +5,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import {
   format,
   parseISO,
-  startOfDay,
-  endOfDay,
   isToday,
   isYesterday,
 } from 'date-fns';
@@ -15,16 +13,17 @@ import { catchError, of } from 'rxjs';
 import { FoodService } from '../../../core/services/food.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { NutritionProgressBarsComponent, NutritionData, NutritionTotals } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
 import { EditFoodEntryRequest, FoodEntryDto } from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-food-entries',
-  standalone: true,
-  imports: [
+  standalone: true,  imports: [
     CommonModule,
     RouterLink,
     ReactiveFormsModule,
     LoadingSpinnerComponent,
+    NutritionProgressBarsComponent,
     FormsModule
   ],
   templateUrl: './food-entries.component.html',
@@ -65,17 +64,21 @@ export class FoodEntriesComponent implements OnInit {
     this.loadEntries();
     this.updateDateFlags();
   }
-
   loadEntries() {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const selectedDate = this.showingAll
-      ? undefined
-      : this.filterForm.get('selectedDate')?.value;
+    // Get the date parameter for API call
+    let dateParam: string | undefined;
+    if (!this.showingAll) {
+      const selectedDate = this.filterForm.get('selectedDate')?.value;
+      if (selectedDate) {
+        dateParam = selectedDate;
+      }
+    }
 
     this.foodService
-      .getFoodEntries(selectedDate)
+      .getFoodEntries(dateParam)
       .pipe(
         catchError((error) => {
           this.errorMessage = 'Failed to load food entries. Please try again.';
@@ -84,14 +87,24 @@ export class FoodEntriesComponent implements OnInit {
         })
       )
       .subscribe((entries) => {
+        // Initialize showNutrition property for all entries
+        entries.forEach(entry => {
+          if (entry.showNutrition === undefined) {
+            entry.showNutrition = false;
+          }
+        });
+        
         if (this.showingAll) {
           this.allEntries = entries;
           this.displayEntries = entries;
+          this.selectedDateEntries = []; // No specific date selected
         } else {
-          this.selectedDateEntries = entries;
+          this.allEntries = entries;
+          this.selectedDateEntries = entries; // These are already filtered by date from API
           this.displayEntries = entries;
-          this.calculateDailyTotals();
         }
+        
+        this.calculateDailyTotals();
         this.isLoading = false;
       });
   }
@@ -175,23 +188,25 @@ export class FoodEntriesComponent implements OnInit {
       this.isYesterday = false;
     }
   }
-
   private calculateDailyTotals() {
+    // Use selectedDateEntries for specific date totals, or displayEntries for "All Time"
+    const entriesToSum = this.showingAll ? this.displayEntries : this.selectedDateEntries;
+    
     this.dailyTotals = {
-      calories: this.selectedDateEntries.reduce(
+      calories: entriesToSum.reduce(
         (sum, entry) => sum + entry.calories,
         0
       ),
-      protein: this.selectedDateEntries.reduce(
+      protein: entriesToSum.reduce(
         (sum, entry) => sum + entry.protein,
         0
       ),
-      carbs: this.selectedDateEntries.reduce(
+      carbs: entriesToSum.reduce(
         (sum, entry) => sum + entry.carbohydrates,
         0
       ),
-      fat: this.selectedDateEntries.reduce((sum, entry) => sum + entry.fat, 0),
-      fiber: this.selectedDateEntries.reduce(
+      fat: entriesToSum.reduce((sum, entry) => sum + entry.fat, 0),
+      fiber: entriesToSum.reduce(
         (sum, entry) => sum + entry.fiber,
         0
       ),
@@ -266,5 +281,68 @@ export class FoodEntriesComponent implements OnInit {
 
   onImageError(event: any) {
     event.target.style.display = 'none';
+  }
+  
+  // Helper methods for nutrition progress bars
+  get dailyTotalsAsNutritionData(): NutritionData {
+    return {
+      calories: this.dailyTotals.calories,
+      protein: this.dailyTotals.protein,
+      carbohydrates: this.dailyTotals.carbs,
+      fat: this.dailyTotals.fat,
+      fiber: this.dailyTotals.fiber
+    };
+  }
+
+  get dailyTotalsAsNutritionTotals(): NutritionTotals {
+    return {
+      calories: this.dailyTotals.calories,
+      protein: this.dailyTotals.protein,
+      carbohydrates: this.dailyTotals.carbs,
+      fat: this.dailyTotals.fat,
+      fiber: this.dailyTotals.fiber,
+      totalCalories: this.dailyTotals.calories,
+      totalProtein: this.dailyTotals.protein,
+      totalCarbohydrates: this.dailyTotals.carbs,
+      totalFat: this.dailyTotals.fat,
+      totalFiber: this.dailyTotals.fiber
+    };
+  }
+
+  getEntryAsNutritionData(entry: FoodEntryDto): NutritionData {
+    return {
+      calories: entry.calories,
+      protein: entry.protein,
+      carbohydrates: entry.carbohydrates,
+      fat: entry.fat,
+      fiber: entry.fiber,
+      sugar: entry.sugar
+    };
+  }
+
+  toggleNutritionDetails(entry: FoodEntryDto) {
+    entry.showNutrition = !entry.showNutrition;
+  }
+
+  toggleAllNutritionDetails() {
+    const anyExpanded = this.displayEntries.some(entry => entry.showNutrition);
+    // If any are expanded, collapse all. If none are expanded, expand all.
+    this.displayEntries.forEach(entry => {
+      entry.showNutrition = !anyExpanded;
+    });
+  }
+
+  areAnyNutritionDetailsExpanded(): boolean {
+    return this.displayEntries.some(entry => entry.showNutrition);
+  }
+  getNutrientCount(entry: FoodEntryDto): number {
+    let count = 0;
+    if (entry.calories > 0) count++;
+    if (entry.protein > 0) count++;
+    if (entry.carbohydrates > 0) count++;
+    if (entry.fat > 0) count++;
+    if (entry.fiber > 0) count++;
+    if (entry.sugar > 0) count++;
+    return count;
   }
 }

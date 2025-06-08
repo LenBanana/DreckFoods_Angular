@@ -37,8 +37,8 @@ export class FoodSelectorComponent implements OnInit {
     @Output() searchError = new EventEmitter<string>();
     private foodService = inject(FoodService);
 
-    searchResponse: FoodSearchResponse | null = null;
-    recentFoods: FoodSearchDto[] = [];
+    searchResponse: FoodSearchResponse | null = null;    recentFoods: FoodSearchDto[] = [];
+    recentFoodsResponse: FoodSearchResponse | null = null;
     isSearching = false;
     isLoadingRecent = false;
     errorMessage = '';
@@ -85,10 +85,12 @@ export class FoodSelectorComponent implements OnInit {
 
     onFoodSelected(food: FoodSearchDto) {
         this.foodSelected.emit(food);
-    }
-
-    onPageChange(page: number) {
-        if (!this.currentQuery) return;
+    }    onPageChange(page: number) {
+        if (!this.currentQuery) {
+            // Handle page change for recent foods
+            this.loadRecentFoods(page);
+            return;
+        }
 
         this.isSearching = true;
         this.foodService.searchFoods(this.currentQuery, page, this.pageSize, this.sortBy, this.sortDirection)
@@ -131,11 +133,9 @@ export class FoodSelectorComponent implements OnInit {
                 }
                 this.isSearching = false;
             });
-    }
-
-    private loadRecentFoods() {
+    }    private loadRecentFoods(page: number = 1) {
         this.isLoadingRecent = true;
-        this.foodService.getPastEatenFoods(1, 5) // Use smaller page size for recent foods
+        this.foodService.getPastEatenFoods(page, this.pageSize) // Use standard page size with pagination
             .pipe(
                 catchError(error => {
                     console.error('Failed to load recent foods:', error);
@@ -145,6 +145,7 @@ export class FoodSelectorComponent implements OnInit {
             .subscribe(results => {
                 if (results) {
                     this.recentFoods = results.foods;
+                    this.recentFoodsResponse = results;
                 }
                 this.isLoadingRecent = false;
             });

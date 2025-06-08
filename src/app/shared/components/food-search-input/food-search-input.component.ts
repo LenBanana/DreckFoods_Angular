@@ -253,6 +253,7 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
       if (result.value && result.value.trim()) {
         this.closeBarcodeScanner();
         this.searchByBarcode(result.value.trim());
+        this.isScanningBarcode = false;
       }
     }
   }

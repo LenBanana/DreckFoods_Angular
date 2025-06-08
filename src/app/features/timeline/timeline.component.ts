@@ -7,6 +7,7 @@ import { catchError, of } from 'rxjs';
 import { TimelineService } from '../../core/services/timeline.service';
 import { AlertService } from '../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { NutritionProgressBarsComponent, NutritionData, NutritionTotals } from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
 import { DailyTimelineDto } from '../../core/models/timeline.models';
 import { FoodService } from '../../core/services/food.service';
 import { FoodEntryDto, EditFoodEntryRequest } from '../../core/models/food.models';
@@ -14,7 +15,7 @@ import { FoodEntryDto, EditFoodEntryRequest } from '../../core/models/food.model
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, NutritionProgressBarsComponent, FormsModule],
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
 })
@@ -40,7 +41,7 @@ export class TimelineComponent implements OnInit {
 
   constructor() {
     const endDate = new Date();
-    const startDate = subDays(endDate, 30);
+    const startDate = subDays(endDate, 7);
 
     this.filterForm = this.fb.group({
       startDate: [format(startDate, 'yyyy-MM-dd')],
@@ -97,6 +98,23 @@ export class TimelineComponent implements OnInit {
     entry.editing = false;
     this.updateEntry(day, entry);
   }
+
+  toggleNutritionDetails(entry: FoodEntryDto) {
+    entry.showNutrition = !entry.showNutrition;
+  }
+
+  toggleAllNutritionDetails(day: DailyTimelineDto) {
+    const anyExpanded = day.foodEntries.some(entry => entry.showNutrition);
+    // If any are expanded, collapse all. If none are expanded, expand all.
+    day.foodEntries.forEach(entry => {
+      entry.showNutrition = !anyExpanded;
+    });
+  }
+
+  areAnyNutritionDetailsExpanded(day: DailyTimelineDto): boolean {
+    return day.foodEntries.some(entry => entry.showNutrition);
+  }
+
   updateEntry(day: DailyTimelineDto, entry: FoodEntryDto) {
     this.storeAccordionState();
     let updateRequest: EditFoodEntryRequest = {
@@ -143,9 +161,16 @@ export class TimelineComponent implements OnInit {
           }
           return of({ days: [], totalDays: 0 });
         })
-      )
-      .subscribe(response => {
+      )      .subscribe(response => {
         this.timelineData = response.days;
+        // Initialize showNutrition property for all entries
+        this.timelineData.forEach(day => {
+          day.foodEntries.forEach(entry => {
+            if (entry.showNutrition === undefined) {
+              entry.showNutrition = false;
+            }
+          });
+        });
         this.calculateAverages();
         if (!silent) {
           this.isLoading = false;
@@ -214,6 +239,47 @@ export class TimelineComponent implements OnInit {
     return Math.min(percentage, 100);
   }
 
+  // New methods for entry-level progress bars
+  getEntryNutrientPercentage(entryValue: number, dayTotal: number): number {
+    if (dayTotal === 0) return 0;
+    return Math.min((entryValue / dayTotal) * 100, 100);
+  }
+
+  getEntryCaloriePercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.calories, day.totalCalories);
+  }
+
+  getEntryProteinPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.protein, day.totalProtein);
+  }
+
+  getEntryCarbPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.carbohydrates, day.totalCarbohydrates);
+  }
+
+  getEntryFatPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.fat, day.totalFat);
+  }
+
+  getEntryFiberPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.fiber, day.totalFiber);
+  }
+
+  getEntrySugarPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.sugar, day.totalSugar);
+  }
+
+  getNutrientCount(entry: FoodEntryDto): number {
+    let count = 0;
+    if (entry.calories > 0) count++;
+    if (entry.protein > 0) count++;
+    if (entry.carbohydrates > 0) count++;
+    if (entry.fat > 0) count++;
+    if (entry.fiber > 0) count++;
+    if (entry.sugar > 0) count++;
+    return count;
+  }
+
   formatDayHeader(dateString: string): string {
     return format(parseISO(dateString), 'EEEE, MMM d, yyyy');
   }
@@ -224,5 +290,34 @@ export class TimelineComponent implements OnInit {
 
   onImageError(event: any) {
     event.target.style.display = 'none';
+  }
+
+  // Helper methods for nutrition progress bars
+  getEntryAsNutritionData(entry: FoodEntryDto): NutritionData {
+    return {
+      calories: entry.calories,
+      protein: entry.protein,
+      carbohydrates: entry.carbohydrates,
+      fat: entry.fat,
+      fiber: entry.fiber,
+      sugar: entry.sugar
+    };
+  }
+
+  getDayAsNutritionTotals(day: DailyTimelineDto): NutritionTotals {
+    return {
+      calories: day.totalCalories,
+      protein: day.totalProtein,
+      carbohydrates: day.totalCarbohydrates,
+      fat: day.totalFat,
+      fiber: day.totalFiber,
+      sugar: day.totalSugar,
+      totalCalories: day.totalCalories,
+      totalProtein: day.totalProtein,
+      totalCarbohydrates: day.totalCarbohydrates,
+      totalFat: day.totalFat,
+      totalFiber: day.totalFiber,
+      totalSugar: day.totalSugar
+    };
   }
 }

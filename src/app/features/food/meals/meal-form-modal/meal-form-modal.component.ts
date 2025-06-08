@@ -91,9 +91,12 @@ export class MealFormModalComponent implements OnInit {
       }
     } as FoodSearchDto;
   }
-
   onItemsChange(items: MealItem[]) {
     this.mealItems = items;
+    // Reset validation display when user starts adding items
+    if (items.length > 0) {
+      this.showValidation = false;
+    }
   }
 
   onValidationChange(isValid: boolean) {

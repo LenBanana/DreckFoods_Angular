@@ -1,0 +1,14 @@
+.nutrition-progress {
+  .progress {
+    border-radius: 3px;
+    background-color: var(--progress-bg);
+    
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+  }
+  
+  small {
+    font-size: 0.75rem;
+  }
+}
