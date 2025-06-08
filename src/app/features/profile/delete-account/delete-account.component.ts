@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class DeleteAccountComponent {
   private authService = inject(AuthService);
+  @Output() cancelDeletion: EventEmitter<void> = new EventEmitter<void>();
 
   isLoading = false;
   message = '';
@@ -26,6 +27,7 @@ export class DeleteAccountComponent {
   cancelDelete(): void {
     this.showConfirmation = false;
     this.message = '';
+    this.cancelDeletion.emit();
   }
 
   confirmDelete(): void {
@@ -38,7 +40,6 @@ export class DeleteAccountComponent {
         this.isSuccess = true;
         this.message = response.message || 'Account deleted successfully.';
         this.showConfirmation = false;
-        // The authService.deleteAccount() already handles logout and navigation
       },
       error: (error) => {
         this.isLoading = false;

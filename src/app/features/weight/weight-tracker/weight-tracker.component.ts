@@ -11,6 +11,7 @@ import { format, parseISO, subMonths } from 'date-fns';
 import { catchError, of } from 'rxjs';
 
 import { WeightService } from '../../../core/services/weight.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { WeightEntryDto } from '../../../core/models/weight.models';
 
@@ -29,6 +30,7 @@ import { WeightEntryDto } from '../../../core/models/weight.models';
 export class WeightTrackerComponent implements OnInit {
   private fb = inject(FormBuilder);
   private weightService = inject(WeightService);
+  private alertService = inject(AlertService);
 
   weightForm: FormGroup;
   weightEntries: WeightEntryDto[] = [];
@@ -113,21 +115,26 @@ export class WeightTrackerComponent implements OnInit {
     this.loadWeightHistory();
   }
 
-  deleteEntry(entry: WeightEntryDto) {
-    if (
-      confirm(
-        `Are you sure you want to delete the weight entry from ${this.formatDate(
-          entry.recordedAt
-        )}?`
-      )
-    ) {
-      this.deletingEntryId = entry.id;
+  async deleteEntry(entry: WeightEntryDto) {
+    var confirm = await this.alertService.confirm({
+      message: `Are you sure you want to delete the weight entry from ${this.formatDate(
+        entry.recordedAt
+      )}? This action cannot be undone.`,
+      title: 'Delete Weight Entry',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      confirmButtonType: 'danger',
+    });
 
+    if (confirm) {
+      this.deletingEntryId = entry.id;
       this.weightService
         .deleteWeightEntry(entry.id)
         .pipe(
           catchError((error) => {
-            alert('Failed to delete entry. Please try again.');
+            this.alertService.error(
+              'Failed to delete entry. Please try again.'
+            );
             this.deletingEntryId = null;
             return of(null);
           })

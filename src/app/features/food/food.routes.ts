@@ -10,6 +10,10 @@ export const foodRoutes: Routes = [
     loadComponent: () => import('./food-entries/food-entries.component').then(m => m.FoodEntriesComponent)
   },
   {
+    path: 'meals',
+    loadComponent: () => import('./meals/meals.component').then(m => m.MealsComponent)
+  },
+  {
     path: '',
     redirectTo: 'entries',
     pathMatch: 'full'

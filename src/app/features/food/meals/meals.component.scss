@@ -1,0 +1,35 @@
+.loading-state,
+.error-state,
+.empty-state {
+  padding: 3rem 1rem;
+
+  .error-icon,
+  .empty-icon {
+    opacity: 0.7;
+  }
+}
+
+.badge {
+  &.fs-6 {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .h2 {
+    font-size: 1.5rem;
+  }
+
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+}

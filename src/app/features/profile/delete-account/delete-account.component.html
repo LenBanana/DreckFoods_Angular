@@ -1,6 +1,4 @@
-<div class="delete-account-container">
-  <h3>Delete Account</h3>
-  
+<div class="delete-account-container">  
   <div *ngIf="message" 
        class="message" 
        [ngClass]="{'success': isSuccess, 'error': !isSuccess}">
@@ -29,15 +27,15 @@
 
   <div *ngIf="showConfirmation" class="confirmation-section">
     <div class="confirmation-box">
-      <h4>Final Confirmation</h4>
-      <p>This action cannot be undone. Your account and all associated data will be permanently deleted.</p>
+      <h4 class="my-3">Final Confirmation</h4>
+      <p class="alert alert-warning">This action cannot be undone. Your account and all associated data will be permanently deleted.</p>
       <p><strong>Do you really want to delete your account?</strong></p>
     </div>
     
     <div class="button-group">
       <button 
         type="button" 
-        class="btn btn-secondary"
+        class="btn btn-secondary me-2"
         (click)="cancelDelete()"
         [disabled]="isLoading">
         Cancel

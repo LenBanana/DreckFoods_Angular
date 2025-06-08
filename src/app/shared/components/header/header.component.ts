@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService, Theme } from '../../../core/services/theme.service';
@@ -15,12 +15,16 @@ import { User } from '../../../core/models/auth.models';
 })
 export class HeaderComponent {
   private authService = inject(AuthService);
-  private themeService = inject(ThemeService);
-  private router = inject(Router);
-
-  navLinks = [
+  private themeService = inject(ThemeService);  navLinks = [
     { path: '/dashboard', label: 'Dashboard' },
-    { path: '/food', label: 'Food' },
+    { 
+      label: 'Food', 
+      children: [
+        { path: '/food/entries', label: 'Food Entries' },
+        { path: '/food/meals', label: 'Meals' },
+        { path: '/food/search', label: 'Food Search' }
+      ]
+    },
     { path: '/weight', label: 'Weight' },
     { path: '/timeline', label: 'Timeline' },
   ];

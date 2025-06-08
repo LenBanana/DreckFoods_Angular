@@ -1,0 +1,73 @@
+.meal-item-manager {
+  .current-items {
+    h6 {
+      font-weight: 600;
+    }
+  }
+
+  .items-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .meal-item-row {
+    transition: all 0.2s ease;
+
+    .item-info {
+      min-width: 0;
+    }
+
+    .weight-controls {
+      width: 120px;
+      flex-shrink: 0;
+
+      .form-label {
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+    }
+
+    .percentage-display {
+      width: 50px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+  }
+
+  .empty-state {
+    border: 2px dashed #dee2e6;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .validation-errors {
+    .alert {
+      border-radius: 0.5rem;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .meal-item-manager {
+    .meal-item-row {
+      flex-direction: column;
+      align-items: stretch !important;
+
+      .item-info {
+        margin-bottom: 0.75rem;
+      }
+
+      .weight-controls,
+      .percentage-display {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0 !important;
+      }
+
+      .percentage-display {
+        text-align: left;
+      }
+    }
+  }
+}

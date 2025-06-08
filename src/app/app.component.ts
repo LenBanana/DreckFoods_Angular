@@ -4,19 +4,21 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 
 import { HeaderComponent } from './shared/components/header/header.component';
+import { AlertContainerComponent } from './shared/components/alert-container/alert-container.component';
 import { AuthService } from './core/services/auth.service';
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, AlertContainerComponent],
   template: `
     <div class="app">
       <app-header *ngIf="showHeader"></app-header>
       <main class="main-content" [class.with-header]="showHeader">
         <router-outlet></router-outlet>
       </main>
+      <app-alert-container></app-alert-container>
     </div>
   `,
   styles: [`

@@ -5,6 +5,7 @@ import { format, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
 import { catchError, of } from 'rxjs';
 
 import { TimelineService } from '../../core/services/timeline.service';
+import { AlertService } from '../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { DailyTimelineDto } from '../../core/models/timeline.models';
 import { FoodService } from '../../core/services/food.service';
@@ -21,6 +22,7 @@ export class TimelineComponent implements OnInit {
   private fb = inject(FormBuilder);
   private timelineService = inject(TimelineService);
   private foodService = inject(FoodService);
+  private alertService = inject(AlertService);
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
   private openAccordions = new Set<string>();
 
@@ -95,19 +97,18 @@ export class TimelineComponent implements OnInit {
     entry.editing = false;
     this.updateEntry(day, entry);
   }
-
   updateEntry(day: DailyTimelineDto, entry: FoodEntryDto) {
     this.storeAccordionState();
     let updateRequest: EditFoodEntryRequest = {
       fddbFoodId: entry.id,
       gramsConsumed: entry.gramsConsumed,
-    }
-
+    };
+    
     this.foodService
       .editFoodEntry(entry.id, updateRequest)
       .pipe(
         catchError((error) => {
-          alert('Failed to update entry. Please try again.');
+          this.alertService.error('Failed to update entry. Please try again.');
           return of(null);
         })
       )

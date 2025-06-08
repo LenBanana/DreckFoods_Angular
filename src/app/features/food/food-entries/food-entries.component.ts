@@ -13,6 +13,7 @@ import {
 import { catchError, of } from 'rxjs';
 
 import { FoodService } from '../../../core/services/food.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { EditFoodEntryRequest, FoodEntryDto } from '../../../core/models/food.models';
 
@@ -32,6 +33,7 @@ import { EditFoodEntryRequest, FoodEntryDto } from '../../../core/models/food.mo
 export class FoodEntriesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private foodService = inject(FoodService);
+  private alertService = inject(AlertService);
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
 
   filterForm: FormGroup;
@@ -110,18 +112,17 @@ export class FoodEntriesComponent implements OnInit {
     entry.editing = false;
     this.updateEntry(entry);
   }
-
   updateEntry(entry: FoodEntryDto) {
     let updateRequest: EditFoodEntryRequest = {
       fddbFoodId: entry.id,
       gramsConsumed: entry.gramsConsumed,
-    }
-
+    };
+    
     this.foodService
       .editFoodEntry(entry.id, updateRequest)
       .pipe(
         catchError((error) => {
-          alert('Failed to update entry. Please try again.');
+          this.alertService.error('Failed to update entry. Please try again.');
           return of(null);
         })
       )
@@ -196,21 +197,21 @@ export class FoodEntriesComponent implements OnInit {
       ),
     };
   }
-
-  deleteEntry(entry: FoodEntryDto) {
-    if (confirm(`Are you sure you want to delete "${entry.foodName}"?`)) {
+  async deleteEntry(entry: FoodEntryDto) {
+    const confirmed = await this.alertService.confirmDelete(entry.foodName);
+    
+    if (confirmed) {
       this.deletingEntryId = entry.id;
-
+      
       this.foodService
         .deleteFoodEntry(entry.id)
         .pipe(
           catchError((error) => {
-            alert('Failed to delete entry. Please try again.');
+            this.alertService.error('Failed to delete entry. Please try again.');
             this.deletingEntryId = null;
             return of(null);
           })
-        )
-        .subscribe((response) => {
+        )        .subscribe((response) => {
           // Remove from local arrays
           this.allEntries = this.allEntries.filter((e) => e.id !== entry.id);
           this.selectedDateEntries = this.selectedDateEntries.filter(

@@ -1,0 +1,46 @@
+.search-options {
+  .form-label {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    color: #495057;
+  }
+
+  .form-select-sm {
+    font-size: 0.875rem;
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .col-auto {
+    padding: 0 0.25rem;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .search-options {
+    .row {
+      flex-direction: column;
+      align-items: stretch !important;
+    }
+
+    .col-auto {
+      padding: 0;
+      margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

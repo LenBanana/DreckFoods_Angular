@@ -1,7 +1,7 @@
 <div class="container py-4">
     <!-- Welcome -->
     <div class="text-center mb-3">
-        <h1>
+        <h1 class="h1">
             Welcome back,
             {{ currentUser?.firstName || 'there' }}!
             <i class="fas fa-hand-wave"></i>
@@ -66,7 +66,7 @@
 
     <!-- Quick Actions -->
     <div class="text-center my-3 mt-4">
-        <h2 class="mb-4">Quick Actions</h2>
+        <h2 class="mb-4 h2">Quick Actions</h2>
         <div class="row gx-4 gy-3 justify-content-center">
             <div class="col-sm-6 col-md-3" *ngFor="let a of navs">
                 <a [routerLink]="a.path" class="card h-100 text-decoration-none shadow-sm">

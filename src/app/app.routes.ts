@@ -32,11 +32,15 @@ export const routes: Routes = [
     path: 'timeline',
     canActivate: [authGuard],
     loadComponent: () => import('./features/timeline/timeline.component').then(m => m.TimelineComponent)
-  },
-  {
+  },  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+  },
+  {
+    path: 'test-alerts',
+    canActivate: [authGuard],
+    loadComponent: () => import('./test-alerts.component').then(m => m.TestAlertsComponent)
   },
   {
     path: '**',

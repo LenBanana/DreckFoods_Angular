@@ -50,14 +50,14 @@
                     <h5 class="card-title mb-3"><i class="fas fa-chart-line me-2 text-primary"></i>{{ getSelectedDateLabel() }} Summary</h5>
                     <div class="row g-3 text-center">
                         <div class="col-6 col-md" *ngFor="let s of [
-                          { v: dailyTotals.calories|number:'1.0-0', l: 'Calories', icon: 'fas fa-fire' },
-                          { v: dailyTotals.protein|number:'1.1-1', l: 'Protein', icon: 'fas fa-drumstick-bite' },
-                          { v: dailyTotals.carbs|number:'1.1-1', l: 'Carbs', icon: 'fas fa-bread-slice' },
-                          { v: dailyTotals.fat|number:'1.1-1', l: 'Fat', icon: 'fas fa-seedling' },
-                          { v: dailyTotals.fiber|number:'1.1-1', l: 'Fiber', icon: 'fas fa-leaf' }
+                          { v: dailyTotals.calories|number:'1.0-0', l: 'Calories', icon: 'fas fa-fire', iconColor: 'text-danger' },
+                          { v: dailyTotals.protein|number:'1.1-1', l: 'Protein', icon: 'fas fa-egg', iconColor: 'text-success' },
+                          { v: dailyTotals.carbs|number:'1.1-1', l: 'Carbs', icon: 'fas fa-bread-slice', iconColor: 'text-warning' },
+                          { v: dailyTotals.fat|number:'1.1-1', l: 'Fat', icon: 'fas fa-bacon', iconColor: 'text-danger' },
+                          { v: dailyTotals.fiber|number:'1.1-1', l: 'Fiber', icon: 'fas fa-leaf', iconColor: 'text-secondary' },
                         ]">
                             <div class="summary-item shadow">
-                                <i [class]="s.icon" class="mb-2 text-primary"></i>
+                                <i [class]="(s.icon + ' ' + s.iconColor + ' mb-2 fs-3')"></i>
                                 <div class="fw-bold fs-5">{{ s.v }}</div>
                                 <small class="text-muted">{{ s.l }}</small>
                             </div>
@@ -95,7 +95,7 @@
                                     <p *ngIf="entry.brand" class="brand-name mb-2">{{ entry.brand }}</p>
                                     <div class="consumption-info">
                                         <span (click)="startEditing(entry)" class="grams-display" 
-                                            *ngIf="!entry.editing">{{ entry.gramsConsumed }}g</span>
+                                            *ngIf="!entry.editing">{{ entry.gramsConsumed | number:'1.0-0' }}g</span>
                                         <span *ngIf="entry.editing" class="grams-edit">
                                             <input #editInput type="number"
                                                 class="form-control form-control-sm"

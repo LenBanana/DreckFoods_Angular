@@ -1,333 +1,105 @@
 <div class="food-search">
-    <!-- Hero -->
-    <div class="container py-4 text-white">
-        <h2><i class="fas fa-search me-3 text-info"></i>Find DreckFoods</h2>
-        <p class="text-muted mb-0 d-none d-md-block">Search for foods, scan barcodes, and track your nutrition.</p>
+  <!-- Hero -->
+  <div class="container py-4 text-white">
+    <h2 class="h2"><i class="fas fa-search me-3 text-primary"></i>Find Foods</h2>
+    <p class="text-muted mb-0 d-none d-md-block">Search for foods, scan barcodes, and track your nutrition.</p>
+  </div>
+
+  <!-- Search Input -->
+  <div class="container mb-3">
+    <app-food-search-input
+      placeholder="Search for food or scan barcode..."
+      [showBarcodeScanner]="true"
+      [pageSize]="pageSize"
+      [sortBy]="sortBy"
+      [sortDirection]="sortDirection"
+      (searchResults)="onSearchResults($event)"
+      (searchError)="onSearchError($event)"
+      (isSearching)="onIsSearching($event)"
+      (searchQuery)="onSearchQuery($event)">
+    </app-food-search-input>
+  </div>
+
+  <!-- Search Options -->
+  <div class="container mb-4">
+    <app-search-options
+      [sortBy]="sortBy"
+      [sortDirection]="sortDirection"
+      [pageSize]="pageSize"
+      [layout]="layout"
+      [possiblePageSizes]="possiblePageSizes"
+      [showLayoutOptions]="true"
+      [showResultsInfo]="showResults"
+      [currentPage]="getCurrentResults()?.page || 1"
+      [totalPages]="getCurrentResults()?.totalPages || 1"
+      [totalCount]="getCurrentResults()?.totalCount || 0"
+      (sortByChange)="onSortByChange($event)"
+      (sortDirectionChange)="onSortDirectionChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (layoutChange)="onLayoutChange($event)">
+    </app-search-options>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="container mb-4">
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <span class="flex-grow-1">{{ errorMessage }}</span>
+      <button type="button" class="btn-close" (click)="clearError()"></button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="container mb-5">
+    <!-- Section Header -->
+    <div *ngIf="showResults" class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">
+        <span *ngIf="isSearchMode">Search Results</span>
+        <span *ngIf="!isSearchMode">Recently Eaten Foods</span>
+      </h3>
     </div>
 
-    <!-- Search Bar with Barcode Scanner Icon -->
-    <div class="container mb-3">
-        <form [formGroup]="searchForm" class="row g-2 justify-content-center">
-            <div class="col-md-12 position-relative search-input-container">
-                <input type="text" formControlName="query" class="form-control form-control-lg rounded-pill ps-4 pe-5"
-                    placeholder="Search for food or scan barcode..." (keyup.enter)="onSearch()" />
+    <!-- Loading State -->
+    <app-loading-spinner 
+      *ngIf="isCurrentlyLoading()" 
+      class="d-flex justify-content-center my-5"
+      size="large">
+    </app-loading-spinner>
 
-                <!-- Barcode Scanner Icon Button -->
-                <button type="button" class="btn btn-light position-absolute top-0 end-0 rounded-0 h-100 px-3 me-5"
-                    (click)="openBarcodeScanner()" [disabled]="isCurrentlyLoading() || isScanningBarcode"
-                    title="Scan Barcode">
-                    <i class="fas fa-barcode"></i>
-                </button>
+    <!-- Results -->
+    <app-food-search-results
+      *ngIf="showResults && !isCurrentlyLoading()"
+      [searchResponse]="getCurrentResults()"
+      [layout]="layout"
+      [isLoading]="isCurrentlyLoading()"
+      [showImages]="true"
+      [showNutrition]="true"
+      [showBrand]="true"
+      [showTags]="true"
+      [showPagination]="true"
+      [actionButtonText]="'Add'"
+      [actionButtonIcon]="'fas fa-plus'"
+      [emptyMessage]="isSearchMode ? 'No foods found for your search' : 'No recently eaten foods'"
+      [emptyIcon]="isSearchMode ? 'fas fa-search' : 'fas fa-history'"
+      (foodSelected)="onFoodSelected($event)"
+      (imageError)="onImageError($event)"
+      (pageChange)="onPageChange($event)">
+    </app-food-search-results>
 
-                <!-- Search Icon Button -->
-                <button *ngIf="!isSearchMode" type="button" class="btn btn-light position-absolute top-0 end-0 rounded-end-pill h-100 px-3"
-                    (click)="onSearch()" [disabled]="isCurrentlyLoading()" title="Search">
-                    <span *ngIf="isCurrentlyLoading()" class="spinner-border spinner-border-sm"></span>
-                    <i *ngIf="!isCurrentlyLoading()" class="fas fa-search"></i>
-                </button>
-
-                <!-- Clear Button -->
-                <button *ngIf="isSearchMode" type="button"
-                    class="btn position-absolute top-50 end-0 translate-middle-y me-3"
-                    (click)="clearSearch()" title="Clear search">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </form>
+    <!-- Initial State -->
+    <div *ngIf="!showResults && !isCurrentlyLoading()" class="text-center py-5">
+      <i class="fas fa-apple-alt fa-3x text-primary mb-3"></i>
+      <h4>Ready to search</h4>
+      <p class="text-muted">Enter a food name above or scan a barcode to find nutrition information.</p>
+      <p class="text-muted small">Your recently eaten foods will appear here when available.</p>
     </div>
-
-
-    <!-- Search Options -->
-    <div class="container m-0 mx-auto row d-flex align-items-center mb-4">
-        <div class="col-md-auto">
-            <label for="sortBy" class="form-label">Sort by</label>
-            <select id="sortBy" class="form-select" [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
-                <option *ngFor="let option of sortByOptions" [value]="option.value">
-                    {{ option.label }}
-                </option>
-            </select>
-        </div>
-
-        <div class="col-md-auto">
-            <label for="sortDirection" class="form-label">Direction</label>
-            <select id="sortDirection" class="form-select" [(ngModel)]="sortDirection" (ngModelChange)="onSortChange()">
-                <option *ngFor="let option of sortDirectionOptions" [value]="option.value">
-                    {{ option.label }}
-                </option>
-            </select>
-        </div>
-
-        <div class="col-md-auto">
-            <label for="pageSize" class="form-label">Results per page</label>
-            <select id="pageSize" class="form-select" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
-                <option *ngFor="let size of possiblePageSizes" [value]="size">
-                    {{ size }}
-                </option>
-            </select>
-        </div>
-    </div>
-    <!-- Barcode Scanner Modal -->
-    <div *ngIf="isBarcodeScannerOpen" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.8);">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-barcode me-2"></i>Scan Barcode
-                    </h5>
-                    <button type="button" class="btn-close" (click)="closeBarcodeScanner()"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="scanner-container position-relative" style="min-height: 400px;">
-                        <!-- Scanner Component -->
-                        <ngx-scanner-qrcode #scanner *ngIf="scannerEnabled" [config]="config" [vibrate]="0"
-                            (event)="onScanResult($event)" (error)="onScanError($event)"
-                            style="width: 100%; height: 400px; display: block;">
-                        </ngx-scanner-qrcode>
-
-                        <!-- Scanner Overlay with Targeting Frame -->
-                        <div *ngIf="scannerEnabled && hasPermission && hasDevices"
-                            class="scanner-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center pointer-events-none">
-                            <div class="scanner-frame position-relative"
-                                style="width: 280px; height: 180px; border: 3px solid #fff; border-radius: 8px; background: transparent;">
-                                <!-- Corner indicators -->
-                                <div class="position-absolute"
-                                    style="top: -3px; left: -3px; width: 30px; height: 30px; border-top: 6px solid #007bff; border-left: 6px solid #007bff; border-radius: 8px 0 0 0;">
-                                </div>
-                                <div class="position-absolute"
-                                    style="top: -3px; right: -3px; width: 30px; height: 30px; border-top: 6px solid #007bff; border-right: 6px solid #007bff; border-radius: 0 8px 0 0;">
-                                </div>
-                                <div class="position-absolute"
-                                    style="bottom: -3px; left: -3px; width: 30px; height: 30px; border-bottom: 6px solid #007bff; border-left: 6px solid #007bff; border-radius: 0 0 0 8px;">
-                                </div>
-                                <div class="position-absolute"
-                                    style="bottom: -3px; right: -3px; width: 30px; height: 30px; border-bottom: 6px solid #007bff; border-right: 6px solid #007bff; border-radius: 0 0 8px 0;">
-                                </div>
-
-                                <!-- Scanning line animation -->
-                                <div class="scanner-line position-absolute w-100"
-                                    style="height: 2px; background: linear-gradient(90deg, transparent, #007bff, transparent); top: 50%; animation: scan 2s linear infinite;">
-                                </div>
-                            </div>
-
-                            <!-- Instructions -->
-                            <div class="position-absolute bottom-0 start-0 end-0 text-center text-white p-3"
-                                style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
-                                <small><i class="fas fa-info-circle me-1"></i>Position the barcode within the
-                                    frame</small>
-                            </div>
-                        </div>
-
-                        <!-- Camera Controls -->
-                        <div *ngIf="scannerEnabled && hasPermission && hasDevices"
-                            class="position-absolute top-0 end-0 p-3">
-                            <!-- Switch Camera Button -->
-                            <button *ngIf="availableDevices && availableDevices.length > 1" type="button"
-                                class="btn btn-light rounded-circle me-2" (click)="switchCamera()"
-                                style="width: 50px; height: 50px;" title="Switch Camera">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-
-                            <!-- Flashlight Button (if supported) -->
-                            <!-- Note: Flashlight control would need additional implementation -->
-                        </div>
-
-                        <!-- Loading State -->
-                        <div *ngIf="!scannerEnabled && isBarcodeScannerOpen && !errorMessage"
-                            class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
-                            <div class="spinner-border text-primary mb-3" role="status"
-                                style="width: 3rem; height: 3rem;">
-                                <span class="visually-hidden">Loading scanner...</span>
-                            </div>
-                            <h5>Initializing Camera</h5>
-                            <p class="text-muted">Please wait while we access your camera...</p>
-                        </div>
-
-                        <!-- Permission Denied State -->
-                        <div *ngIf="!hasPermission && scannerEnabled && !scannerStarting"
-                            class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
-                            <i class="fas fa-camera-retro fa-4x text-muted mb-3"></i>
-                            <h5>Camera Access Required</h5>
-                            <p class="text-muted mb-3">Please allow camera access to scan barcodes.</p>
-                            <button type="button" class="btn btn-primary" (click)="startScanner()">
-                                <i class="fas fa-camera me-2"></i>Grant Access
-                            </button>
-                        </div>
-
-                        <!-- No Camera State -->
-                        <div *ngIf="hasPermission && !hasDevices && scannerEnabled && !scannerStarting"
-                            class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
-                            <i class="fas fa-exclamation-triangle fa-4x text-warning mb-3"></i>
-                            <h5>No Camera Found</h5>
-                            <p class="text-muted">No camera devices were detected on this device.</p>
-                        </div>
-
-                        <!-- Error State -->
-                        <div *ngIf="errorMessage"
-                            class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
-                            <i class="fas fa-exclamation-circle fa-4x text-danger mb-3"></i>
-                            <h5>Scanner Error</h5>
-                            <p class="text-muted mb-3">{{ errorMessage }}</p>
-                            <button class="btn btn-primary" (click)="startScanner()">
-                                <i class="fas fa-redo me-2"></i>Try Again
-                            </button>
-                        </div>
-
-                        <!-- Scanning Indicator -->
-                        <div *ngIf="isScanningBarcode"
-                            class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                            style="background: rgba(0,0,0,0.8); z-index: 10;">
-                            <div class="text-center text-white">
-                                <div class="spinner-border mb-3" role="status">
-                                    <span class="visually-hidden">Processing...</span>
-                                </div>
-                                <h5>Processing Barcode...</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <!-- Selection of devices -->
-                    <div *ngIf="availableDevices && availableDevices.length > 1" class="me-auto">
-                        <label for="cameraSelect" class="form-label">Select Camera</label>
-                        <select id="cameraSelect" class="form-select" (change)="onDeviceChange($event)">
-                            <option *ngFor="let device of availableDevices" [value]="device.deviceId"
-                                [selected]="device.deviceId === currentDeviceId">
-                                {{ device.label || 'Camera ' + (availableDevices.indexOf(device) + 1) }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="text-muted flex-grow-1">
-                        <small>
-                            <i class="fas fa-barcode me-1"></i>
-                            Supports: EAN-13, EAN-8, UPC-A, UPC-E, Code 128, Code 39, QR codes
-                        </small>
-                    </div>
-                    <button type="button" class="btn btn-secondary" (click)="closeBarcodeScanner()">
-                        <i class="fas fa-times me-2"></i>Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Results / States -->
-    <div class="container mb-5">
-        <!-- Loading -->
-        <app-loading-spinner *ngIf="isCurrentlyLoading()" class="d-flex justify-content-center my-5"
-            size="large"></app-loading-spinner>
-
-        <!-- Results -->
-        <ng-container *ngIf="getCurrentResults() && !isCurrentlyLoading(); else initialTpl">
-            <ng-container *ngIf="getCurrentResults()!.foods.length; else noResultsTpl">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2>
-                        <span *ngIf="isSearchMode">Search Results</span>
-                        <span *ngIf="!isSearchMode">Recently Eaten Foods</span>
-                    </h2>
-                    <div class="text-muted">
-                        {{ getCurrentResults()!.totalCount }} found
-                        <span *ngIf="getCurrentResults()!.totalPages > 1">
-                            (Page {{ getCurrentResults()!.page }} of {{ getCurrentResults()!.totalPages }})
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Pagination -->
-                <ng-container
-                    *ngTemplateOutlet="paginationTpl; context: { searchResults: getCurrentResults() }"></ng-container>
-
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 search-results">
-                    <div class="col" *ngFor="let food of getCurrentResults()!.foods">
-                        <div class="card h-100 position-relative food-card" (click)="openAddFoodModal(food)">
-                            <img *ngIf="food.imageUrl" [src]="food.imageUrl" class="card-img-top" [alt]="food.name"
-                                style="object-fit: cover; height: 290px;" (error)="onImageError($event)" />
-                            <div *ngIf="!food.imageUrl"
-                                class="card-img-top d-flex align-items-center justify-content-center bg-secondary h-100"
-                                style="min-height: 290px;">
-                                <i class="fas fa-utensils fa-2x text-muted"></i>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ food.name }}</h5>
-                                <p *ngIf="food.brand" class="card-subtitle mb-2 text-muted">{{ food.brand }}</p>
-                                <div *ngIf="food.tags?.length" class="mb-2">
-                                    <span class="badge bg-secondary me-1" *ngFor="let t of food.tags.slice(0, 3)">{{ t
-                                        }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between small text-muted">
-                                    <div>{{ food.nutrition.calories.value | number:'1.0-0' }} cal</div>
-                                    <div>{{ food.nutrition.protein.value | number:'1.1-1' }} g</div>
-                                    <div>{{ food.nutrition.carbohydrates.total.value | number:'1.1-1' }} g</div>
-                                    <div>{{ food.nutrition.fat.value | number:'1.1-1' }} g</div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary position-absolute top-0 end-0 m-2 rounded-circle p-2 add-btn"
-                                style="width: 50px; height: 50px;">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pagination -->
-                <ng-container
-                    *ngTemplateOutlet="paginationTpl; context: { searchResults: getCurrentResults() }"></ng-container>
-            </ng-container>
-        </ng-container>
-    </div>
-</div>
-
-<!-- Pagination -->
-<ng-template #paginationTpl let-searchResults="searchResults">
-    <nav *ngIf="searchResults.totalPages > 1" aria-label="Page navigation" class="my-3">
-        <ul class="pagination justify-content-center mb-0">
-            <li class="page-item" [class.disabled]="searchResults.page <= 1">
-                <button class="page-link" (click)="loadPage(searchResults.page - 1)">Previous</button>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">Page {{ searchResults.page }} of {{ searchResults.totalPages
-                    }}</span>
-            </li>
-            <li class="page-item" [class.disabled]="searchResults.page >= searchResults.totalPages">
-                <button class="page-link" (click)="loadPage(searchResults.page + 1)">Next</button>
-            </li>
-        </ul>
-    </nav>
-</ng-template>
-
-<!-- Initial State (only shown when loading initially) -->
-<ng-template #initialTpl>
-    <div *ngIf="!isCurrentlyLoading()" class="text-center py-5">
-        <i class="fas fa-apple-alt fa-3x text-primary"></i>
-        <h4 class="mt-3">Ready to search</h4>
-        <p>Enter a food name above or scan a barcode to find nutrition information.</p>
-        <p class="text-muted small">Your recently eaten foods will appear here when available.</p>
-    </div>
-</ng-template>
-
-<!-- No Results -->
-<ng-template #noResultsTpl>
-    <div class="text-center py-5">
-        <i class="fas fa-search fa-3x text-muted"></i>
-        <h4 class="mt-3">
-            <span *ngIf="isSearchMode">No foods found</span>
-            <span *ngIf="!isSearchMode">No recently eaten foods</span>
-        </h4>
-        <p *ngIf="isSearchMode">Try different keywords, check your spelling, or scan a barcode.</p>
-        <p *ngIf="!isSearchMode">Start adding foods to see your recently eaten items here.</p>
-    </div>
-</ng-template>
-
-<!-- Error -->
-<div *ngIf="errorMessage" class="container mb-5">
-    <div class="text-center py-5">
-        <i class="fas fa-exclamation-triangle fa-3x text-danger"></i>
-        <h4 class="mt-3">Error</h4>
-        <p>{{ errorMessage }}</p>
-        <button class="btn btn-light" (click)="clearError()">Try Again</button>
-    </div>
+  </div>
 </div>
 
 <!-- Add Food Modal -->
-<app-add-food-modal *ngIf="selectedFood" [food]="selectedFood" (close)="closeAddFoodModal()"
-    (foodAdded)="onFoodAdded()"></app-add-food-modal>
+<app-add-food-modal 
+  *ngIf="selectedFood" 
+  [food]="selectedFood" 
+  (close)="closeAddFoodModal()"
+  (foodAdded)="onFoodAdded()">
+</app-add-food-modal>

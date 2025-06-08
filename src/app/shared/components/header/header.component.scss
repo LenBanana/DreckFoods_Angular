@@ -72,6 +72,28 @@
     }
   }
 
+  .dropdown-menu {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.375rem;
+  }
+
+  .dropdown-item {
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      background-color: var(--bs-primary);
+      color: white;
+    }
+
+    &.active {
+      background-color: var(--bs-primary);
+      color: white;
+    }
+  }
+
   [data-theme="dark"] & {
     .user-name,
     .navbar-brand {
@@ -96,6 +118,25 @@
 
       &:hover {
         color: rgba(255, 255, 255, 1);
+      }
+    }
+
+    .dropdown-menu {
+      background-color: var(--bs-dark);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-item {
+      color: rgba(255, 255, 255, 0.8);
+
+      &:hover {
+        background-color: var(--bs-primary);
+        color: white;
+      }
+
+      &.active {
+        background-color: var(--bs-primary);
+        color: white;
       }
     }
   }

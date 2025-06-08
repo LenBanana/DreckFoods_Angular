@@ -9,14 +9,27 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
             aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainNav">
+        </button>        <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item" *ngFor="let link of navLinks">
-                    <a class="nav-link me-3" [routerLink]="link.path" routerLinkActive="active">
+                    <!-- Simple link without children -->
+                    <a *ngIf="!link.children" class="nav-link me-3" [routerLink]="link.path" routerLinkActive="active">
                         {{ link.label }}
                     </a>
+                    
+                    <!-- Dropdown link with children -->
+                    <div *ngIf="link.children" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle me-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ link.label }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li *ngFor="let child of link.children">
+                                <a class="dropdown-item" [routerLink]="child.path" routerLinkActive="active">
+                                    {{ child.label }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
             

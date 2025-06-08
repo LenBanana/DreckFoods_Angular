@@ -23,6 +23,8 @@
   --card-border: rgba(0, 0, 0, 0.125);
   --text-muted: #6c757d;
   --bg-light: #f8f9fa;
+  --bg-info: #3daee6;
+  --bg-primary: #667eea;
   --border-color: #dee2e6;
   --navbar-bg: rgba(255, 255, 255, 0.75);
   --shadow: rgba(0, 0, 0, 0.1);
@@ -42,6 +44,8 @@
   --card-border: rgba(255, 255, 255, 0.125);
   --text-muted: #adb5bd;
   --bg-light: #343a40;
+  --bg-info: #228dd0;
+  --bg-primary: #3c3c73;
   --border-color: #495057;
   --navbar-bg: rgba(30, 30, 30, 0.75);
   --shadow: rgba(0, 0, 0, 0.3);
@@ -100,6 +104,11 @@ $primary: var(--bs-primary) !default;
   outline-offset: 2px;
 }
 
+.h1,
+.h2 {
+  font-weight: 700 !important;
+}
+
 // Dark theme specific component styles
 [data-theme="dark"] {
   .card {
@@ -111,6 +120,23 @@ $primary: var(--bs-primary) !default;
     background-color: var(--bg-light) !important;
   }
 
+  .bg-info {
+    background-color: var(--bg-info) !important;
+  }
+
+  .bg-primary {
+    background-color: var(--bg-primary) !important;
+  }
+
+  .btn-primary {
+    background: var(--bg-primary);
+    border-color: var(--bg-primary);
+  }
+
+  .text-primary {
+    color: #667eea !important;
+  }
+
   .text-muted {
     color: var(--text-muted) !important;
   }
@@ -119,7 +145,8 @@ $primary: var(--bs-primary) !default;
     border-color: var(--border-color) !important;
   }
 
-  .shadow, .shadow-sm {
+  .shadow,
+  .shadow-sm {
     box-shadow: 0 0.125rem 0.25rem var(--shadow) !important;
   }
 
@@ -134,8 +161,9 @@ $primary: var(--bs-primary) !default;
 
   .dropdown-item {
     color: var(--bs-body-color);
-    
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       background-color: var(--bg-light);
       color: var(--bs-body-color);
     }
