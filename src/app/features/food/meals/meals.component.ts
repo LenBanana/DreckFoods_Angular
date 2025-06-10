@@ -13,6 +13,7 @@ import {
 } from '../../../core/models/meal.models';
 import { MealService } from '../../../core/services/meal.service';
 import { AlertService } from '../../../core/services/alert.service';
+import { AlertType } from '../../../core/models/alert.models';
 
 @Component({
   selector: 'app-meals',
@@ -143,6 +144,75 @@ export class MealsComponent implements OnInit {
           this.closeEditModal();
         }
         this.isUpdating = false;
+      });
+  }
+
+  shareMeal(meal: MealResponseDTO) {
+    this.mealService
+      .getMealShareId(meal.id)
+      .pipe(
+        catchError((error) => {
+          console.error('Error getting share ID:', error);
+          this.alertService.error('Failed to get share ID. Please try again.');
+          return of(null);
+        })
+      )
+      .subscribe((shareId) => {
+        if (shareId) {
+          // Show meal share ID to the user
+          this.alertService.successExtraLarge(
+            `Meal "${meal.name}" can be shared using ID:\n${shareId}`,
+            'Share ID',
+            {
+              autoDismiss: false,
+              centered: true,
+            }
+          );
+        }
+      });
+  }
+
+  async addMealByShareId() {
+    const shareId = await this.alertService.prompt({
+      title: 'Add Meal by Share ID',
+      message: 'Please enter the share ID of the meal you want to add:',
+      placeholder: 'Enter share ID',
+      required: true,
+      confirmLabel: 'Add Meal',
+      cancelLabel: 'Cancel',
+      inputType: 'text',
+      validation: (value: string) => {
+        if (!value.trim()) {
+          return 'Share ID cannot be empty.';
+        }
+        return null; // Valid input
+      },
+    });
+
+    if (!shareId) {
+      this.alertService.error('Share ID cannot be empty.');
+      return;
+    }
+    this.isCreating = true;
+
+    this.mealService
+      .addMealByShareId(shareId)
+      .pipe(
+        catchError((error) => {
+          console.error('Error adding meal by share ID:', error);
+          this.alertService.error(
+            'Failed to add meal by share ID. Please try again.'
+          );
+          this.isCreating = false;
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.loadMeals();
+          this.closeCreateModal();
+        }
+        this.isCreating = false;
       });
   }
 

@@ -7,10 +7,10 @@ import { catchError, of } from 'rxjs';
 import { TimelineService } from '../../core/services/timeline.service';
 import { AlertService } from '../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-import { NutritionProgressBarsComponent, NutritionData, NutritionTotals } from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
+import { NutritionProgressBarsComponent } from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
 import { DailyTimelineDto } from '../../core/models/timeline.models';
 import { FoodService } from '../../core/services/food.service';
-import { FoodEntryDto, EditFoodEntryRequest } from '../../core/models/food.models';
+import { FoodEntryDto, EditFoodEntryRequest, NutritionData, NutritionTotals } from '../../core/models/food.models';
 
 @Component({
   selector: 'app-timeline',
@@ -20,11 +20,11 @@ import { FoodEntryDto, EditFoodEntryRequest } from '../../core/models/food.model
   styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent implements OnInit {
+  @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
   private fb = inject(FormBuilder);
   private timelineService = inject(TimelineService);
   private foodService = inject(FoodService);
   private alertService = inject(AlertService);
-  @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
   private openAccordions = new Set<string>();
 
   filterForm: FormGroup;
@@ -300,7 +300,8 @@ export class TimelineComponent implements OnInit {
       carbohydrates: entry.carbohydrates,
       fat: entry.fat,
       fiber: entry.fiber,
-      sugar: entry.sugar
+      sugar: entry.sugar,
+      caffeine: entry.caffeine
     };
   }
 
@@ -312,12 +313,14 @@ export class TimelineComponent implements OnInit {
       fat: day.totalFat,
       fiber: day.totalFiber,
       sugar: day.totalSugar,
+      caffeine: day.totalCaffeine,
       totalCalories: day.totalCalories,
       totalProtein: day.totalProtein,
       totalCarbohydrates: day.totalCarbohydrates,
       totalFat: day.totalFat,
       totalFiber: day.totalFiber,
-      totalSugar: day.totalSugar
+      totalSugar: day.totalSugar,
+      totalCaffeine: day.totalCaffeine
     };
   }
 }

@@ -1,24 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NutritionProgressBarComponent, NutritionProgressConfig } from '../nutrition-progress-bar/nutrition-progress-bar.component';
+import { NutritionData, NutritionTotals } from '../../../core/models/food.models';
 
-export interface NutritionData {
-  calories: number;
-  protein: number;
-  carbohydrates: number;
-  fat: number;
-  fiber: number;
-  sugar?: number;
-}
-
-export interface NutritionTotals extends NutritionData {
-  totalCalories: number;
-  totalProtein: number;
-  totalCarbohydrates: number;
-  totalFat: number;
-  totalFiber: number;
-  totalSugar?: number;
-}
 
 @Component({
   selector: 'app-nutrition-progress-bars',
@@ -77,6 +61,22 @@ export class NutritionProgressBarsComponent {
         unit: 'g',
         color: 'secondary',
         show: this.nutritionData.fiber > 0
+      },
+      {
+        label: 'Caffeine',
+        value: this.nutritionData.caffeine,
+        total: this.totals.totalCaffeine,
+        unit: 'mg',
+        color: 'dark',
+        show: this.nutritionData.caffeine > 0
+      },
+      {
+        label: 'Sugar',
+        value: this.nutritionData.sugar,
+        total: this.totals.totalSugar,
+        unit: 'g',
+        color: 'primary',
+        show: this.nutritionData.sugar > 0
       }
     ];
 

@@ -9,6 +9,7 @@ export interface DailyTimelineDto {
   totalCarbohydrates: number;
   totalSugar: number;
   totalFiber: number;
+  totalCaffeine: number;
   foodEntries: FoodEntryDto[];
   weightEntry?: WeightEntryDto;
 }

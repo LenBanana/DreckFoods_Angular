@@ -13,12 +13,12 @@ import { catchError, of } from 'rxjs';
 import { FoodService } from '../../../core/services/food.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { NutritionProgressBarsComponent, NutritionData, NutritionTotals } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
-import { EditFoodEntryRequest, FoodEntryDto } from '../../../core/models/food.models';
+import { NutritionProgressBarsComponent } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
+import { EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals } from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-food-entries',
-  standalone: true,  imports: [
+  standalone: true, imports: [
     CommonModule,
     RouterLink,
     ReactiveFormsModule,
@@ -52,6 +52,8 @@ export class FoodEntriesComponent implements OnInit {
     carbs: 0,
     fat: 0,
     fiber: 0,
+    sugar: 0,
+    caffeine: 0,
   };
 
   constructor() {
@@ -93,7 +95,7 @@ export class FoodEntriesComponent implements OnInit {
             entry.showNutrition = false;
           }
         });
-        
+
         if (this.showingAll) {
           this.allEntries = entries;
           this.displayEntries = entries;
@@ -103,7 +105,7 @@ export class FoodEntriesComponent implements OnInit {
           this.selectedDateEntries = entries; // These are already filtered by date from API
           this.displayEntries = entries;
         }
-        
+
         this.calculateDailyTotals();
         this.isLoading = false;
       });
@@ -130,7 +132,7 @@ export class FoodEntriesComponent implements OnInit {
       fddbFoodId: entry.id,
       gramsConsumed: entry.gramsConsumed,
     };
-    
+
     this.foodService
       .editFoodEntry(entry.id, updateRequest)
       .pipe(
@@ -191,7 +193,7 @@ export class FoodEntriesComponent implements OnInit {
   private calculateDailyTotals() {
     // Use selectedDateEntries for specific date totals, or displayEntries for "All Time"
     const entriesToSum = this.showingAll ? this.displayEntries : this.selectedDateEntries;
-    
+
     this.dailyTotals = {
       calories: entriesToSum.reduce(
         (sum, entry) => sum + entry.calories,
@@ -210,14 +212,22 @@ export class FoodEntriesComponent implements OnInit {
         (sum, entry) => sum + entry.fiber,
         0
       ),
+      sugar: entriesToSum.reduce(
+        (sum, entry) => sum + (entry.sugar || 0),
+        0
+      ),
+      caffeine: entriesToSum.reduce(
+        (sum, entry) => sum + (entry.caffeine || 0),
+        0
+      ),
     };
   }
   async deleteEntry(entry: FoodEntryDto) {
     const confirmed = await this.alertService.confirmDelete(entry.foodName);
-    
+
     if (confirmed) {
       this.deletingEntryId = entry.id;
-      
+
       this.foodService
         .deleteFoodEntry(entry.id)
         .pipe(
@@ -226,7 +236,7 @@ export class FoodEntriesComponent implements OnInit {
             this.deletingEntryId = null;
             return of(null);
           })
-        )        .subscribe((response) => {
+        ).subscribe((response) => {
           // Remove from local arrays
           this.allEntries = this.allEntries.filter((e) => e.id !== entry.id);
           this.selectedDateEntries = this.selectedDateEntries.filter(
@@ -282,7 +292,7 @@ export class FoodEntriesComponent implements OnInit {
   onImageError(event: any) {
     event.target.style.display = 'none';
   }
-  
+
   // Helper methods for nutrition progress bars
   get dailyTotalsAsNutritionData(): NutritionData {
     return {
@@ -290,7 +300,9 @@ export class FoodEntriesComponent implements OnInit {
       protein: this.dailyTotals.protein,
       carbohydrates: this.dailyTotals.carbs,
       fat: this.dailyTotals.fat,
-      fiber: this.dailyTotals.fiber
+      fiber: this.dailyTotals.fiber,
+      sugar: this.dailyTotals.sugar || 0,
+      caffeine: this.dailyTotals.caffeine || 0
     };
   }
 
@@ -301,11 +313,15 @@ export class FoodEntriesComponent implements OnInit {
       carbohydrates: this.dailyTotals.carbs,
       fat: this.dailyTotals.fat,
       fiber: this.dailyTotals.fiber,
+      caffeine: this.dailyTotals.caffeine || 0,
+      sugar: this.dailyTotals.sugar || 0,
       totalCalories: this.dailyTotals.calories,
       totalProtein: this.dailyTotals.protein,
       totalCarbohydrates: this.dailyTotals.carbs,
       totalFat: this.dailyTotals.fat,
-      totalFiber: this.dailyTotals.fiber
+      totalFiber: this.dailyTotals.fiber,
+      totalCaffeine: this.dailyTotals.caffeine || 0,
+      totalSugar: this.dailyTotals.sugar || 0
     };
   }
 
@@ -316,7 +332,8 @@ export class FoodEntriesComponent implements OnInit {
       carbohydrates: entry.carbohydrates,
       fat: entry.fat,
       fiber: entry.fiber,
-      sugar: entry.sugar
+      sugar: entry.sugar,
+      caffeine: entry.caffeine
     };
   }
 

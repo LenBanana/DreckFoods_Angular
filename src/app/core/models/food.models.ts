@@ -33,6 +33,7 @@ export interface NutritionInfo {
   carbohydrates: CarbohydrateInfo;
   minerals: MineralInfo;
   fiber: NutritionalValue;
+  caffeine: NutritionalValue;
 }
 
 export interface FoodSearchDto {
@@ -42,6 +43,7 @@ export interface FoodSearchDto {
   description: string;
   imageUrl: string;
   brand: string;
+  ean?: string;
   tags: string[];
   nutrition: NutritionInfo;
 }
@@ -78,8 +80,28 @@ export interface FoodEntryDto {
   carbohydrates: number;
   fiber: number;
   sugar: number;
+  caffeine: number;
   consumedAt: string;
   createdAt: string;
   editing?: boolean;
   showNutrition?: boolean;
+}
+export interface NutritionData {
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+  fiber: number;
+  sugar: number;
+  caffeine: number;
+}
+
+export interface NutritionTotals extends NutritionData {
+  totalCalories: number;
+  totalProtein: number;
+  totalCarbohydrates: number;
+  totalFat: number;
+  totalFiber: number;
+  totalSugar: number;
+  totalCaffeine: number;
 }

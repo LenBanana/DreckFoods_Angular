@@ -84,10 +84,11 @@ export class MealFormModalComponent implements OnInit {
           phosphorus: { value: 0, unit: 'mg' },
           copper: { value: 0, unit: 'mg' },
           fluoride: { value: 0, unit: 'mg' },
-          iodine: { value: 0, unit: 'mg' }
+          iodine: { value: 0, unit: 'mg' },
         },
         fiber: { value: 0, unit: 'g' },
-        kilojoules: { value: 0, unit: 'kJ' }
+        kilojoules: { value: 0, unit: 'kJ' },
+        caffeine: { value: 0, unit: 'mg' }
       }
     } as FoodSearchDto;
   }

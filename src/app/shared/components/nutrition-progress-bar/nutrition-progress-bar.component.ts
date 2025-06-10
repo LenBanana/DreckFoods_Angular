@@ -6,7 +6,7 @@ export interface NutritionProgressConfig {
   value: number;
   total: number;
   unit: string;
-  color: 'danger' | 'success' | 'info' | 'warning' | 'secondary' | 'primary';
+  color: 'danger' | 'success' | 'info' | 'warning' | 'secondary' | 'primary' | 'dark' | 'light';
   show?: boolean;
 }
 

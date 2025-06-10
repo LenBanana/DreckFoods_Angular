@@ -1,7 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FoodSearchDto, FoodSearchResponse } from '../../../core/models/food.models';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { AppRole } from '../../../core/models/auth.models';
 
 export type FoodResultsLayout = 'grid' | 'list' | 'compact';
 
@@ -13,6 +16,9 @@ export type FoodResultsLayout = 'grid' | 'list' | 'compact';
   styleUrls: ['./food-search-results.component.scss']
 })
 export class FoodSearchResultsComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   @Input() foods: FoodSearchDto[] = [];
   @Input() searchResponse: FoodSearchResponse | null = null;
   @Input() layout: FoodResultsLayout = 'list';
@@ -37,8 +43,18 @@ export class FoodSearchResultsComponent {
     return this.showPagination && this.searchResponse != null && this.searchResponse.totalPages > 1;
   }
 
+  get canEditFoods(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user && (user.role === AppRole.Admin || user.role === AppRole.DataEditor) || false;
+  }
+
   onFoodSelect(food: FoodSearchDto) {
     this.foodSelected.emit(food);
+  }
+
+  onEditFood(food: FoodSearchDto, event: Event) {
+    event.stopPropagation(); // Prevent triggering food selection
+    this.router.navigate(['/food/editor', food.id]);
   }
 
   onImageError(event: Event) {

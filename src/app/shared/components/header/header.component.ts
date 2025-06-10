@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService, Theme } from '../../../core/services/theme.service';
-import { User } from '../../../core/models/auth.models';
+import { AppRole, User } from '../../../core/models/auth.models';
 import { filter } from 'rxjs';
 
 @Component({
@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit {
     { path: '/timeline', label: 'Timeline' },
   ];
 
+  AppRole = AppRole;
   currentUser: User | null = null;
   currentTheme: Theme = 'light';
   isUserMenuOpen = false;

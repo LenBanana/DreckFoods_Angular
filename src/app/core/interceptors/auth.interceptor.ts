@@ -1,15 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
-import { AuthService } from '../services/auth.service';
+import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private authService = inject(AuthService);
+  private tokenService = inject(TokenService);
+  private router = inject(Router);
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const token = this.authService.getToken();
+    const token = this.tokenService.getToken();
 
     if (token) {
       req = req.clone({
@@ -22,7 +24,10 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError(error => {
         if (error.status === 401) {
-          this.authService.logout();
+          // Clear token and redirect to login
+          this.tokenService.removeToken();
+          localStorage.removeItem('food_tracker_user');
+          this.router.navigate(['/auth/login']);
         }
         return throwError(() => error);
       })

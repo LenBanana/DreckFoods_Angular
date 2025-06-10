@@ -36,4 +36,12 @@ export class MealService {
     addMealPortion(request: AddMealPortionDTO): Observable<FoodEntryDto[]> {
         return this.http.post<FoodEntryDto[]>(`${environment.apiUrl}/meal/portion`, request);
     }
+
+    getMealShareId(mealId: number): Observable<string> {
+        return this.http.get(`${environment.apiUrl}/meal/${mealId}/share`, { responseType: 'text' });
+    }
+
+    addMealByShareId(shareId: string): Observable<MealResponseDTO> {
+        return this.http.post<MealResponseDTO>(`${environment.apiUrl}/meal/${shareId}/share`, {});
+    }
 }

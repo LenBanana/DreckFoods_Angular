@@ -5,6 +5,7 @@ export interface User {
   lastName: string;
   currentWeight?: number;
   createdAt: string;
+  role: AppRole;
 }
 
 export interface LoginRequest {
@@ -47,7 +48,7 @@ export interface ResetPasswordRequest {
 }
 
 export enum AppRole {
-  User = 'User',
-  DataEditor = 'DataEditor',
-  Admin = 'Admin'
+  User = 0,
+  DataEditor = 1,
+  Admin = 2
 }

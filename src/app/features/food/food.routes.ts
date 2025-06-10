@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminEditorGuard } from '../../core/guards/admin-editor.guard';
 
 export const foodRoutes: Routes = [
   {
@@ -12,6 +13,11 @@ export const foodRoutes: Routes = [
   {
     path: 'meals',
     loadComponent: () => import('./meals/meals.component').then(m => m.MealsComponent)
+  },
+  {
+    path: 'editor/:id',
+    loadComponent: () => import('./food-db-editor/food-db-editor.component').then(m => m.FoodDbEditorComponent),
+    canActivate: [adminEditorGuard]
   },
   {
     path: '',

@@ -8,6 +8,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 import { FoodEntryDto } from '../../core/models/food.models';
 import { User } from '../../core/models/auth.models';
 import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,7 +19,7 @@ import { UserService } from '../../core/services/user.service';
 })
 export class DashboardComponent implements OnInit {
     private foodService = inject(FoodService);
-    private userService = inject(UserService);
+    private authService = inject(AuthService);
 
     currentUser: User | null = null;
     isLoading = true;
@@ -35,8 +36,11 @@ export class DashboardComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.userService.getProfile().subscribe({
+        this.authService.currentUser$.subscribe({
             next: (user) => {
+                if (!user) {
+                    return;
+                }
                 this.currentUser = user;
                 this.currentWeight = user.currentWeight;
             },

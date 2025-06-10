@@ -86,6 +86,7 @@
                 <span><span class="badge bg-warning me-1">&nbsp;</span>{{ day.totalFat|number:'1.1-1' }}g Fat</span>
                 <span><span class="badge bg-secondary me-1">&nbsp;</span>{{ day.totalFiber|number:'1.1-1' }}g
                   Fiber</span>
+                <span *ngIf="day.totalCaffeine > 0"><span class="badge bg-dark me-1">&nbsp;</span>{{ day.totalCaffeine|number:'1.1-1' }}mg Caffeine</span>
               </div>
 
               <!-- Combined Macros Progress Bar -->
@@ -120,12 +121,6 @@
                 <div class="progress-bar progress-bar-striped" style="background-color: #ccc;"
                   [style.width.%]="getUnaccountedPercentage(day)" data-bs-toggle="tooltip"
                   title="Other/Unaccounted calories">
-                </div>
-
-                <!-- Fiber (overlay - doesn't contribute to calories) -->
-                <div class="progress-bar bg-secondary" style="position: absolute; height: 4px; bottom: 0; opacity: 0.8;"
-                  [style.width.%]="getMacroPercentage(day.totalFiber*4, day.totalCalories)" data-bs-toggle="tooltip"
-                  [title]="day.totalFiber + 'g Fiber'">
                 </div>
               </div>
 

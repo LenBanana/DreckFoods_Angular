@@ -24,6 +24,11 @@
             </button>
           </li>
           <li>
+            <button class="dropdown-item" (click)="onShare()" [disabled]="isDeleting">
+              <i class="fas fa-share-alt me-2"></i>Share
+            </button>
+          </li>
+          <li>
             <button class="dropdown-item text-danger" (click)="onDelete()" [disabled]="isDeleting">
               <i class="fas fa-trash me-2"></i>
               <span *ngIf="isDeleting">Deleting...</span>

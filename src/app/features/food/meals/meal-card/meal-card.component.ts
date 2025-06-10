@@ -18,10 +18,15 @@ export class MealCardComponent {
 
   @Output() edit = new EventEmitter<MealResponseDTO>();
   @Output() delete = new EventEmitter<MealResponseDTO>();
+  @Output() share = new EventEmitter<MealResponseDTO>();
   @Output() logPortion = new EventEmitter<MealResponseDTO>();
 
   onEdit() {
     this.edit.emit(this.meal);
+  }
+
+  onShare() {
+    this.share.emit(this.meal);
   }
 
   async onDelete() {

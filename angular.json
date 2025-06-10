@@ -31,6 +31,10 @@
                 "glob": "**/*",
                 "input": "node_modules/ngx-scanner-qrcode/wasm/",
                 "output": "./assets/wasm/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src"
               }
             ],
             "styles": [

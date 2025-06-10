@@ -51,11 +51,18 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer bg-transparent border-0 pt-0">
-                    <button class="btn btn-primary btn-sm w-100">
-                        <i [class]="actionButtonIcon + ' me-1'"></i>{{ actionButtonText }}
-                    </button>
+                </div>                <div class="card-footer bg-transparent border-0 pt-0">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm flex-grow-1">
+                            <i [class]="actionButtonIcon + ' me-1'"></i>{{ actionButtonText }}
+                        </button>
+                        <button *ngIf="canEditFoods" 
+                                class="btn btn-outline-secondary btn-sm" 
+                                (click)="onEditFood(food, $event)"
+                                title="Edit food data">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,12 +81,18 @@
                     style="width: 60px; height: 60px;">
                     <i class="fas fa-utensils text-muted"></i>
                 </div>
-            </div>
-
-            <div class="flex-grow-1">
+            </div>            <div class="flex-grow-1">
                 <div class="d-flex justify-content-between align-items-start mb-1">
                     <h6 class="mb-0">{{ food.name }}</h6>
-                    <i [class]="actionButtonIcon + ' text-primary'"></i>
+                    <div class="d-flex align-items-center gap-2">
+                        <button *ngIf="canEditFoods" 
+                                class="btn btn-outline-secondary btn-sm p-1" 
+                                (click)="onEditFood(food, $event)"
+                                title="Edit food data">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <i [class]="actionButtonIcon + ' text-primary'"></i>
+                    </div>
                 </div>
                 <p *ngIf="showBrand && food.brand" class="mb-1 text-muted small">{{ food.brand }}</p>
 
@@ -98,15 +111,22 @@
     </div>
 
     <!-- Compact Layout -->
-    <div *ngIf="!isLoading && displayFoods.length > 0 && layout === 'compact'" class="list-group">
-        <button *ngFor="let food of displayFoods; trackBy: trackByFoodId" type="button"
+    <div *ngIf="!isLoading && displayFoods.length > 0 && layout === 'compact'" class="list-group">        <button *ngFor="let food of displayFoods; trackBy: trackByFoodId" type="button"
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 food-compact-item"
             (click)="onFoodSelect(food)">
             <div>
                 <strong>{{ food.name }}</strong>
                 <small *ngIf="showBrand && food.brand" class="text-muted d-block">{{ food.brand }}</small>
             </div>
-            <i [class]="actionButtonIcon + ' text-primary'"></i>
+            <div class="d-flex align-items-center gap-2">
+                <button *ngIf="canEditFoods" 
+                        class="btn btn-outline-secondary btn-sm p-1" 
+                        (click)="onEditFood(food, $event)"
+                        title="Edit food data">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <i [class]="actionButtonIcon + ' text-primary'"></i>
+            </div>
         </button>
     </div>
 

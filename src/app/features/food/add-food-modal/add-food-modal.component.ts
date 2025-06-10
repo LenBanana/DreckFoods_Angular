@@ -33,6 +33,7 @@ export class AddFoodModalComponent implements OnInit {
     carbs: 0,
     fat: 0,
     fiber: 0,
+    caffeine: 0,
     sugar: 0
   };
 
@@ -61,6 +62,7 @@ export class AddFoodModalComponent implements OnInit {
       carbs: this.food.nutrition.carbohydrates.total.value * multiplier,
       fat: this.food.nutrition.fat.value * multiplier,
       fiber: this.food.nutrition.fiber.value * multiplier,
+      caffeine: this.food.nutrition.caffeine?.value ? this.food.nutrition.caffeine.value * multiplier : 0,
       sugar: this.food.nutrition.carbohydrates.sugar.value * multiplier
     };
   }
