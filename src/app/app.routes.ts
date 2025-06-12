@@ -7,6 +7,9 @@ export const routes: Routes = [
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full'
+  },  {
+    path: 'auth/confirm-email',
+    loadComponent: () => import('./features/auth/confirm-email/confirm-email.component').then(m => m.ConfirmEmailComponent)
   },
   {
     path: 'auth',

@@ -1,0 +1,9 @@
+<div class="card text-center h-100" [class.shadow-sm]="showShadow">
+  <div class="card-body" [ngClass]="getCardBodyClass()">
+    <div class="mb-2" [ngClass]="getIconClass()">
+      <i [class]="data.icon"></i>
+    </div>
+    <h4 class="card-text">{{ data.value | number : decimals }}{{ data.unit || '' }}</h4>
+    <small class="text-muted">{{ data.label }}</small>
+  </div>
+</div>

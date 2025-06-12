@@ -39,24 +39,20 @@ export class SearchOptionsComponent {
   sortDirectionOptions = [
     { value: SortDirection.Ascending, label: 'Ascending' },
     { value: SortDirection.Descending, label: 'Descending' }
-  ];
-
-  onSortByChange(event: Event) {
+  ];  onSortByChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-    this.sortByChange.emit(target.value as unknown as FoodSortBy);
+    this.sortByChange.emit(Number(target.value) as FoodSortBy);
   }
 
   onSortDirectionChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-    this.sortDirectionChange.emit(target.value as unknown as SortDirection);
+    this.sortDirectionChange.emit(Number(target.value) as SortDirection);
   }
 
   onPageSizeChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-    this.pageSizeChange.emit(parseInt(target.value, 10));
-  }
-
-  onLayoutChange(event: Event) {
+    this.pageSizeChange.emit(Number(target.value));
+  }  onLayoutChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.layoutChange.emit(target.value as FoodResultsLayout);
   }

@@ -1,11 +1,7 @@
 <div *ngIf="hasAnyNutrients()" class="nutrition-progress-bars" [class]="'layout-' + layout">
   <div class="progress-container">
-    <app-nutrition-progress-bar
-      *ngFor="let config of visibleConfigs"
-      [config]="config"
-      [height]="height"
-      [showValues]="showValues"
-      [showLabels]="showLabels">
+    <app-nutrition-progress-bar *ngFor="let config of visibleConfigs" [config]="config" [height]="height"
+      [showValues]="showValues" [showLabels]="showLabels">
     </app-nutrition-progress-bar>
   </div>
 </div>

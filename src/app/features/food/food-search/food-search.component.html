@@ -5,94 +5,14 @@
     <p class="text-muted mb-0 d-none d-md-block">Search for foods, scan barcodes, and track your nutrition.</p>
   </div>
 
-  <!-- Search Input -->
-  <div class="container mb-3">
-    <app-food-search-input
-      placeholder="Search for food or scan barcode..."
-      [showBarcodeScanner]="true"
-      [pageSize]="pageSize"
-      [sortBy]="sortBy"
-      [sortDirection]="sortDirection"
-      (searchResults)="onSearchResults($event)"
-      (searchError)="onSearchError($event)"
-      (isSearching)="onIsSearching($event)"
-      (searchQuery)="onSearchQuery($event)">
-    </app-food-search-input>
-  </div>
-
-  <!-- Search Options -->
-  <div class="container mb-4">
-    <app-search-options
-      [sortBy]="sortBy"
-      [sortDirection]="sortDirection"
-      [pageSize]="pageSize"
-      [layout]="layout"
-      [possiblePageSizes]="possiblePageSizes"
-      [showLayoutOptions]="true"
-      [showResultsInfo]="showResults"
-      [currentPage]="getCurrentResults()?.page || 1"
-      [totalPages]="getCurrentResults()?.totalPages || 1"
-      [totalCount]="getCurrentResults()?.totalCount || 0"
-      (sortByChange)="onSortByChange($event)"
-      (sortDirectionChange)="onSortDirectionChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
-      (layoutChange)="onLayoutChange($event)">
-    </app-search-options>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="container mb-4">
-    <div class="alert alert-danger d-flex align-items-center" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <span class="flex-grow-1">{{ errorMessage }}</span>
-      <button type="button" class="btn-close" (click)="clearError()"></button>
-    </div>
-  </div>
-
-  <!-- Results -->
+  <!-- Search Container -->
   <div class="container mb-5">
-    <!-- Section Header -->
-    <div *ngIf="showResults" class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="mb-0">
-        <span *ngIf="isSearchMode">Search Results</span>
-        <span *ngIf="!isSearchMode">Recently Eaten Foods</span>
-      </h3>
-    </div>
-
-    <!-- Loading State -->
-    <app-loading-spinner 
-      *ngIf="isCurrentlyLoading()" 
-      class="d-flex justify-content-center my-5"
-      size="large">
-    </app-loading-spinner>
-
-    <!-- Results -->
-    <app-food-search-results
-      *ngIf="showResults && !isCurrentlyLoading()"
-      [searchResponse]="getCurrentResults()"
-      [layout]="layout"
-      [isLoading]="isCurrentlyLoading()"
-      [showImages]="true"
-      [showNutrition]="true"
-      [showBrand]="true"
-      [showTags]="true"
-      [showPagination]="true"
-      [actionButtonText]="'Add'"
-      [actionButtonIcon]="'fas fa-plus'"
-      [emptyMessage]="isSearchMode ? 'No foods found for your search' : 'No recently eaten foods'"
-      [emptyIcon]="isSearchMode ? 'fas fa-search' : 'fas fa-history'"
+    <app-food-search-container
+      [config]="searchConfig"
       (foodSelected)="onFoodSelected($event)"
-      (imageError)="onImageError($event)"
-      (pageChange)="onPageChange($event)">
-    </app-food-search-results>
-
-    <!-- Initial State -->
-    <div *ngIf="!showResults && !isCurrentlyLoading()" class="text-center py-5">
-      <i class="fas fa-apple-alt fa-3x text-primary mb-3"></i>
-      <h4>Ready to search</h4>
-      <p class="text-muted">Enter a food name above or scan a barcode to find nutrition information.</p>
-      <p class="text-muted small">Your recently eaten foods will appear here when available.</p>
-    </div>
+      (searchError)="onSearchError($event)"
+      (searchStateChange)="onSearchStateChange($event)">
+    </app-food-search-container>
   </div>
 </div>
 

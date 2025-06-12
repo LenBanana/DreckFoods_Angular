@@ -1,0 +1,73 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.csr.html",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],  "dataGroups": [
+    {
+      "name": "api-static-data",
+      "urls": [
+        "/api/food/search**",
+        "/api/food/database**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "15m",
+        "timeout": "8s"
+      }
+    },
+    {
+      "name": "api-dynamic-data", 
+      "urls": [
+        "/api/food/entries**",
+        "/api/meals**",
+        "/api/weight**",
+        "/api/timeline**",
+        "/api/user/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 20,
+        "maxAge": "30s",
+        "timeout": "3s"
+      }
+    },
+    {
+      "name": "api-auth",
+      "urls": [
+        "/api/auth/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 5,
+        "maxAge": "10s",
+        "timeout": "2s"
+      }
+    }
+  ]
+}

@@ -14,6 +14,8 @@ import { FoodService } from '../../../core/services/food.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { NutritionProgressBarsComponent } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
+import { NutritionCardComponent, NutritionCardData } from '../../../shared/components/nutrition-card/nutrition-card.component';
+import { NutritionConfigService } from '../../../shared/services/nutrition-config.service';
 import { EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals } from '../../../core/models/food.models';
 
 @Component({
@@ -24,6 +26,7 @@ import { EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals } fr
     ReactiveFormsModule,
     LoadingSpinnerComponent,
     NutritionProgressBarsComponent,
+    NutritionCardComponent,
     FormsModule
   ],
   templateUrl: './food-entries.component.html',
@@ -33,6 +36,7 @@ export class FoodEntriesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private foodService = inject(FoodService);
   private alertService = inject(AlertService);
+  private nutritionConfigService = inject(NutritionConfigService);
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
 
   filterForm: FormGroup;
@@ -351,8 +355,7 @@ export class FoodEntriesComponent implements OnInit {
 
   areAnyNutritionDetailsExpanded(): boolean {
     return this.displayEntries.some(entry => entry.showNutrition);
-  }
-  getNutrientCount(entry: FoodEntryDto): number {
+  }  getNutrientCount(entry: FoodEntryDto): number {
     let count = 0;
     if (entry.calories > 0) count++;
     if (entry.protein > 0) count++;
@@ -361,5 +364,16 @@ export class FoodEntriesComponent implements OnInit {
     if (entry.fiber > 0) count++;
     if (entry.sugar > 0) count++;
     return count;
+  }
+
+  getDailySummaryCards(): NutritionCardData[] {
+    return [
+      this.nutritionConfigService.createNutritionCard('calories', this.dailyTotals.calories),
+      this.nutritionConfigService.createNutritionCard('protein', this.dailyTotals.protein),
+      this.nutritionConfigService.createNutritionCard('carbs', this.dailyTotals.carbs),
+      this.nutritionConfigService.createNutritionCard('fat', this.dailyTotals.fat),
+      this.nutritionConfigService.createNutritionCard('fiber', this.dailyTotals.fiber),
+      this.nutritionConfigService.createNutritionCard('caffeine', this.dailyTotals.caffeine)
+    ];
   }
 }

@@ -53,10 +53,11 @@
                     </div>
                 </div>                <div class="card-footer bg-transparent border-0 pt-0">
                     <div class="d-flex gap-2">
-                        <button class="btn btn-primary btn-sm flex-grow-1">
+                        <button type="button" class="btn btn-primary btn-sm flex-grow-1">
                             <i [class]="actionButtonIcon + ' me-1'"></i>{{ actionButtonText }}
                         </button>
                         <button *ngIf="canEditFoods" 
+                                type="button"
                                 class="btn btn-outline-secondary btn-sm" 
                                 (click)="onEditFood(food, $event)"
                                 title="Edit food data">
@@ -81,11 +82,11 @@
                     style="width: 60px; height: 60px;">
                     <i class="fas fa-utensils text-muted"></i>
                 </div>
-            </div>            <div class="flex-grow-1">
-                <div class="d-flex justify-content-between align-items-start mb-1">
+            </div>            <div class="flex-grow-1">                <div class="d-flex justify-content-between align-items-start mb-1">
                     <h6 class="mb-0">{{ food.name }}</h6>
                     <div class="d-flex align-items-center gap-2">
                         <button *ngIf="canEditFoods" 
+                                type="button"
                                 class="btn btn-outline-secondary btn-sm p-1" 
                                 (click)="onEditFood(food, $event)"
                                 title="Edit food data">
@@ -117,9 +118,9 @@
             <div>
                 <strong>{{ food.name }}</strong>
                 <small *ngIf="showBrand && food.brand" class="text-muted d-block">{{ food.brand }}</small>
-            </div>
-            <div class="d-flex align-items-center gap-2">
+            </div>            <div class="d-flex align-items-center gap-2">
                 <button *ngIf="canEditFoods" 
+                        type="button"
                         class="btn btn-outline-secondary btn-sm p-1" 
                         (click)="onEditFood(food, $event)"
                         title="Edit food data">

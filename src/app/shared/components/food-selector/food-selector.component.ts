@@ -9,6 +9,7 @@ import { FoodSortBy, SortDirection } from '../../../core/models/enums/sorting.mo
 import { FoodSearchInputComponent } from '../food-search-input/food-search-input.component';
 import { FoodSearchResultsComponent, FoodResultsLayout } from '../food-search-results/food-search-results.component';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 @Component({
     selector: 'app-food-selector',
@@ -18,6 +19,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
         FormsModule,
         FoodSearchInputComponent,
         FoodSearchResultsComponent,
+        SearchOptionsComponent
     ],
     templateUrl: './food-selector.component.html',
     styleUrls: ['./food-selector.component.scss']

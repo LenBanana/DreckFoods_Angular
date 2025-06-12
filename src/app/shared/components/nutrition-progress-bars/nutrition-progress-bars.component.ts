@@ -61,22 +61,13 @@ export class NutritionProgressBarsComponent {
         unit: 'g',
         color: 'secondary',
         show: this.nutritionData.fiber > 0
-      },
-      {
+      }, {
         label: 'Caffeine',
         value: this.nutritionData.caffeine,
         total: this.totals.totalCaffeine,
         unit: 'mg',
         color: 'dark',
         show: this.nutritionData.caffeine > 0
-      },
-      {
-        label: 'Sugar',
-        value: this.nutritionData.sugar,
-        total: this.totals.totalSugar,
-        unit: 'g',
-        color: 'primary',
-        show: this.nutritionData.sugar > 0
       }
     ];
 

@@ -1,20 +1,17 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { importProvidersFrom } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { importProvidersFrom, isDevMode } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
 
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes';
-import { authInterceptorProvider } from './app/core/interceptors/auth.interceptor';
+import { appConfig } from './app/app.config';
+import { provideServiceWorker } from '@angular/service-worker';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(routes),
-    importProvidersFrom(
-      HttpClientModule,
-      BrowserAnimationsModule
-    ),
-    authInterceptorProvider
+    ...appConfig.providers,
+    importProvidersFrom(BrowserAnimationsModule), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          })
   ]
 }).catch(err => console.error(err));

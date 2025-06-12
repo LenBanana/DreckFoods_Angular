@@ -16,7 +16,8 @@ import { filter } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
-  private themeService = inject(ThemeService); navLinks = [
+  private themeService = inject(ThemeService);
+  navLinks = [
     { path: '/dashboard', label: 'Dashboard' },
     {
       label: 'Food',
@@ -102,9 +103,7 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.closeUserMenu();
-  }
-
-  toggleTheme() {
+  }  toggleTheme() {
     this.themeService.toggleTheme();
   }
 

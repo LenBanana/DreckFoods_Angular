@@ -30,8 +30,7 @@ export class AuthService {
   private userKey = 'food_tracker_user';
   constructor() {
     this.initializeAuth();
-  }
-  private initializeAuth(): void {
+  }  private initializeAuth(): void {
     // Check if user data exists in localStorage first
     const storedUser = localStorage.getItem(this.userKey);
     const token = this.tokenService.getToken();
@@ -41,15 +40,22 @@ export class AuthService {
         const user = JSON.parse(storedUser);
         this.currentUserSubject.next(user);
 
-        this.refreshUserProfile();
+        // Only refresh profile if we have a valid connection
+        if (navigator.onLine !== false) {
+          this.refreshUserProfile();
+        }
       } catch (error) {
         console.error('Error parsing stored user data:', error);
         this.logout();
       }
     } else {
-      this.logout();
+      // Clear any invalid data
+      this.tokenService.removeToken();
+      localStorage.removeItem(this.userKey);
+      this.currentUserSubject.next(null);
     }
   }
+
   private refreshUserProfile(): void {
     this.http.get<User>(`${environment.apiUrl}/user/profile`).subscribe({
       next: (user: User) => {
@@ -58,9 +64,11 @@ export class AuthService {
       },
       error: (err: any) => {
         console.error('Error fetching user profile:', err);
+        // Only logout on authentication errors, not network errors
         if (err.status === 401 || err.status === 403) {
           this.logout();
         }
+        // For network errors, keep the cached user data
       }
     });
   }

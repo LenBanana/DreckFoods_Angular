@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, OnChanges } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FoodSearchDto } from '../../../../core/models/food.models';
-import { FoodSelectorComponent } from '../../../../shared/components/food-selector/food-selector.component';
+import { FoodSearchContainerComponent, FoodSearchConfig } from '../../../../shared/components/food-search-container/food-search-container.component';
 
 export interface MealItem {
   food: FoodSearchDto | null;
@@ -12,7 +12,7 @@ export interface MealItem {
 @Component({
   selector: 'app-meal-item-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, FoodSelectorComponent],
+  imports: [CommonModule, FormsModule, FoodSearchContainerComponent],
   templateUrl: './meal-item-manager.component.html',
   styleUrls: ['./meal-item-manager.component.scss']
 })
@@ -22,6 +22,31 @@ export class MealItemManagerComponent implements OnChanges {
 
   @Output() itemsChange = new EventEmitter<MealItem[]>();
   @Output() validationChange = new EventEmitter<boolean>();
+
+  searchConfig: FoodSearchConfig = {
+    placeholder: 'Search for foods to add to your meal...',
+    showBarcodeScanner: true,
+    layout: 'compact',
+    pageSize: 6,
+    possiblePageSizes: [3, 5, 10],
+    showSearchOptions: true,
+    showLayoutOptions: true,
+    showRecentFoods: true,
+    showResultsHeader: false,
+    showPagination: true,
+    showImages: true,
+    showNutrition: false,
+    showBrand: true,
+    showTags: false,
+    actionButtonText: 'Add',
+    actionButtonIcon: 'fas fa-plus',
+    emptySearchMessage: 'No foods found for your search',
+    emptyRecentMessage: 'No recently added foods',
+    emptySearchIcon: 'fas fa-search',
+    emptyRecentIcon: 'fas fa-history',
+    initialStateMessage: 'Enter a food name above to search for foods to add to your meal.',
+    initialStateIcon: 'fas fa-search'
+  };
 
   ngOnChanges() {
     this.onItemChange();
@@ -69,5 +94,13 @@ export class MealItemManagerComponent implements OnChanges {
 
   get isValid(): boolean {
     return this.validationErrors.length === 0;
+  }
+
+  onSearchError(error: string) {
+    console.error('Search error in meal manager:', error);
+  }
+
+  onSearchStateChange(state: { isSearching: boolean; isSearchMode: boolean; hasResults: boolean; currentQuery: string }) {
+    // Handle search state changes if needed
   }
 }

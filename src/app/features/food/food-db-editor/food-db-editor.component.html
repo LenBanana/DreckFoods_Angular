@@ -170,13 +170,15 @@
                   <!-- Energy -->
                   <div class="nutrition-section">
                     <h6 class="section-title text-primary">Energy</h6>
-                    <div class="row">
-                      <div class="col-md-6">
+                    <div class="row">                      <div class="col-md-6">
                         <div class="mb-3">
-                          <label class="form-label">Kilojoules</label>
+                          <label class="form-label">
+                            Kilojoules
+                            <small class="text-muted">(auto-calculated from calories)</small>
+                          </label>
                           <div class="input-group">
                             <input type="number" class="form-control" formControlName="kilojoulesValue" 
-                                   step="0.1" min="0">
+                                   step="0.1" min="0" (input)="onKilojoulesChange()">
                             <input type="text" class="form-control" formControlName="kilojoulesUnit" 
                                    style="max-width: 60px;">
                           </div>
@@ -184,10 +186,13 @@
                       </div>
                       <div class="col-md-6">
                         <div class="mb-3">
-                          <label class="form-label">Calories</label>
+                          <label class="form-label">
+                            Calories
+                            <small class="text-muted">(auto-calculated from kilojoules)</small>
+                          </label>
                           <div class="input-group">
                             <input type="number" class="form-control" formControlName="caloriesValue" 
-                                   step="0.1" min="0">
+                                   step="0.1" min="0" (input)="onCaloriesChange()">
                             <input type="text" class="form-control" formControlName="caloriesUnit" 
                                    style="max-width: 60px;">
                           </div>

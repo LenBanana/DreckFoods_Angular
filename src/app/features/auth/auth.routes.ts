@@ -8,9 +8,6 @@ export const authRoutes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent)
-  },  {
-    path: 'confirm-email',
-    loadComponent: () => import('./confirm-email/confirm-email.component').then(m => m.ConfirmEmailComponent)
   },
   {
     path: 'forgot-password',

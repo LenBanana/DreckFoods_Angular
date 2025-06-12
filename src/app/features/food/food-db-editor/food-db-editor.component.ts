@@ -20,6 +20,10 @@ import {
   styleUrls: ['./food-db-editor.component.scss']
 })
 export class FoodDbEditorComponent implements OnInit {
+  private static readonly KILOJOULE_TO_CALORIE_FACTOR = 0.239;
+  private static readonly CALORIE_TO_KILOJOULE_FACTOR = 4.184;
+  private static readonly DECIMAL_PRECISION = 10;
+
   private foodEditorService = inject(FoodEditorService);
   private alertService = inject(AlertService);
   private route = inject(ActivatedRoute);
@@ -34,7 +38,6 @@ export class FoodDbEditorComponent implements OnInit {
 
   foodInfoForm: FormGroup;
   nutritionForm: FormGroup;
-
   constructor() {
     this.foodInfoForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(200)]],
@@ -95,15 +98,38 @@ export class FoodDbEditorComponent implements OnInit {
       calciumValue: [null, [Validators.min(0)]],
       calciumUnit: ['mg'],
       phosphorusValue: [null, [Validators.min(0)]],
-      phosphorusUnit: ['mg'],
-      copperValue: [null, [Validators.min(0)]],
-      copperUnit: ['mg'],      fluorideValue: [null, [Validators.min(0)]],
+      phosphorusUnit: ['mg'],      copperValue: [null, [Validators.min(0)]],
+      copperUnit: ['mg'],
+      fluorideValue: [null, [Validators.min(0)]],
       fluorideUnit: ['mg'],
       iodineValue: [null, [Validators.min(0)]],
       iodineUnit: ['μg'],
       caffeineValue: [null, [Validators.min(0)]],
       caffeineUnit: ['mg']
     });
+  }
+  private convertKilojoulesToCalories(kilojoules: number): number {
+    return Math.round((kilojoules * FoodDbEditorComponent.KILOJOULE_TO_CALORIE_FACTOR) * FoodDbEditorComponent.DECIMAL_PRECISION) / FoodDbEditorComponent.DECIMAL_PRECISION;
+  }
+
+  private convertCaloriesToKilojoules(calories: number): number {
+    return Math.round((calories * FoodDbEditorComponent.CALORIE_TO_KILOJOULE_FACTOR) * FoodDbEditorComponent.DECIMAL_PRECISION) / FoodDbEditorComponent.DECIMAL_PRECISION;
+  }
+
+  onKilojoulesChange(): void {
+    const kilojoulesValue = this.nutritionForm.get('kilojoulesValue')?.value;
+    if (kilojoulesValue !== null && kilojoulesValue !== '') {
+      const calories = this.convertKilojoulesToCalories(kilojoulesValue);
+      this.nutritionForm.get('caloriesValue')?.setValue(calories, { emitEvent: false });
+    }
+  }
+
+  onCaloriesChange(): void {
+    const caloriesValue = this.nutritionForm.get('caloriesValue')?.value;
+    if (caloriesValue !== null && caloriesValue !== '') {
+      const kilojoules = this.convertCaloriesToKilojoules(caloriesValue);
+      this.nutritionForm.get('kilojoulesValue')?.setValue(kilojoules, { emitEvent: false });
+    }
   }
 
   ngOnInit(): void {
@@ -188,46 +214,54 @@ export class FoodDbEditorComponent implements OnInit {
         calciumValue: nutrition.minerals?.calcium?.value,
         calciumUnit: nutrition.minerals?.calcium?.unit || 'mg',
         phosphorusValue: nutrition.minerals?.phosphorus?.value,
-        phosphorusUnit: nutrition.minerals?.phosphorus?.unit || 'mg',
-        copperValue: nutrition.minerals?.copper?.value,
-        copperUnit: nutrition.minerals?.copper?.unit || 'mg',        fluorideValue: nutrition.minerals?.fluoride?.value,
+        phosphorusUnit: nutrition.minerals?.phosphorus?.unit || 'mg',        copperValue: nutrition.minerals?.copper?.value,
+        copperUnit: nutrition.minerals?.copper?.unit || 'mg',
+        fluorideValue: nutrition.minerals?.fluoride?.value,
         fluorideUnit: nutrition.minerals?.fluoride?.unit || 'mg',
         iodineValue: nutrition.minerals?.iodine?.value,
         iodineUnit: nutrition.minerals?.iodine?.unit || 'μg',
       });
     }
   }
-
   setActiveTab(tab: 'info' | 'nutrition'): void {
     this.activeTab = tab;
   }
 
-  onSubmitFoodInfo(): void {
-    if (this.foodInfoForm.invalid || !this.foodId) return;
-
-    this.isSaving = true;
-    const formValue = this.foodInfoForm.value;
-    
-    const updateDto: FddbFoodUpdateDTO = {
+  private buildFoodInfoDto(formValue: any): FddbFoodUpdateDTO {
+    return {
       name: formValue.name,
       url: formValue.url || undefined,
       description: formValue.description || undefined,
       imageUrl: formValue.imageUrl || undefined,
       brand: formValue.brand || undefined,
       ean: formValue.ean || undefined,
-      tags: formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag) : undefined
+      tags: formValue.tags ? 
+        formValue.tags.split(',')
+          .map((tag: string) => tag.trim())
+          .filter((tag: string) => tag) : 
+        undefined
     };
+  }
+
+  private handleSubmitSuccess(message: string): void {
+    this.alertService.success(message);
+    this.isSaving = false;
+    this.loadFood();
+  }
+
+  private handleSubmitError(errorMessage: string, error: any): void {
+    this.alertService.error(errorMessage, error.message || 'Unknown error occurred');
+    this.isSaving = false;
+  }
+  onSubmitFoodInfo(): void {
+    if (this.foodInfoForm.invalid || !this.foodId) return;
+
+    this.isSaving = true;
+    const updateDto = this.buildFoodInfoDto(this.foodInfoForm.value);
 
     this.foodEditorService.updateFoodInfo(this.foodId, updateDto).subscribe({
-      next: (response) => {
-        this.alertService.success('Food information updated successfully');
-        this.isSaving = false;
-        this.loadFood(); // Reload to get updated data
-      },
-      error: (error) => {
-        this.alertService.error('Failed to update food information', error.message || 'Unknown error occurred');
-        this.isSaving = false;
-      }
+      next: () => this.handleSubmitSuccess('Food information updated successfully'),
+      error: (error) => this.handleSubmitError('Failed to update food information', error)
     });
   }
 
@@ -273,26 +307,17 @@ export class FoodDbEditorComponent implements OnInit {
       calciumValue: formValue.calciumValue,
       calciumUnit: formValue.calciumUnit,
       phosphorusValue: formValue.phosphorusValue,
-      phosphorusUnit: formValue.phosphorusUnit,
-      copperValue: formValue.copperValue,
-      copperUnit: formValue.copperUnit,      fluorideValue: formValue.fluorideValue,
+      phosphorusUnit: formValue.phosphorusUnit,      copperValue: formValue.copperValue,
+      copperUnit: formValue.copperUnit,
+      fluorideValue: formValue.fluorideValue,
       fluorideUnit: formValue.fluorideUnit,
       iodineValue: formValue.iodineValue,
       iodineUnit: formValue.iodineUnit,
       caffeineValue: formValue.caffeineValue,
       caffeineUnit: formValue.caffeineUnit
-    };
-
-    this.foodEditorService.updateFoodNutrition(this.foodId, updateDto).subscribe({
-      next: (response) => {
-        this.alertService.success('Nutrition information updated successfully');
-        this.isSaving = false;
-        this.loadFood(); // Reload to get updated data
-      },
-      error: (error) => {
-        this.alertService.error('Failed to update nutrition information', error.message || 'Unknown error occurred');
-        this.isSaving = false;
-      }
+    };    this.foodEditorService.updateFoodNutrition(this.foodId, updateDto).subscribe({
+      next: () => this.handleSubmitSuccess('Nutrition information updated successfully'),
+      error: (error) => this.handleSubmitError('Failed to update nutrition information', error)
     });
   }
 
@@ -301,18 +326,8 @@ export class FoodDbEditorComponent implements OnInit {
 
     this.isSaving = true;
     const foodInfoValue = this.foodInfoForm.value;
-    const nutritionValue = this.nutritionForm.value;
-
-    const updateDto: FddbFoodCompleteUpdateDTO = {
-      foodInfo: this.foodInfoForm.valid ? {
-        name: foodInfoValue.name,
-        url: foodInfoValue.url || undefined,
-        description: foodInfoValue.description || undefined,
-        imageUrl: foodInfoValue.imageUrl || undefined,
-        brand: foodInfoValue.brand || undefined,
-        ean: foodInfoValue.ean || undefined,
-        tags: foodInfoValue.tags ? foodInfoValue.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag) : undefined
-      } : undefined,
+    const nutritionValue = this.nutritionForm.value;    const updateDto: FddbFoodCompleteUpdateDTO = {
+      foodInfo: this.foodInfoForm.valid ? this.buildFoodInfoDto(foodInfoValue) : undefined,
       nutrition: this.nutritionForm.valid ? {
         kilojoulesValue: nutritionValue.kilojoulesValue,
         kilojoulesUnit: nutritionValue.kilojoulesUnit,
@@ -349,27 +364,18 @@ export class FoodDbEditorComponent implements OnInit {
         calciumValue: nutritionValue.calciumValue,
         calciumUnit: nutritionValue.calciumUnit,
         phosphorusValue: nutritionValue.phosphorusValue,
-        phosphorusUnit: nutritionValue.phosphorusUnit,
-        copperValue: nutritionValue.copperValue,
-        copperUnit: nutritionValue.copperUnit,        fluorideValue: nutritionValue.fluorideValue,
+        phosphorusUnit: nutritionValue.phosphorusUnit,        copperValue: nutritionValue.copperValue,
+        copperUnit: nutritionValue.copperUnit,
+        fluorideValue: nutritionValue.fluorideValue,
         fluorideUnit: nutritionValue.fluorideUnit,
         iodineValue: nutritionValue.iodineValue,
         iodineUnit: nutritionValue.iodineUnit,
         caffeineValue: nutritionValue.caffeineValue,
         caffeineUnit: nutritionValue.caffeineUnit
       } : undefined
-    };
-
-    this.foodEditorService.updateFoodComplete(this.foodId, updateDto).subscribe({
-      next: (response) => {
-        this.alertService.success('Food data updated successfully');
-        this.isSaving = false;
-        this.loadFood(); // Reload to get updated data
-      },
-      error: (error) => {
-        this.alertService.error('Failed to update food data', error.message || 'Unknown error occurred');
-        this.isSaving = false;
-      }
+    };    this.foodEditorService.updateFoodComplete(this.foodId, updateDto).subscribe({
+      next: () => this.handleSubmitSuccess('Food data updated successfully'),
+      error: (error) => this.handleSubmitError('Failed to update food data', error)
     });
   }
 
