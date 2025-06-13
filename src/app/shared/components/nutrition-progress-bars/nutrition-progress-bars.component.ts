@@ -1,15 +1,20 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NutritionProgressBarComponent, NutritionProgressConfig } from '../nutrition-progress-bar/nutrition-progress-bar.component';
-import { NutritionData, NutritionTotals } from '../../../core/models/food.models';
-
+import {
+  NutritionProgressBarComponent,
+  NutritionProgressConfig,
+} from '../nutrition-progress-bar/nutrition-progress-bar.component';
+import {
+  NutritionData,
+  NutritionTotals,
+} from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-nutrition-progress-bars',
   standalone: true,
   imports: [CommonModule, NutritionProgressBarComponent],
   templateUrl: './nutrition-progress-bars.component.html',
-  styleUrls: ['./nutrition-progress-bars.component.scss']
+  styleUrls: ['./nutrition-progress-bars.component.scss'],
 })
 export class NutritionProgressBarsComponent {
   @Input() nutritionData!: NutritionData;
@@ -27,7 +32,7 @@ export class NutritionProgressBarsComponent {
         total: this.totals.calories,
         unit: '',
         color: 'danger',
-        show: this.nutritionData.calories > 0
+        show: this.nutritionData.calories > 0,
       },
       {
         label: 'Protein',
@@ -35,7 +40,7 @@ export class NutritionProgressBarsComponent {
         total: this.totals.protein,
         unit: 'g',
         color: 'success',
-        show: this.nutritionData.protein > 0
+        show: this.nutritionData.protein > 0,
       },
       {
         label: 'Carbs',
@@ -43,7 +48,7 @@ export class NutritionProgressBarsComponent {
         total: this.totals.carbohydrates,
         unit: 'g',
         color: 'info',
-        show: this.nutritionData.carbohydrates > 0
+        show: this.nutritionData.carbohydrates > 0,
       },
       {
         label: 'Fat',
@@ -51,7 +56,7 @@ export class NutritionProgressBarsComponent {
         total: this.totals.fat,
         unit: 'g',
         color: 'warning',
-        show: this.nutritionData.fat > 0
+        show: this.nutritionData.fat > 0,
       },
       {
         label: 'Fiber',
@@ -59,14 +64,15 @@ export class NutritionProgressBarsComponent {
         total: this.totals.fiber,
         unit: 'g',
         color: 'secondary',
-        show: this.nutritionData.fiber > 0
-      }, {
+        show: this.nutritionData.fiber > 0,
+      },
+      {
         label: 'Caffeine',
         value: this.nutritionData.caffeine,
         total: this.totals.caffeine,
         unit: 'mg',
         color: 'dark',
-        show: this.nutritionData.caffeine > 0
+        show: this.nutritionData.caffeine > 0,
       },
       {
         label: 'Salt',
@@ -74,15 +80,17 @@ export class NutritionProgressBarsComponent {
         total: this.totals.salt,
         unit: 'g',
         color: 'light',
-        show: this.nutritionData.salt > 0
-      }
+        show: this.nutritionData.salt > 0,
+      },
     ];
 
     return configs;
   }
 
   get visibleConfigs(): NutritionProgressConfig[] {
-    return this.progressConfigs.filter(config => config.show !== false && config.value > 0);
+    return this.progressConfigs.filter(
+      (config) => config.show !== false && config.value > 0,
+    );
   }
 
   hasAnyNutrients(): boolean {

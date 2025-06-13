@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +15,7 @@ import { ChangePasswordRequest } from '../../../core/models/auth.models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.scss'
+  styleUrl: './change-password.component.scss',
 })
 export class ChangePasswordComponent {
   private fb = inject(FormBuilder);
@@ -22,14 +27,16 @@ export class ChangePasswordComponent {
   isSuccess = false;
 
   constructor() {
-    this.changePasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      oldPassword: ['', [Validators.required, Validators.minLength(6)]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+    this.changePasswordForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator },
+    );
 
-    // Pre-fill email if user is logged in
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.changePasswordForm.patchValue({ email: currentUser.email });
@@ -39,19 +46,23 @@ export class ChangePasswordComponent {
   passwordMatchValidator(group: FormGroup) {
     const newPassword = group.get('newPassword');
     const confirmPassword = group.get('confirmPassword');
-    
-    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
+
+    if (
+      newPassword &&
+      confirmPassword &&
+      newPassword.value !== confirmPassword.value
+    ) {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     if (confirmPassword?.hasError('passwordMismatch')) {
       delete confirmPassword.errors?.['passwordMismatch'];
       if (Object.keys(confirmPassword.errors || {}).length === 0) {
         confirmPassword.setErrors(null);
       }
     }
-    
+
     return null;
   }
 
@@ -59,11 +70,11 @@ export class ChangePasswordComponent {
     if (this.changePasswordForm.valid) {
       this.isLoading = true;
       this.message = '';
-      
+
       const request: ChangePasswordRequest = {
         email: this.changePasswordForm.value.email,
         oldPassword: this.changePasswordForm.value.oldPassword,
-        newPassword: this.changePasswordForm.value.newPassword
+        newPassword: this.changePasswordForm.value.newPassword,
       };
 
       this.authService.changePassword(request).subscribe({
@@ -72,8 +83,7 @@ export class ChangePasswordComponent {
           this.isSuccess = true;
           this.message = response.message || 'Password changed successfully!';
           this.changePasswordForm.reset();
-          
-          // Pre-fill email again
+
           const currentUser = this.authService.getCurrentUser();
           if (currentUser) {
             this.changePasswordForm.patchValue({ email: currentUser.email });
@@ -82,8 +92,9 @@ export class ChangePasswordComponent {
         error: (error) => {
           this.isLoading = false;
           this.isSuccess = false;
-          this.message = error.error?.message || 'An error occurred. Please try again.';
-        }
+          this.message =
+            error.error?.message || 'An error occurred. Please try again.';
+        },
       });
     }
   }

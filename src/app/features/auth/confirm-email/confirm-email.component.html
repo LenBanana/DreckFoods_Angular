@@ -1,42 +1,42 @@
 <div class="d-flex justify-content-center align-items-center min-vh-100 py-3">
-    <div class="card p-4 shadow-sm" style="max-width:400px; width:100%;">
-        <!-- Loading -->
-        <div *ngIf="isLoading; else resultTpl" class="text-center">
-            <app-loading-spinner *ngIf="isLoading" size="small"></app-loading-spinner>
-            <h5>Confirming your email...</h5>
-        </div>
-
-        <!-- Result -->
-        <ng-template #resultTpl>
-            <!-- Success -->
-            <div *ngIf="confirmationSuccess; else failTpl" class="text-center">
-                <i class="fas fa-check-circle fa-3x text-success"></i>
-                <h4 class="mt-2">Email Confirmed!</h4>
-                <p>
-                    Your account has been verified. You can now sign in and start
-                    tracking your food.
-                </p>
-                <a routerLink="/auth/login" class="btn btn-primary mt-3">
-                    Sign In Now
-                </a>
-            </div>
-
-            <!-- Failure -->
-            <ng-template #failTpl>
-                <div class="text-center">
-                    <i class="fas fa-times-circle fa-3x text-danger"></i>
-                    <h4 class="mt-2">Confirmation Failed</h4>
-                    <p>{{ errorMessage }}</p>
-                    <div class="d-flex justify-content-center gap-2 mt-3">
-                        <a routerLink="/auth/login" class="btn btn-outline-secondary">
-                            Go to Login
-                        </a>
-                        <a routerLink="/auth/register" class="btn btn-primary">
-                            Register Again
-                        </a>
-                    </div>
-                </div>
-            </ng-template>
-        </ng-template>
+  <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%">
+    <!-- Loading -->
+    <div *ngIf="isLoading; else resultTpl" class="text-center">
+      <app-loading-spinner *ngIf="isLoading" size="small"></app-loading-spinner>
+      <h5>Confirming your email...</h5>
     </div>
+
+    <!-- Result -->
+    <ng-template #resultTpl>
+      <!-- Success -->
+      <div *ngIf="confirmationSuccess; else failTpl" class="text-center">
+        <i class="fas fa-check-circle fa-3x text-success"></i>
+        <h4 class="mt-2">Email Confirmed!</h4>
+        <p>
+          Your account has been verified. You can now sign in and start tracking
+          your food.
+        </p>
+        <a routerLink="/auth/login" class="btn btn-primary mt-3">
+          Sign In Now
+        </a>
+      </div>
+
+      <!-- Failure -->
+      <ng-template #failTpl>
+        <div class="text-center">
+          <i class="fas fa-times-circle fa-3x text-danger"></i>
+          <h4 class="mt-2">Confirmation Failed</h4>
+          <p>{{ errorMessage }}</p>
+          <div class="d-flex justify-content-center gap-2 mt-3">
+            <a routerLink="/auth/login" class="btn btn-outline-secondary">
+              Go to Login
+            </a>
+            <a routerLink="/auth/register" class="btn btn-primary">
+              Register Again
+            </a>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
 </div>

@@ -45,9 +45,18 @@
       </div>
 
       <div class="row">
-        <div class="col-12 col-md-6 col-xl-4 mb-4" *ngFor="let meal of meals; trackBy: trackByMealId">
-          <app-meal-card [meal]="meal" [isDeleting]="deletingMealId === meal.id" (edit)="openEditModal($event)"
-            (share)="shareMeal($event)" (delete)="deleteMeal($event)" (logPortion)="openPortionModal($event)">
+        <div
+          class="col-12 col-md-6 col-xl-4 mb-4"
+          *ngFor="let meal of meals; trackBy: trackByMealId"
+        >
+          <app-meal-card
+            [meal]="meal"
+            [isDeleting]="deletingMealId === meal.id"
+            (edit)="openEditModal($event)"
+            (share)="shareMeal($event)"
+            (delete)="deleteMeal($event)"
+            (logPortion)="openPortionModal($event)"
+          >
           </app-meal-card>
         </div>
       </div>
@@ -61,7 +70,8 @@
         </div>
         <h3 class="mb-3">No Meals Yet</h3>
         <p class="text-muted mb-4">
-          Create your first meal by combining multiple foods into one convenient entry.
+          Create your first meal by combining multiple foods into one convenient
+          entry.
         </p>
         <button class="btn btn-primary btn-lg" (click)="openCreateModal()">
           <i class="fas fa-plus me-2"></i>Create Your First Meal
@@ -72,16 +82,30 @@
 </div>
 
 <!-- Create Meal Modal -->
-<app-meal-form-modal *ngIf="showCreateModal" [isSubmitting]="isCreating" (close)="closeCreateModal()"
-  (submit)="createMeal($event)">
+<app-meal-form-modal
+  *ngIf="showCreateModal"
+  [isSubmitting]="isCreating"
+  (close)="closeCreateModal()"
+  (submit)="createMeal($event)"
+>
 </app-meal-form-modal>
 
 <!-- Edit Meal Modal -->
-<app-meal-form-modal *ngIf="showEditModal && selectedMeal" [meal]="selectedMeal" [isSubmitting]="isUpdating"
-  (close)="closeEditModal()" (submit)="updateMeal($event)">
+<app-meal-form-modal
+  *ngIf="showEditModal && selectedMeal"
+  [meal]="selectedMeal"
+  [isSubmitting]="isUpdating"
+  (close)="closeEditModal()"
+  (submit)="updateMeal($event)"
+>
 </app-meal-form-modal>
 
 <!-- Meal Portion Modal -->
-<app-meal-portion-modal *ngIf="showPortionModal && selectedMeal" [meal]="selectedMeal" [isSubmitting]="isLoggingPortion"
-  (close)="closePortionModal()" (submit)="addMealPortion($event)">
+<app-meal-portion-modal
+  *ngIf="showPortionModal && selectedMeal"
+  [meal]="selectedMeal"
+  [isSubmitting]="isLoggingPortion"
+  (close)="closePortionModal()"
+  (submit)="addMealPortion($event)"
+>
 </app-meal-portion-modal>

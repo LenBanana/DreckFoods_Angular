@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
@@ -10,7 +15,12 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
@@ -31,7 +41,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       firstName: [''],
       lastName: [''],
-      currentWeight: [null, [Validators.min(0), Validators.max(1000)]]
+      currentWeight: [null, [Validators.min(0), Validators.max(1000)]],
     });
   }
 
@@ -40,15 +50,17 @@ export class RegisterComponent {
       this.isLoading = true;
       this.errorMessage = '';
 
-      this.authService.register(this.registerForm.value)
+      this.authService
+        .register(this.registerForm.value)
         .pipe(
-          catchError(error => {
-            this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+          catchError((error) => {
+            this.errorMessage =
+              error.error?.message || 'Registration failed. Please try again.';
             this.isLoading = false;
             return of(null);
-          })
+          }),
         )
-        .subscribe(response => {
+        .subscribe((response) => {
           if (response) {
             this.registrationSuccess = true;
             this.registeredEmail = this.registerForm.value.email;

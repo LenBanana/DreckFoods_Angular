@@ -14,7 +14,7 @@
   .scanner-viewport {
     width: 100%;
     height: 400px;
-    
+
     @media (max-width: 768px) {
       height: 300px;
     }
@@ -41,11 +41,11 @@
 
   .scanner-line {
     background: linear-gradient(
-      90deg, 
-      transparent 0%, 
-      rgba(0, 255, 0, 0.8) 45%, 
-      rgba(0, 255, 0, 1) 50%, 
-      rgba(0, 255, 0, 0.8) 55%, 
+      90deg,
+      transparent 0%,
+      rgba(0, 255, 0, 0.8) 45%,
+      rgba(0, 255, 0, 1) 50%,
+      rgba(0, 255, 0, 0.8) 55%,
       transparent 100%
     );
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
@@ -85,7 +85,6 @@
   }
 }
 
-// Button styles
 .btn {
   &:disabled {
     opacity: 0.6;
@@ -93,7 +92,6 @@
   }
 }
 
-// Animation for scanner line
 @keyframes scan {
   0% {
     top: 0%;

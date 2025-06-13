@@ -65,21 +65,20 @@
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .food-search-results {
     .food-card {
       margin-bottom: 1rem;
     }
-    
+
     .card-img-top {
       height: 150px !important;
     }
-    
+
     .food-list-item {
       flex-direction: column;
       align-items: flex-start !important;
-      
+
       .flex-shrink-0 {
         margin-bottom: 0.5rem;
         margin-right: 0 !important;

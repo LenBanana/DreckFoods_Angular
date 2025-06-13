@@ -1,76 +1,115 @@
-<nav class="navbar navbar-expand-lg navbar-dark position-fixed w-100 d-none d-lg-block"
-    style="background-color: var(--navbar-bg)" data-bs-theme="dark">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" routerLink="/dashboard">
-            <i class="fas fa-utensils fa-lg"></i>
-            <span class="ms-2">DreckFoods</span>
-        </a>
+<nav
+  class="navbar navbar-expand-lg navbar-dark position-fixed w-100 d-none d-lg-block"
+  style="background-color: var(--navbar-bg)"
+  data-bs-theme="dark"
+>
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/dashboard">
+      <i class="fas fa-utensils fa-lg"></i>
+      <span class="ms-2">DreckFoods</span>
+    </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item" *ngFor="let link of navLinks">
-                    <!-- Simple link without children -->
-                    <a *ngIf="!link.children" class="nav-link me-3" [routerLink]="link.path" routerLinkActive="active">
-                        {{ link.label }}
-                    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNav"
+      aria-controls="mainNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item" *ngFor="let link of navLinks">
+          <!-- Simple link without children -->
+          <a
+            *ngIf="!link.children"
+            class="nav-link me-3"
+            [routerLink]="link.path"
+            routerLinkActive="active"
+          >
+            {{ link.label }}
+          </a>
 
-                    <!-- Dropdown link with children -->
-                    <div *ngIf="link.children" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle me-3" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ link.label }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li *ngFor="let child of link.children">
-                                <a class="dropdown-item" [routerLink]="child.path" routerLinkActive="active">
-                                    {{ child.label }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+          <!-- Dropdown link with children -->
+          <div *ngIf="link.children" class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle me-3"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ link.label }}
+            </a>
+            <ul class="dropdown-menu">
+              <li *ngFor="let child of link.children">
+                <a
+                  class="dropdown-item"
+                  [routerLink]="child.path"
+                  routerLinkActive="active"
+                >
+                  {{ child.label }}
+                </a>
+              </li>
             </ul>
+          </div>
+        </li>
+      </ul>
 
-            <div class="d-flex align-items-center gap-3">
-                <!-- Theme Toggle Button -->
-                <button type="button" class="theme-toggle" (click)="toggleTheme()"
-                    [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
-                    [attr.title]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
-                    <i [class]="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
-                </button>
+      <div class="d-flex align-items-center gap-3">
+        <!-- Theme Toggle Button -->
+        <button
+          type="button"
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="
+            isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
+          "
+          [attr.title]="
+            isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
+          "
+        >
+          <i [class]="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
+        </button>
 
-                <!-- User Menu -->
-                <div class="btn-group d-flex">
-                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="avatar text-light">{{ getUserInitials() }}</span>
-                        <span class="ms-2 d-none d-md-inline user-name"
-                            [class.text-primary]="currentUser?.role !== AppRole.User">
-                            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" routerLink="/profile">
-                                <i class="fas fa-user me-2"></i>
-                                Profile
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <button class="dropdown-item text-danger" (click)="logout()">
-                                <i class="fas fa-sign-out-alt me-2"></i>
-                                Sign Out
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <!-- User Menu -->
+        <div class="btn-group d-flex">
+          <button
+            type="button"
+            class="btn dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <span class="avatar text-light">{{ getUserInitials() }}</span>
+            <span
+              class="ms-2 d-none d-md-inline user-name"
+              [class.text-primary]="currentUser?.role !== AppRole.User"
+            >
+              {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" routerLink="/profile">
+                <i class="fas fa-user me-2"></i>
+                Profile
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Sign Out
+              </button>
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
+  </div>
 </nav>

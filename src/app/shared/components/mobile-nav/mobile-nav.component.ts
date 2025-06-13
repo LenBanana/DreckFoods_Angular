@@ -16,7 +16,7 @@ interface NavItem {
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './mobile-nav.component.html',
-  styleUrls: ['./mobile-nav.component.scss']
+  styleUrls: ['./mobile-nav.component.scss'],
 })
 export class MobileNavComponent {
   private authService = inject(AuthService);
@@ -28,7 +28,7 @@ export class MobileNavComponent {
     {
       path: '/dashboard',
       label: 'Dashboard',
-      icon: 'fas fa-home'
+      icon: 'fas fa-home',
     },
     {
       path: '/food',
@@ -37,18 +37,19 @@ export class MobileNavComponent {
       children: [
         { path: '/food/entries', label: 'Food Entries', icon: 'fas fa-list' },
         { path: '/food/meals', label: 'Meals', icon: 'fas fa-hamburger' },
-        { path: '/food/search', label: 'Food Search', icon: 'fas fa-search' }
-      ]
-    },    {
+        { path: '/food/search', label: 'Food Search', icon: 'fas fa-search' },
+      ],
+    },
+    {
       path: '/weight',
       label: 'Weight',
-      icon: 'fas fa-weight-scale'
+      icon: 'fas fa-weight-scale',
     },
     {
       path: '/timeline',
       label: 'Timeline',
-      icon: 'fas fa-chart-line'
-    }
+      icon: 'fas fa-chart-line',
+    },
   ];
 
   showFoodSubmenu = false;
@@ -64,13 +65,11 @@ export class MobileNavComponent {
   }
 
   navigateToFood() {
-    // If food submenu is shown, hide it and don't navigate
     if (this.showFoodSubmenu) {
       this.showFoodSubmenu = false;
       return;
     }
-    
-    // Show submenu for food options
+
     this.showFoodSubmenu = true;
   }
 

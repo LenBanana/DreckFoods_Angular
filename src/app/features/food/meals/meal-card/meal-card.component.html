@@ -4,32 +4,55 @@
     <div class="d-flex justify-content-between align-items-start mb-3">
       <div class="meal-info flex-grow-1">
         <h5 class="meal-name mb-1">{{ meal.name }}</h5>
-        <p *ngIf="meal.description" class="meal-description text-muted mb-2 small">
+        <p
+          *ngIf="meal.description"
+          class="meal-description text-muted mb-2 small"
+        >
           {{ meal.description }}
         </p>
         <div class="meal-meta">
-          <span class="badge bg-info text-dark me-2">{{ meal.totalWeight }}g total</span>
-          <span class="badge bg-info text-dark">{{ meal.items.length }} items</span>
+          <span class="badge bg-info text-dark me-2"
+            >{{ meal.totalWeight }}g total</span
+          >
+          <span class="badge bg-info text-dark"
+            >{{ meal.items.length }} items</span
+          >
         </div>
       </div>
       <div class="dropdown">
-        <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown" [disabled]="isDeleting"
-          title="Meal options">
+        <button
+          class="btn btn-link text-muted p-0"
+          data-bs-toggle="dropdown"
+          [disabled]="isDeleting"
+          title="Meal options"
+        >
           <i class="fas fa-ellipsis-v"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <button class="dropdown-item" (click)="onEdit()" [disabled]="isDeleting">
+            <button
+              class="dropdown-item"
+              (click)="onEdit()"
+              [disabled]="isDeleting"
+            >
               <i class="fas fa-edit me-2"></i>Edit
             </button>
           </li>
           <li>
-            <button class="dropdown-item" (click)="onShare()" [disabled]="isDeleting">
+            <button
+              class="dropdown-item"
+              (click)="onShare()"
+              [disabled]="isDeleting"
+            >
               <i class="fas fa-share-alt me-2"></i>Share
             </button>
           </li>
           <li>
-            <button class="dropdown-item text-danger" (click)="onDelete()" [disabled]="isDeleting">
+            <button
+              class="dropdown-item text-danger"
+              (click)="onDelete()"
+              [disabled]="isDeleting"
+            >
               <i class="fas fa-trash me-2"></i>
               <span *ngIf="isDeleting">Deleting...</span>
               <span *ngIf="!isDeleting">Delete</span>
@@ -45,25 +68,33 @@
       <div class="row g-2 text-center">
         <div class="col-6">
           <div class="nutrition-item">
-            <div class="nutrition-value fw-bold">{{ meal.nutrition.calories | number:'1.0-0' }} kcal</div>
+            <div class="nutrition-value fw-bold">
+              {{ meal.nutrition.calories | number: "1.0-0" }} kcal
+            </div>
             <div class="nutrition-label small text-muted">Calories</div>
           </div>
         </div>
         <div class="col-6">
           <div class="nutrition-item">
-            <div class="nutrition-value fw-bold">{{ meal.nutrition.protein | number:'1.0-1' }}g</div>
+            <div class="nutrition-value fw-bold">
+              {{ meal.nutrition.protein | number: "1.0-1" }}g
+            </div>
             <div class="nutrition-label small text-muted">Protein</div>
           </div>
         </div>
         <div class="col-6">
           <div class="nutrition-item">
-            <div class="nutrition-value fw-bold">{{ meal.nutrition.carbohydrates | number:'1.0-1' }}g</div>
+            <div class="nutrition-value fw-bold">
+              {{ meal.nutrition.carbohydrates | number: "1.0-1" }}g
+            </div>
             <div class="nutrition-label small text-muted">Carbs</div>
           </div>
         </div>
         <div class="col-6">
           <div class="nutrition-item">
-            <div class="nutrition-value fw-bold">{{ meal.nutrition.fat | number:'1.0-1' }}g</div>
+            <div class="nutrition-value fw-bold">
+              {{ meal.nutrition.fat | number: "1.0-1" }}g
+            </div>
             <div class="nutrition-label small text-muted">Fat</div>
           </div>
         </div>
@@ -74,23 +105,29 @@
     <div class="meal-items mb-3">
       <h6 class="text-muted mb-2">Ingredients</h6>
       <div class="ingredients-list">
-        <div *ngFor="let item of meal.items"
-          class="ingredient-item d-flex justify-content-between align-items-center mb-1">
+        <div
+          *ngFor="let item of meal.items"
+          class="ingredient-item d-flex justify-content-between align-items-center mb-1"
+        >
           <span class="ingredient-name small badge">{{ item.foodName }}</span>
           <span class="ingredient-weight small text-muted badge">
-            {{ item.weight }}g ({{ item.percentage | number:'1.0-0' }}%)
+            {{ item.weight }}g ({{ item.percentage | number: "1.0-0" }}%)
           </span>
         </div>
       </div>
     </div>
 
     <!-- Action Button -->
-    <button class="btn btn-primary w-100" (click)="onLogPortion()" [disabled]="isDeleting">
+    <button
+      class="btn btn-primary w-100"
+      (click)="onLogPortion()"
+      [disabled]="isDeleting"
+    >
       <i class="fas fa-utensils me-2"></i>Log Portion
     </button>
   </div>
 
-  <div class="card-footer bg-light border-0 py-2">
+  <div class="card-footer border-0 py-2">
     <small class="text-muted">Created {{ formatDate(meal.createdAt) }}</small>
   </div>
 </div>

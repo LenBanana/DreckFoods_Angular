@@ -6,7 +6,15 @@ export interface NutritionProgressConfig {
   value: number;
   total: number;
   unit: string;
-  color: 'danger' | 'success' | 'info' | 'warning' | 'secondary' | 'primary' | 'dark' | 'light';
+  color:
+    | 'danger'
+    | 'success'
+    | 'info'
+    | 'warning'
+    | 'secondary'
+    | 'primary'
+    | 'dark'
+    | 'light';
   show?: boolean;
 }
 
@@ -15,7 +23,7 @@ export interface NutritionProgressConfig {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './nutrition-progress-bar.component.html',
-  styleUrls: ['./nutrition-progress-bar.component.scss']
+  styleUrls: ['./nutrition-progress-bar.component.scss'],
 })
 export class NutritionProgressBarComponent {
   @Input() config!: NutritionProgressConfig;

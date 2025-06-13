@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Alert, AlertConfig, AlertType, AlertSize, ConfirmationConfig, InputPromptConfig } from '../models/alert.models';
+import {
+  Alert,
+  AlertConfig,
+  AlertType,
+  AlertSize,
+  ConfirmationConfig,
+  InputPromptConfig,
+} from '../models/alert.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
   private alertsSubject = new BehaviorSubject<Alert[]>([]);
@@ -13,7 +20,7 @@ export class AlertService {
 
   /**
    * Add a new alert
-   */  addAlert(config: AlertConfig): string {
+   */ addAlert(config: AlertConfig): string {
     const id = `alert-${++this.alertIdCounter}`;
     const alert: Alert = {
       id,
@@ -25,13 +32,12 @@ export class AlertService {
       actions: config.actions,
       centered: config.centered ?? false,
       inputConfig: config.inputConfig,
-      size: config.size ?? AlertSize.MEDIUM
+      size: config.size ?? AlertSize.MEDIUM,
     };
 
     const currentAlerts = this.alertsSubject.value;
     this.alertsSubject.next([...currentAlerts, alert]);
 
-    // Auto dismiss if enabled
     if (alert.autoDismiss && alert.duration) {
       setTimeout(() => {
         this.removeAlert(id);
@@ -44,11 +50,10 @@ export class AlertService {
    * Remove an alert by ID
    */
   removeAlert(id: string): void {
-    // Clean up input callback when alert is removed
     this.inputCallbacks.delete(id);
-    
+
     const currentAlerts = this.alertsSubject.value;
-    const updatedAlerts = currentAlerts.filter(alert => alert.id !== id);
+    const updatedAlerts = currentAlerts.filter((alert) => alert.id !== id);
     this.alertsSubject.next(updatedAlerts);
   }
 
@@ -62,171 +67,235 @@ export class AlertService {
   /**
    * Convenience methods for different alert types
    */
-  success(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  success(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.SUCCESS,
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
-  error(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  error(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.ERROR,
       title,
       message,
-      autoDismiss: false, // Errors typically shouldn't auto-dismiss
-      ...options
+      autoDismiss: false,
+      ...options,
     });
   }
 
-  warning(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  warning(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.WARNING,
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
-  info(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  info(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.INFO,
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
   /**
    * Centered alert methods for important notifications
    */
-  successCentered(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  successCentered(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.SUCCESS,
       title,
       message,
       centered: true,
-      ...options
+      ...options,
     });
   }
 
-  errorCentered(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  errorCentered(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.ERROR,
       title,
       message,
       autoDismiss: false,
       centered: true,
-      ...options
+      ...options,
     });
   }
 
-  warningCentered(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  warningCentered(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.WARNING,
       title,
       message,
       centered: true,
-      ...options
+      ...options,
     });
   }
-  infoCentered(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  infoCentered(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.INFO,
       title,
       message,
       centered: true,
-      ...options
+      ...options,
     });
   }
 
   /**
    * Large alert methods for displaying long content
    */
-  successLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  successLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.SUCCESS,
       title,
       message,
       size: AlertSize.LARGE,
-      ...options
+      ...options,
     });
   }
 
-  errorLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  errorLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.ERROR,
       title,
       message,
       autoDismiss: false,
       size: AlertSize.LARGE,
-      ...options
+      ...options,
     });
   }
 
-  warningLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  warningLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.WARNING,
       title,
       message,
       size: AlertSize.LARGE,
-      ...options
+      ...options,
     });
   }
 
-  infoLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  infoLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.INFO,
       title,
       message,
       size: AlertSize.LARGE,
-      ...options
+      ...options,
     });
   }
 
   /**
    * Extra large alert methods for displaying very long content
    */
-  successExtraLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  successExtraLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.SUCCESS,
       title,
       message,
       size: AlertSize.EXTRA_LARGE,
-      ...options
+      ...options,
     });
   }
 
-  errorExtraLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  errorExtraLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.ERROR,
       title,
       message,
       autoDismiss: false,
       size: AlertSize.EXTRA_LARGE,
-      ...options
+      ...options,
     });
   }
 
-  warningExtraLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  warningExtraLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.WARNING,
       title,
       message,
       size: AlertSize.EXTRA_LARGE,
-      ...options
+      ...options,
     });
   }
 
-  infoExtraLarge(message: string, title?: string, options?: Partial<AlertConfig>): string {
+  infoExtraLarge(
+    message: string,
+    title?: string,
+    options?: Partial<AlertConfig>,
+  ): string {
     return this.addAlert({
       type: AlertType.INFO,
       title,
       message,
       size: AlertSize.EXTRA_LARGE,
-      ...options
+      ...options,
     });
   }
 
@@ -245,20 +314,20 @@ export class AlertService {
         title: config.title,
         message: config.message,
         autoDismiss: false,
-        centered: true, // Confirmations should be centered by default
+        centered: true,
         actions: [
           {
             label: cancelLabel,
             action: () => resolve(false),
-            primary: false
+            primary: false,
           },
           {
             label: confirmLabel,
             action: () => resolve(true),
             primary: true,
-            buttonType: confirmButtonType
-          }
-        ]
+            buttonType: confirmButtonType,
+          },
+        ],
       });
     });
   }
@@ -269,10 +338,11 @@ export class AlertService {
   confirmDelete(itemName: string, customMessage?: string): Promise<boolean> {
     return this.confirm({
       title: 'Confirm Delete',
-      message: customMessage || `Are you sure you want to delete "${itemName}"?`,
+      message:
+        customMessage || `Are you sure you want to delete "${itemName}"?`,
       confirmLabel: 'Delete',
       cancelLabel: 'Cancel',
-      confirmButtonType: 'danger'
+      confirmButtonType: 'danger',
     });
   }
   /**
@@ -291,7 +361,7 @@ export class AlertService {
           errorMessage = 'This field is required';
           return false;
         }
-        
+
         if (config.validation) {
           const validationError = config.validation(value);
           if (validationError) {
@@ -299,21 +369,21 @@ export class AlertService {
             return false;
           }
         }
-        
+
         errorMessage = '';
         return true;
       };
 
       const updateActions = (alertId: string) => {
         const currentAlerts = this.alertsSubject.value;
-        const alertIndex = currentAlerts.findIndex(a => a.id === alertId);
+        const alertIndex = currentAlerts.findIndex((a) => a.id === alertId);
         if (alertIndex >= 0) {
           const alert = { ...currentAlerts[alertIndex] };
           alert.actions = [
             {
               label: cancelLabel,
               action: () => resolve(null),
-              primary: false
+              primary: false,
             },
             {
               label: confirmLabel,
@@ -321,15 +391,14 @@ export class AlertService {
                 if (validateInput(inputValue)) {
                   resolve(inputValue);
                 } else {
-                  // Update the alert to show error
                   this.updateAlertError(alertId, errorMessage);
                 }
               },
               primary: true,
-              buttonType: 'primary'
-            }
+              buttonType: 'primary',
+            },
           ];
-          
+
           const updatedAlerts = [...currentAlerts];
           updatedAlerts[alertIndex] = alert;
           this.alertsSubject.next(updatedAlerts);
@@ -348,12 +417,11 @@ export class AlertService {
           maxLength: config.maxLength,
           required: config.required,
           inputType: config.inputType || 'text',
-          validation: config.validation
+          validation: config.validation,
         },
-        actions: []
+        actions: [],
       });
 
-      // Set up input value tracking
       this.setupInputTracking(alertId, (value) => {
         inputValue = value;
         updateActions(alertId);
@@ -366,20 +434,30 @@ export class AlertService {
   /**
    * Quick text input prompt
    */
-  promptText(message: string, title?: string, placeholder?: string, initialValue?: string): Promise<string | null> {
+  promptText(
+    message: string,
+    title?: string,
+    placeholder?: string,
+    initialValue?: string,
+  ): Promise<string | null> {
     return this.prompt({
       title: title || 'Input Required',
       message,
       placeholder,
       initialValue,
-      inputType: 'text'
+      inputType: 'text',
     });
   }
 
   /**
    * Quick email input prompt
    */
-  promptEmail(message: string, title?: string, placeholder?: string, initialValue?: string): Promise<string | null> {
+  promptEmail(
+    message: string,
+    title?: string,
+    placeholder?: string,
+    initialValue?: string,
+  ): Promise<string | null> {
     return this.prompt({
       title: title || 'Email Required',
       message,
@@ -388,15 +466,23 @@ export class AlertService {
       inputType: 'email',
       validation: (value) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(value) ? null : 'Please enter a valid email address';
-      }
+        return emailRegex.test(value)
+          ? null
+          : 'Please enter a valid email address';
+      },
     });
   }
 
   /**
    * Quick number input prompt
    */
-  promptNumber(message: string, title?: string, placeholder?: string, min?: number, max?: number): Promise<string | null> {
+  promptNumber(
+    message: string,
+    title?: string,
+    placeholder?: string,
+    min?: number,
+    max?: number,
+  ): Promise<string | null> {
     return this.prompt({
       title: title || 'Number Required',
       message,
@@ -405,10 +491,12 @@ export class AlertService {
       validation: (value) => {
         const num = parseFloat(value);
         if (isNaN(num)) return 'Please enter a valid number';
-        if (min !== undefined && num < min) return `Number must be at least ${min}`;
-        if (max !== undefined && num > max) return `Number must be at most ${max}`;
+        if (min !== undefined && num < min)
+          return `Number must be at least ${min}`;
+        if (max !== undefined && num > max)
+          return `Number must be at most ${max}`;
         return null;
-      }
+      },
     });
   }
 
@@ -420,26 +508,28 @@ export class AlertService {
       title: title || 'Confirm Action',
       message,
       confirmLabel: 'Yes',
-      cancelLabel: 'No'
+      cancelLabel: 'No',
     });
   }
 
   private inputCallbacks = new Map<string, (value: string) => void>();
 
-  private setupInputTracking(alertId: string, callback: (value: string) => void): void {
+  private setupInputTracking(
+    alertId: string,
+    callback: (value: string) => void,
+  ): void {
     this.inputCallbacks.set(alertId, callback);
   }
 
   private updateAlertError(alertId: string, errorMessage: string): void {
     const currentAlerts = this.alertsSubject.value;
-    const alertIndex = currentAlerts.findIndex(a => a.id === alertId);
+    const alertIndex = currentAlerts.findIndex((a) => a.id === alertId);
     if (alertIndex >= 0) {
       const alert = { ...currentAlerts[alertIndex] };
       if (alert.inputConfig) {
         alert.inputConfig = { ...alert.inputConfig };
-        // We'll handle error display in the component
       }
-      
+
       const updatedAlerts = [...currentAlerts];
       updatedAlerts[alertIndex] = alert;
       this.alertsSubject.next(updatedAlerts);
@@ -455,15 +545,15 @@ export class AlertService {
   private getDefaultDuration(type: AlertType): number {
     switch (type) {
       case AlertType.SUCCESS:
-        return 5000; // 5 seconds
+        return 5000;
       case AlertType.INFO:
-        return 7000; // 7 seconds
+        return 7000;
       case AlertType.WARNING:
-        return 10000; // 10 seconds
+        return 10000;
       case AlertType.ERROR:
       case AlertType.CONFIRM:
       case AlertType.INPUT:
-        return 0; // No auto-dismiss for errors, confirmations, and inputs
+        return 0;
       default:
         return 5000;
     }

@@ -50,5 +50,5 @@ export interface ResetPasswordRequest {
 export enum AppRole {
   User = 0,
   DataEditor = 1,
-  Admin = 2
+  Admin = 2,
 }

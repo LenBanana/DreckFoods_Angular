@@ -1,9 +1,11 @@
-<div class="meal-item-manager">  <!-- Food Selector -->
+<div class="meal-item-manager">
+  <!-- Food Selector -->
   <div class="mb-3">
     <label class="form-label">Add Foods to Meal</label>
-    <app-food-search-container 
+    <app-food-search-container
       [config]="searchConfig"
-      (foodSelected)="onFoodSelected($event)">
+      (foodSelected)="onFoodSelected($event)"
+    >
     </app-food-search-container>
   </div>
 
@@ -15,18 +17,32 @@
     </div>
 
     <div class="items-list mb-3">
-      <div *ngFor="let item of items; let i = index"
-        class="meal-item-row d-flex align-items-center mb-2 p-3 border rounded">
+      <div
+        *ngFor="let item of items; let i = index"
+        class="meal-item-row d-flex align-items-center mb-2 p-3 border rounded"
+      >
         <div class="item-info flex-grow-1">
-          <div class="item-name fw-semibold">{{ item.food?.name || 'Select a food' }}</div>
-          <div *ngIf="item.food?.brand" class="item-brand small text-muted">{{ item.food?.brand }}</div>
+          <div class="item-name fw-semibold">
+            {{ item.food?.name || "Select a food" }}
+          </div>
+          <div *ngIf="item.food?.brand" class="item-brand small text-muted">
+            {{ item.food?.brand }}
+          </div>
         </div>
 
         <div class="weight-controls me-3">
           <label class="form-label small">Weight</label>
           <div class="input-group input-group-sm">
-            <input type="number" class="form-control" [(ngModel)]="item.weight" [ngModelOptions]="{standalone: true}"
-              (ngModelChange)="onItemChange()" min="1" max="9999" placeholder="Weight">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="item.weight"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="onItemChange()"
+              min="1"
+              max="9999"
+              placeholder="Weight"
+            />
             <span class="input-group-text">g</span>
           </div>
         </div>
@@ -35,7 +51,12 @@
           <small class="text-muted">{{ getPercentage(item.weight) }}%</small>
         </div>
 
-        <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeItem(i)" title="Remove item">
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          (click)="removeItem(i)"
+          title="Remove item"
+        >
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -49,7 +70,10 @@
   </div>
 
   <!-- Validation Errors -->
-  <div *ngIf="showValidation && validationErrors.length > 0" class="validation-errors mt-3">
+  <div
+    *ngIf="showValidation && validationErrors.length > 0"
+    class="validation-errors mt-3"
+  >
     <div class="alert alert-warning" role="alert">
       <h6 class="alert-heading">Please fix the following issues:</h6>
       <ul class="mb-0">

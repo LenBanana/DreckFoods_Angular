@@ -2,26 +2,51 @@
   <!-- Search Input with Barcode Scanner -->
   <div [formGroup]="searchForm">
     <div class="input-group input-group-lg">
-      <input type="text" formControlName="query" class="form-control rounded-start-pill ps-4"
-        [placeholder]="placeholder" (keyup.enter)="onSearch()" />
+      <input
+        type="text"
+        formControlName="query"
+        class="form-control rounded-start-pill ps-4"
+        [placeholder]="placeholder"
+        (keyup.enter)="onSearch()"
+      />
 
       <div class="input-group-text p-0 rounded-end-pill">
         <!-- Barcode Scanner Button -->
-        <button *ngIf="showBarcodeScanner" type="button" class="btn h-100 border-0 px-3"
-          (click)="openBarcodeScanner()" [disabled]="isCurrentlyLoading || isScanningBarcode" title="Scan Barcode">
+        <button
+          *ngIf="showBarcodeScanner"
+          type="button"
+          class="btn h-100 border-0 px-3"
+          (click)="openBarcodeScanner()"
+          [disabled]="isCurrentlyLoading || isScanningBarcode"
+          title="Scan Barcode"
+        >
           <i class="fas fa-barcode"></i>
         </button>
 
         <!-- Search Button -->
-        <button *ngIf="!hasQuery" type="button" class="btn h-100 border-0 px-3 rounded-end-pill"
-          (click)="onSearch()" [disabled]="isCurrentlyLoading" title="Search">
-          <span *ngIf="isCurrentlyLoading" class="spinner-border spinner-border-sm"></span>
+        <button
+          *ngIf="!hasQuery"
+          type="button"
+          class="btn h-100 border-0 px-3 rounded-end-pill"
+          (click)="onSearch()"
+          [disabled]="isCurrentlyLoading"
+          title="Search"
+        >
+          <span
+            *ngIf="isCurrentlyLoading"
+            class="spinner-border spinner-border-sm"
+          ></span>
           <i *ngIf="!isCurrentlyLoading" class="fas fa-search"></i>
         </button>
 
         <!-- Clear Button -->
-        <button *ngIf="hasQuery" type="button" class="btn h-100 border-0 px-3 rounded-end-pill"
-          (click)="clearSearch()" title="Clear search">
+        <button
+          *ngIf="hasQuery"
+          type="button"
+          class="btn h-100 border-0 px-3 rounded-end-pill"
+          (click)="clearSearch()"
+          title="Clear search"
+        >
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -29,71 +54,158 @@
   </div>
 
   <!-- Barcode Scanner Modal -->
-  <div *ngIf="isBarcodeScannerOpen" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.8);">
+  <div
+    *ngIf="isBarcodeScannerOpen"
+    class="modal d-block"
+    tabindex="-1"
+    style="background-color: rgba(0, 0, 0, 0.8)"
+  >
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
             <i class="fas fa-barcode me-2"></i>Scan Barcode
           </h5>
-          <button type="button" class="btn-close" (click)="closeBarcodeScanner()"></button>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeBarcodeScanner()"
+          ></button>
         </div>
         <div class="modal-body p-0">
-          <div class="scanner-container position-relative" style="min-height: 400px;">
+          <div
+            class="scanner-container position-relative"
+            style="min-height: 400px"
+          >
             <!-- Scanner Component -->
-            <ngx-scanner-qrcode #scanner *ngIf="scannerEnabled" [config]="config" [vibrate]="0"
-              (event)="onScanResult($event)" (error)="onScanError($event)"
-              style="width: 100%; height: 400px; display: block;">
+            <ngx-scanner-qrcode
+              #scanner
+              *ngIf="scannerEnabled"
+              [config]="config"
+              [vibrate]="0"
+              (event)="onScanResult($event)"
+              (error)="onScanError($event)"
+              style="width: 100%; height: 400px; display: block"
+            >
             </ngx-scanner-qrcode>
 
             <!-- Scanner Overlay with Targeting Frame -->
-            <div *ngIf="scannerEnabled && hasPermission && hasDevices"
-              class="scanner-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center pointer-events-none">
-              <div class="scanner-frame position-relative"
-                style="width: 280px; height: 180px; border: 3px solid #fff; border-radius: 8px; background: transparent;">
-
+            <div
+              *ngIf="scannerEnabled && hasPermission && hasDevices"
+              class="scanner-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center pointer-events-none"
+            >
+              <div
+                class="scanner-frame position-relative"
+                style="
+                  width: 280px;
+                  height: 180px;
+                  border: 3px solid #fff;
+                  border-radius: 8px;
+                  background: transparent;
+                "
+              >
                 <!-- Corner indicators -->
-                <div class="position-absolute"
-                  style="top: -3px; left: -3px; width: 30px; height: 30px; border-top: 6px solid #007bff; border-left: 6px solid #007bff; border-radius: 8px 0 0 0;">
-                </div>
-                <div class="position-absolute"
-                  style="top: -3px; right: -3px; width: 30px; height: 30px; border-top: 6px solid #007bff; border-right: 6px solid #007bff; border-radius: 0 8px 0 0;">
-                </div>
-                <div class="position-absolute"
-                  style="bottom: -3px; left: -3px; width: 30px; height: 30px; border-bottom: 6px solid #007bff; border-left: 6px solid #007bff; border-radius: 0 0 0 8px;">
-                </div>
-                <div class="position-absolute"
-                  style="bottom: -3px; right: -3px; width: 30px; height: 30px; border-bottom: 6px solid #007bff; border-right: 6px solid #007bff; border-radius: 0 0 8px 0;">
-                </div>
+                <div
+                  class="position-absolute"
+                  style="
+                    top: -3px;
+                    left: -3px;
+                    width: 30px;
+                    height: 30px;
+                    border-top: 6px solid #007bff;
+                    border-left: 6px solid #007bff;
+                    border-radius: 8px 0 0 0;
+                  "
+                ></div>
+                <div
+                  class="position-absolute"
+                  style="
+                    top: -3px;
+                    right: -3px;
+                    width: 30px;
+                    height: 30px;
+                    border-top: 6px solid #007bff;
+                    border-right: 6px solid #007bff;
+                    border-radius: 0 8px 0 0;
+                  "
+                ></div>
+                <div
+                  class="position-absolute"
+                  style="
+                    bottom: -3px;
+                    left: -3px;
+                    width: 30px;
+                    height: 30px;
+                    border-bottom: 6px solid #007bff;
+                    border-left: 6px solid #007bff;
+                    border-radius: 0 0 0 8px;
+                  "
+                ></div>
+                <div
+                  class="position-absolute"
+                  style="
+                    bottom: -3px;
+                    right: -3px;
+                    width: 30px;
+                    height: 30px;
+                    border-bottom: 6px solid #007bff;
+                    border-right: 6px solid #007bff;
+                    border-radius: 0 0 8px 0;
+                  "
+                ></div>
 
                 <!-- Scanning line animation -->
-                <div class="scanner-line position-absolute w-100"
-                  style="height: 2px; background: linear-gradient(90deg, transparent, #007bff, transparent); top: 50%; animation: scan 2s linear infinite;">
-                </div>
+                <div
+                  class="scanner-line position-absolute w-100"
+                  style="
+                    height: 2px;
+                    background: linear-gradient(
+                      90deg,
+                      transparent,
+                      #007bff,
+                      transparent
+                    );
+                    top: 50%;
+                    animation: scan 2s linear infinite;
+                  "
+                ></div>
               </div>
 
               <!-- Instructions -->
-              <div class="position-absolute bottom-0 start-0 end-0 text-center text-white p-3"
-                style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
-                <small><i class="fas fa-info-circle me-1"></i>Position the barcode within the frame</small>
+              <div
+                class="position-absolute bottom-0 start-0 end-0 text-center text-white p-3"
+                style="
+                  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+                "
+              >
+                <small
+                  ><i class="fas fa-info-circle me-1"></i>Position the barcode
+                  within the frame</small
+                >
               </div>
             </div>
 
             <!-- Loading State -->
-            <div *ngIf="scannerStarting || !hasPermission"
-              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
+            <div
+              *ngIf="scannerStarting || !hasPermission"
+              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark"
+            >
               <div class="text-center text-white">
                 <div class="spinner-border mb-3" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
                 <h5 *ngIf="scannerStarting">Starting Camera...</h5>
-                <h5 *ngIf="!hasPermission && !scannerStarting">Camera Permission Required</h5>
+                <h5 *ngIf="!hasPermission && !scannerStarting">
+                  Camera Permission Required
+                </h5>
               </div>
             </div>
 
             <!-- Processing State -->
-            <div *ngIf="isScanningBarcode"
-              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark">
+            <div
+              *ngIf="isScanningBarcode"
+              class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark"
+            >
               <div class="text-center text-white">
                 <div class="spinner-border mb-3" role="status">
                   <span class="visually-hidden">Processing...</span>
@@ -105,12 +217,25 @@
         </div>
         <div class="modal-footer">
           <!-- Selection of devices -->
-          <div *ngIf="availableDevices && availableDevices.length > 1" class="me-auto">
+          <div
+            *ngIf="availableDevices && availableDevices.length > 1"
+            class="me-auto"
+          >
             <label for="cameraSelect" class="form-label">Select Camera</label>
-            <select id="cameraSelect" class="form-select" (change)="onDeviceChange($event)">
-              <option *ngFor="let device of availableDevices" [value]="device.deviceId"
-                [selected]="device.deviceId === currentDeviceId">
-                {{ device.label || 'Camera ' + (availableDevices.indexOf(device) + 1) }}
+            <select
+              id="cameraSelect"
+              class="form-select"
+              (change)="onDeviceChange($event)"
+            >
+              <option
+                *ngFor="let device of availableDevices"
+                [value]="device.deviceId"
+                [selected]="device.deviceId === currentDeviceId"
+              >
+                {{
+                  device.label ||
+                    "Camera " + (availableDevices.indexOf(device) + 1)
+                }}
               </option>
             </select>
           </div>
@@ -121,7 +246,11 @@
               Supports: EAN-13, EAN-8, UPC-A, UPC-E, Code 128, Code 39, QR codes
             </small>
           </div>
-          <button type="button" class="btn btn-secondary" (click)="closeBarcodeScanner()">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeBarcodeScanner()"
+          >
             <i class="fas fa-times me-2"></i>Close
           </button>
         </div>

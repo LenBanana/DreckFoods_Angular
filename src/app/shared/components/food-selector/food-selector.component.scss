@@ -27,18 +27,16 @@
     padding: 2rem 1rem;
   }
 
-  // Section spacing
   > div + div {
     margin-top: 1.5rem;
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .food-selector {
     .row {
       margin: 0 -0.5rem;
-      
+
       .col-md-6 {
         padding: 0 0.5rem;
         margin-bottom: 0.5rem;

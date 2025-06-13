@@ -1,15 +1,23 @@
-<div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+<div
+  class="modal d-block"
+  tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
           <i class="fas fa-pizza-slice me-2"></i>
-          {{ isEdit ? 'Edit Meal' : 'Create New Meal' }}
+          {{ isEdit ? "Edit Meal" : "Create New Meal" }}
         </h5>
         <button type="button" class="btn-close" (click)="onClose()"></button>
       </div>
 
-      <form [formGroup]="mealForm" (ngSubmit)="onSubmit()" class="overflow-auto">
+      <form
+        [formGroup]="mealForm"
+        (ngSubmit)="onSubmit()"
+        class="overflow-auto"
+      >
         <div class="modal-body">
           <!-- Meal Basic Info -->
           <div class="basic-info mb-4">
@@ -17,18 +25,34 @@
 
             <div class="mb-3">
               <label for="mealName" class="form-label">Meal Name *</label>
-              <input type="text" class="form-control" id="mealName" formControlName="name"
-                placeholder="e.g., Protein Smoothie">
-              <div *ngIf="mealForm.get('name')?.invalid && mealForm.get('name')?.touched"
-                class="text-danger small mt-1">
+              <input
+                type="text"
+                class="form-control"
+                id="mealName"
+                formControlName="name"
+                placeholder="e.g., Protein Smoothie"
+              />
+              <div
+                *ngIf="
+                  mealForm.get('name')?.invalid && mealForm.get('name')?.touched
+                "
+                class="text-danger small mt-1"
+              >
                 Meal name is required (minimum 2 characters)
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="mealDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="mealDescription" formControlName="description" rows="2"
-                placeholder="Optional description of the meal">
+              <label for="mealDescription" class="form-label"
+                >Description</label
+              >
+              <textarea
+                class="form-control"
+                id="mealDescription"
+                formControlName="description"
+                rows="2"
+                placeholder="Optional description of the meal"
+              >
               </textarea>
             </div>
           </div>
@@ -36,36 +60,54 @@
           <!-- Meal Items -->
           <div class="meal-items">
             <h6 class="section-title">Meal Ingredients</h6>
-            <app-meal-item-manager [items]="mealItems" [showValidation]="showValidation"
-              (itemsChange)="onItemsChange($event)" (validationChange)="onValidationChange($event)">
+            <app-meal-item-manager
+              [items]="mealItems"
+              [showValidation]="showValidation"
+              (itemsChange)="onItemsChange($event)"
+              (validationChange)="onValidationChange($event)"
+            >
             </app-meal-item-manager>
           </div>
 
           <!-- Nutrition Preview -->
-          <div *ngIf="mealItems.length > 0 && isItemsValid" class="nutrition-preview mt-4">
+          <div
+            *ngIf="mealItems.length > 0 && isItemsValid"
+            class="nutrition-preview mt-4"
+          >
             <h6 class="section-title">Nutrition Preview (per 100g)</h6>
             <div class="row g-3">
               <div class="col-6 col-md-3">
                 <div class="nutrition-card text-center">
-                  <div class="nutrition-value">{{ calculatedNutrition?.calories | number:'1.0-0' }} kcal</div>
+                  <div class="nutrition-value">
+                    {{ calculatedNutrition?.calories | number: "1.0-0" }} kcal
+                  </div>
                   <div class="nutrition-label">Calories</div>
                 </div>
               </div>
               <div class="col-6 col-md-3">
                 <div class="nutrition-card text-center">
-                  <div class="nutrition-value">{{ calculatedNutrition?.protein | number:'1.1-1' }}g</div>
+                  <div class="nutrition-value">
+                    {{ calculatedNutrition?.protein | number: "1.1-1" }}g
+                  </div>
                   <div class="nutrition-label">Protein</div>
                 </div>
               </div>
               <div class="col-6 col-md-3">
                 <div class="nutrition-card text-center">
-                  <div class="nutrition-value">{{ calculatedNutrition?.carbohydrates?.total | number:'1.1-1' }}g</div>
+                  <div class="nutrition-value">
+                    {{
+                      calculatedNutrition?.carbohydrates?.total
+                        | number: "1.1-1"
+                    }}g
+                  </div>
                   <div class="nutrition-label">Carbs</div>
                 </div>
               </div>
               <div class="col-6 col-md-3">
                 <div class="nutrition-card text-center">
-                  <div class="nutrition-value">{{ calculatedNutrition?.fat | number:'1.1-1' }}g</div>
+                  <div class="nutrition-value">
+                    {{ calculatedNutrition?.fat | number: "1.1-1" }}g
+                  </div>
                   <div class="nutrition-label">Fat</div>
                 </div>
               </div>
@@ -77,9 +119,16 @@
           <button type="button" class="btn btn-secondary" (click)="onClose()">
             Cancel
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="isFormInvalid || isSubmitting">
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEdit ? 'Update Meal' : 'Create Meal' }}
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="isFormInvalid || isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            {{ isEdit ? "Update Meal" : "Create Meal" }}
           </button>
         </div>
       </form>

@@ -8,7 +8,7 @@ import { AlertService } from '../../../../core/services/alert.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './meal-card.component.html',
-  styleUrls: ['./meal-card.component.scss']
+  styleUrls: ['./meal-card.component.scss'],
 })
 export class MealCardComponent {
   private alertService = inject(AlertService);

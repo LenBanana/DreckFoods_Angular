@@ -1,33 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 * {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
-// Mobile browser optimizations
-html, body {
+html,
+body {
   height: 100%;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
 }
 
-// Prevent zoom on form inputs on mobile
-input, select, textarea {
+input,
+select,
+textarea {
   font-size: 16px !important;
   @media (max-width: 767.98px) {
     font-size: 16px !important;
   }
 }
 
-// Fix iOS safe area insets
 body {
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
-// Prevent text selection on mobile for better UX
 .no-select {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -35,28 +34,44 @@ body {
   user-select: none;
 }
 
-// Better tap targets for mobile
-.btn, button, [role="button"] {
+.btn,
+button,
+[role="button"] {
   min-height: 44px;
   min-width: 44px;
   touch-action: manipulation;
 }
 
 :root {
-  // body colours
   --bs-body-bg: #ffffff;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-body-color: #212529;
 
-  // your brand colours
-  --primary-light: #667eea;
-  --primary-dark: #764ba2;
+  --primary-light: #5e74d6;
+  --primary-dark: #6a458f;
   --bs-primary: var(--primary-light);
+  --bs-primary-rgb: 102, 126, 234;
 
-  // we'll use this gradient in a few places
-  --btn-primary-gradient: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+  --bs-secondary: #6c7293;
+  --bs-secondary-rgb: 108, 114, 147;
+  --bs-success: #4ade80;
+  --bs-success-rgb: 74, 222, 128;
+  --bs-info: #3daee6;
+  --bs-info-rgb: 61, 174, 230;
+  --bs-warning: #fbbf24;
+  --bs-warning-rgb: 251, 191, 36;
+  --bs-danger: #f87171;
+  --bs-danger-rgb: 248, 113, 113;
+  --bs-light: #f8fafc;
+  --bs-light-rgb: 248, 250, 252;
+  --bs-dark: #1e293b;
+  --bs-dark-rgb: 30, 41, 59;
+  --btn-primary-gradient: linear-gradient(
+    135deg,
+    var(--primary-light),
+    var(--primary-dark)
+  );
 
-  // Light theme specific colors
   --card-bg: #ffffff;
   --card-dark-bg: #f8f9fa;
   --card-border: rgba(0, 0, 0, 0.125);
@@ -75,31 +90,40 @@ body {
   --bs-body-bg-rgb: 30, 30, 30;
   --bs-body-color: #f8f9fa;
   --bs-primary: var(--primary-dark);
+  --bs-primary-rgb: 118, 75, 162;
 
-  // Dark theme gradient
-  --btn-primary-gradient: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+  --bs-secondary: #94a3b8;
+  --bs-secondary-rgb: 148, 163, 184;
+  --bs-success: #24be5c;
+  --bs-success-rgb: 34, 197, 94;
+  --bs-info: #0ea5e9;
+  --bs-info-rgb: 14, 165, 233;
+  --bs-warning: #f59e0b;
+  --bs-warning-rgb: 245, 158, 11;
+  --bs-danger: #ef4444;
+  --bs-danger-rgb: 239, 68, 68;
+  --bs-light: #e2e8f0;
+  --bs-light-rgb: 226, 232, 240;
+  --bs-dark: #0f172a;
+  --bs-dark-rgb: 15, 23, 42;
 
-  // Dark theme specific colors
+  --btn-primary-gradient: linear-gradient(
+    135deg,
+    var(--primary-dark),
+    var(--primary-light)
+  );
+
   --card-bg: #2d2d2d;
   --card-dark-bg: #343a40;
   --card-border: rgba(255, 255, 255, 0.125);
   --text-muted: #adb5bd;
-  --bg-light: #343a40;
+  --bg-light: #e2e8f0;
   --bg-info: #228dd0;
   --bg-primary: #3c3c73;
   --border-color: #495057;
   --navbar-bg: rgba(30, 30, 30, 0.75);
   --shadow: rgba(0, 0, 0, 0.3);
   --progress-bg: #495057;
-
-  // Bootstrap dark theme overrides
-  --bs-secondary: #6c757d;
-  --bs-success: #198754;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
 }
 
 html[data-theme="light"] {
@@ -119,12 +143,10 @@ body {
   cursor: pointer;
 }
 
-// Override Bootstrap variables if needed:
 $body-bg: var(--bs-body-bg) !default;
 $body-color: var(--bs-body-color) !default;
 $primary: var(--bs-primary) !default;
 
-// Additional utility classes for mobile responsiveness
 .w-md-auto {
   @media (min-width: 768px) {
     width: auto !important;
@@ -139,7 +161,6 @@ $primary: var(--bs-primary) !default;
   }
 }
 
-// Improved focus states for accessibility
 .btn:focus,
 .form-control:focus {
   outline: 2px solid var(--bs-primary);
@@ -151,7 +172,6 @@ $primary: var(--bs-primary) !default;
   font-weight: 700 !important;
 }
 
-// Dark theme specific component styles
 [data-theme="dark"] {
   .card {
     background-color: var(--card-bg);
@@ -170,13 +190,142 @@ $primary: var(--bs-primary) !default;
     background-color: var(--bg-primary) !important;
   }
 
+  .bg-secondary {
+    background-color: var(--bs-secondary) !important;
+  }
+
+  .bg-success {
+    background-color: var(--bs-success) !important;
+  }
+
+  .bg-warning {
+    background-color: var(--bs-warning) !important;
+  }
+
+  .bg-danger {
+    background-color: var(--bs-danger) !important;
+  }
+
+  .bg-dark {
+    background-color: var(--bs-dark) !important;
+  }
+
+  .border-primary {
+    border-color: var(--bs-primary) !important;
+  }
+
+  .border-secondary {
+    border-color: var(--bs-secondary) !important;
+  }
+
+  .border-success {
+    border-color: var(--bs-success) !important;
+  }
+
+  .border-info {
+    border-color: var(--bs-info) !important;
+  }
+
+  .border-warning {
+    border-color: var(--bs-warning) !important;
+  }
+
+  .border-danger {
+    border-color: var(--bs-danger) !important;
+  }
+
   .btn-primary {
-    background: var(--bg-primary);
-    border-color: var(--bg-primary);
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-primary) 85%, white);
+      border-color: color-mix(in srgb, var(--bs-primary) 85%, white);
+    }
+  }
+
+  .btn-secondary {
+    background: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-secondary) 85%, white);
+      border-color: color-mix(in srgb, var(--bs-secondary) 85%, white);
+    }
+  }
+
+  .btn-success {
+    background: var(--bs-success);
+    border-color: var(--bs-success);
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-success) 85%, white);
+      border-color: color-mix(in srgb, var(--bs-success) 85%, white);
+    }
+  }
+
+  .btn-info {
+    background: var(--bs-info);
+    border-color: var(--bs-info);
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-info) 85%, white);
+      border-color: color-mix(in srgb, var(--bs-info) 85%, white);
+    }
+  }
+
+  .btn-warning {
+    background: var(--bs-warning);
+    border-color: var(--bs-warning);
+    color: #000;
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-warning) 85%, black);
+      border-color: color-mix(in srgb, var(--bs-warning) 85%, black);
+      color: #000;
+    }
+  }
+
+  .btn-danger {
+    background: var(--bs-danger);
+    border-color: var(--bs-danger);
+
+    &:hover {
+      background: color-mix(in srgb, var(--bs-danger) 85%, white);
+      border-color: color-mix(in srgb, var(--bs-danger) 85%, white);
+    }
   }
 
   .text-primary {
-    color: #667eea !important;
+    color: var(--bs-primary) !important;
+  }
+
+  .text-secondary {
+    color: var(--bs-secondary) !important;
+  }
+
+  .text-success {
+    color: var(--bs-success) !important;
+  }
+
+  .text-info {
+    color: var(--bs-info) !important;
+  }
+
+  .text-warning {
+    color: var(--bs-warning) !important;
+  }
+
+  .text-danger {
+    color: var(--bs-danger) !important;
+  }
+
+  .text-light {
+    color: var(--bs-light) !important;
+  }
+
+  .text-dark {
+    color: var(--bs-dark) !important;
   }
 
   .text-muted {
@@ -229,7 +378,7 @@ $primary: var(--bs-primary) !default;
   }
 
   .btn-outline-primary {
-    color: var(--bs-primary);
+    color: var(--bs-light);
     border-color: var(--bs-primary);
 
     &:hover {
@@ -243,8 +392,49 @@ $primary: var(--bs-primary) !default;
     }
   }
 
+  .btn-outline-secondary {
+    color: var(--bs-light);
+    border-color: var(--bs-secondary);
+
+    &:hover {
+      background-color: var(--bs-secondary);
+      border-color: var(--bs-secondary);
+    }
+  }
+
+  .btn-outline-success {
+    color: var(--bs-light);
+    border-color: var(--bs-success);
+
+    &:hover {
+      background-color: var(--bs-success);
+      border-color: var(--bs-success);
+    }
+  }
+
+  .btn-outline-info {
+    color: var(--bs-light);
+    border-color: var(--bs-info);
+
+    &:hover {
+      background-color: var(--bs-info);
+      border-color: var(--bs-info);
+    }
+  }
+
+  .btn-outline-warning {
+    color: var(--bs-light);
+    border-color: var(--bs-warning);
+
+    &:hover {
+      background-color: var(--bs-warning);
+      border-color: var(--bs-warning);
+      color: #000;
+    }
+  }
+
   .btn-outline-danger {
-    color: var(--bs-danger);
+    color: var(--bs-light);
     border-color: var(--bs-danger);
 
     &:hover {
@@ -252,9 +442,114 @@ $primary: var(--bs-primary) !default;
       border-color: var(--bs-danger);
     }
   }
+
+  .alert-primary {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-color: rgba(var(--bs-primary-rgb), 0.2);
+    color: var(--bs-primary);
+  }
+
+  .alert-secondary {
+    background-color: rgba(var(--bs-secondary-rgb), 0.1);
+    border-color: rgba(var(--bs-secondary-rgb), 0.2);
+    color: var(--bs-secondary);
+  }
+
+  .alert-success {
+    background-color: rgba(var(--bs-success-rgb), 0.1);
+    border-color: rgba(var(--bs-success-rgb), 0.2);
+    color: var(--bs-success);
+  }
+
+  .alert-info {
+    background-color: rgba(var(--bs-info-rgb), 0.1);
+    border-color: rgba(var(--bs-info-rgb), 0.2);
+    color: var(--bs-info);
+  }
+
+  .alert-warning {
+    background-color: rgba(var(--bs-warning-rgb), 0.1);
+    border-color: rgba(var(--bs-warning-rgb), 0.2);
+    color: var(--bs-warning);
+  }
+
+  .alert-danger {
+    background-color: rgba(var(--bs-danger-rgb), 0.1);
+    border-color: rgba(var(--bs-danger-rgb), 0.2);
+    color: var(--bs-danger);
+  }
 }
 
-// Theme toggle button styles
+[data-theme="light"] {
+  .bg-secondary {
+    background-color: var(--bs-secondary) !important;
+  }
+
+  .bg-success {
+    background-color: var(--bs-success) !important;
+  }
+
+  .bg-warning {
+    background-color: var(--bs-warning) !important;
+  }
+
+  .bg-danger {
+    background-color: var(--bs-danger) !important;
+  }
+
+  .bg-dark {
+    background-color: var(--bs-dark) !important;
+  }
+
+  .text-secondary {
+    color: var(--bs-secondary) !important;
+  }
+
+  .text-success {
+    color: var(--bs-success) !important;
+  }
+
+  .text-info {
+    color: var(--bs-info) !important;
+  }
+
+  .text-warning {
+    color: var(--bs-warning) !important;
+  }
+
+  .text-danger {
+    color: var(--bs-danger) !important;
+  }
+
+  .text-light {
+    color: var(--bs-light) !important;
+  }
+
+  .text-dark {
+    color: var(--bs-dark) !important;
+  }
+
+  .border-secondary {
+    border-color: var(--bs-secondary) !important;
+  }
+
+  .border-success {
+    border-color: var(--bs-success) !important;
+  }
+
+  .border-info {
+    border-color: var(--bs-info) !important;
+  }
+
+  .border-warning {
+    border-color: var(--bs-warning) !important;
+  }
+
+  .border-danger {
+    border-color: var(--bs-danger) !important;
+  }
+}
+
 .theme-toggle {
   background: none;
   border: none;

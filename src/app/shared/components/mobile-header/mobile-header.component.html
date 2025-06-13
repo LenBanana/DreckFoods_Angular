@@ -11,22 +11,28 @@
       <!-- Right side actions -->
       <div class="d-flex align-items-center gap-2">
         <!-- Theme Toggle -->
-        <button 
-          type="button" 
-          class="theme-toggle btn btn-sm" 
+        <button
+          type="button"
+          class="theme-toggle btn btn-sm"
           (click)="toggleTheme()"
-          [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
-          [attr.title]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
+          [attr.aria-label]="
+            isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
+          "
+          [attr.title]="
+            isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
+          "
+        >
           <i [class]="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
 
         <!-- User Menu -->
         <div class="dropdown">
-          <button 
-            type="button" 
-            class="btn btn-sm user-menu-btn" 
+          <button
+            type="button"
+            class="btn btn-sm user-menu-btn"
             data-bs-toggle="dropdown"
-            aria-expanded="false">
+            aria-expanded="false"
+          >
             <span class="avatar">{{ getUserInitials() }}</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">

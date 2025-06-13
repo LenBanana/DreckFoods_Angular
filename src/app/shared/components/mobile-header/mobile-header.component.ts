@@ -10,7 +10,7 @@ import { User } from '../../../core/models/auth.models';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './mobile-header.component.html',
-  styleUrls: ['./mobile-header.component.scss']
+  styleUrls: ['./mobile-header.component.scss'],
 })
 export class MobileHeaderComponent {
   private authService = inject(AuthService);

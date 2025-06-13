@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './delete-account.component.html',
-  styleUrl: './delete-account.component.scss'
+  styleUrl: './delete-account.component.scss',
 })
 export class DeleteAccountComponent {
   private authService = inject(AuthService);
@@ -44,9 +44,11 @@ export class DeleteAccountComponent {
       error: (error) => {
         this.isLoading = false;
         this.isSuccess = false;
-        this.message = error.error?.message || 'An error occurred while deleting your account. Please try again.';
+        this.message =
+          error.error?.message ||
+          'An error occurred while deleting your account. Please try again.';
         this.showConfirmation = false;
-      }
+      },
     });
   }
 }

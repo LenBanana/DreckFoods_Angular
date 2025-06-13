@@ -1,16 +1,35 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MealItemManagerComponent, MealItem } from '../meal-item-manager/meal-item-manager.component';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  MealItemManagerComponent,
+  MealItem,
+} from '../meal-item-manager/meal-item-manager.component';
 import { FoodSearchDto } from '../../../../core/models/food.models';
-import { MealResponseDTO, CreateMealDTO, MealItemDTO } from '../../../../core/models/meal.models';
+import {
+  MealResponseDTO,
+  CreateMealDTO,
+  MealItemDTO,
+} from '../../../../core/models/meal.models';
 
 @Component({
   selector: 'app-meal-form-modal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MealItemManagerComponent],
   templateUrl: './meal-form-modal.component.html',
-  styleUrls: ['./meal-form-modal.component.scss']
+  styleUrls: ['./meal-form-modal.component.scss'],
 })
 export class MealFormModalComponent implements OnInit {
   @Input() meal: MealResponseDTO | null = null;
@@ -29,31 +48,27 @@ export class MealFormModalComponent implements OnInit {
   constructor() {
     this.mealForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['']
+      description: [''],
     });
   }
 
   ngOnInit() {
     if (this.meal) {
-      // Edit mode - populate form
       this.mealForm.patchValue({
         name: this.meal.name,
-        description: this.meal.description || ''
+        description: this.meal.description || '',
       });
 
-      // Convert meal items to component format
-      this.mealItems = this.meal.items.map(item => ({
+      this.mealItems = this.meal.items.map((item) => ({
         food: this.createFoodFromMealItem(item),
-        weight: item.weight
+        weight: item.weight,
       }));
     } else {
-      // Create mode - start with empty item
       this.mealItems = [];
     }
   }
 
   private createFoodFromMealItem(item: any): FoodSearchDto {
-    // Create a minimal FoodSearchDto from meal item data
     return {
       id: item.fddbFoodId,
       name: item.foodName,
@@ -69,7 +84,7 @@ export class MealFormModalComponent implements OnInit {
         carbohydrates: {
           total: { value: 0, unit: 'g' },
           sugar: { value: 0, unit: 'g' },
-          polyols: { value: 0, unit: 'g' }
+          polyols: { value: 0, unit: 'g' },
         },
         minerals: {
           salt: { value: 0, unit: 'g' },
@@ -88,13 +103,13 @@ export class MealFormModalComponent implements OnInit {
         },
         fiber: { value: 0, unit: 'g' },
         kilojoules: { value: 0, unit: 'kJ' },
-        caffeine: { value: 0, unit: 'mg' }
-      }
+        caffeine: { value: 0, unit: 'mg' },
+      },
     } as FoodSearchDto;
   }
   onItemsChange(items: MealItem[]) {
     this.mealItems = items;
-    // Reset validation display when user starts adding items
+
     if (items.length > 0) {
       this.showValidation = false;
     }
@@ -113,10 +128,13 @@ export class MealFormModalComponent implements OnInit {
     const mealData: CreateMealDTO = {
       name: this.mealForm.value.name,
       description: this.mealForm.value.description || undefined,
-      items: this.mealItems.map(item => ({
-        fddbFoodId: item.food!.id,
-        weight: item.weight
-      } as MealItemDTO))
+      items: this.mealItems.map(
+        (item) =>
+          ({
+            fddbFoodId: item.food!.id,
+            weight: item.weight,
+          }) as MealItemDTO,
+      ),
     };
 
     this.submit.emit(mealData);
@@ -131,7 +149,9 @@ export class MealFormModalComponent implements OnInit {
   }
 
   get isFormInvalid(): boolean {
-    return this.mealForm.invalid || !this.isItemsValid || this.mealItems.length === 0;
+    return (
+      this.mealForm.invalid || !this.isItemsValid || this.mealItems.length === 0
+    );
   }
 
   get calculatedNutrition() {
@@ -144,7 +164,7 @@ export class MealFormModalComponent implements OnInit {
       carbohydrates: {
         total: 0,
         sugar: 0,
-        polyols: 0
+        polyols: 0,
       },
       minerals: {
         salt: 0,
@@ -159,27 +179,40 @@ export class MealFormModalComponent implements OnInit {
         phosphorus: 0,
         copper: 0,
         fluoride: 0,
-        iodine: 0
+        iodine: 0,
       },
-      fiber: 0
+      fiber: 0,
     };
 
-    this.mealItems.forEach(item => {
+    this.mealItems.forEach((item) => {
       if (item.food) {
-        totalNutrition.calories += item.food.nutrition.calories.value * (item.weight / 100);
-        totalNutrition.protein += item.food.nutrition.protein.value * (item.weight / 100);
-        totalNutrition.fat += item.food.nutrition.fat.value * (item.weight / 100);
-        totalNutrition.carbohydrates.total += item.food.nutrition.carbohydrates.total.value * (item.weight / 100);
-        totalNutrition.carbohydrates.sugar += item.food.nutrition.carbohydrates.sugar.value * (item.weight / 100);
-        totalNutrition.carbohydrates.polyols += item.food.nutrition.carbohydrates.polyols.value * (item.weight / 100);
-        
-        (Object.keys(item.food.nutrition.minerals) as Array<keyof typeof totalNutrition.minerals>).forEach(key => {
+        totalNutrition.calories +=
+          item.food.nutrition.calories.value * (item.weight / 100);
+        totalNutrition.protein +=
+          item.food.nutrition.protein.value * (item.weight / 100);
+        totalNutrition.fat +=
+          item.food.nutrition.fat.value * (item.weight / 100);
+        totalNutrition.carbohydrates.total +=
+          item.food.nutrition.carbohydrates.total.value * (item.weight / 100);
+        totalNutrition.carbohydrates.sugar +=
+          item.food.nutrition.carbohydrates.sugar.value * (item.weight / 100);
+        totalNutrition.carbohydrates.polyols +=
+          item.food.nutrition.carbohydrates.polyols.value * (item.weight / 100);
+
+        (
+          Object.keys(item.food.nutrition.minerals) as Array<
+            keyof typeof totalNutrition.minerals
+          >
+        ).forEach((key) => {
           if (totalNutrition.minerals[key] !== undefined) {
-            totalNutrition.minerals[key] += (item.food?.nutrition.minerals[key].value ?? 0) * (item.weight / 100);
+            totalNutrition.minerals[key] +=
+              (item.food?.nutrition.minerals[key].value ?? 0) *
+              (item.weight / 100);
           }
         });
 
-        totalNutrition.fiber += item.food.nutrition.fiber.value * (item.weight / 100);
+        totalNutrition.fiber +=
+          item.food.nutrition.fiber.value * (item.weight / 100);
       }
     });
 

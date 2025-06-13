@@ -10,82 +10,183 @@ import { AlertSize } from './core/models/alert.models';
   template: `
     <div class="test-alerts-container" style="padding: 20px;">
       <h2>Alert System Test</h2>
-      
-      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Regular Alerts (Top-Right)</h3>
-        <button (click)="showSuccess()" class="btn btn-success">Success Alert</button>
-        <button (click)="showError()" class="btn btn-danger">Error Alert</button>
-        <button (click)="showWarning()" class="btn btn-warning">Warning Alert</button>
+        <button (click)="showSuccess()" class="btn btn-success">
+          Success Alert
+        </button>
+        <button (click)="showError()" class="btn btn-danger">
+          Error Alert
+        </button>
+        <button (click)="showWarning()" class="btn btn-warning">
+          Warning Alert
+        </button>
         <button (click)="showInfo()" class="btn btn-info">Info Alert</button>
       </div>
 
-      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Centered Alerts</h3>
-        <button (click)="showSuccessCentered()" class="btn btn-success">Centered Success</button>
-        <button (click)="showErrorCentered()" class="btn btn-danger">Centered Error</button>
-        <button (click)="showWarningCentered()" class="btn btn-warning">Centered Warning</button>
-        <button (click)="showInfoCentered()" class="btn btn-info">Centered Info</button>
-      </div>      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button (click)="showSuccessCentered()" class="btn btn-success">
+          Centered Success
+        </button>
+        <button (click)="showErrorCentered()" class="btn btn-danger">
+          Centered Error
+        </button>
+        <button (click)="showWarningCentered()" class="btn btn-warning">
+          Centered Warning
+        </button>
+        <button (click)="showInfoCentered()" class="btn btn-info">
+          Centered Info
+        </button>
+      </div>
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Confirmation Dialogs (Centered by default)</h3>
-        <button (click)="showConfirm()" class="btn btn-primary">Confirm Dialog</button>
-        <button (click)="showDeleteConfirm()" class="btn btn-danger">Delete Confirm</button>
-        <button (click)="showActionConfirm()" class="btn btn-secondary">Action Confirm</button>
-      </div>      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button (click)="showConfirm()" class="btn btn-primary">
+          Confirm Dialog
+        </button>
+        <button (click)="showDeleteConfirm()" class="btn btn-danger">
+          Delete Confirm
+        </button>
+        <button (click)="showActionConfirm()" class="btn btn-secondary">
+          Action Confirm
+        </button>
+      </div>
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Input Prompts (Centered by default)</h3>
-        <button (click)="showTextInput()" class="btn btn-info">Text Input</button>
-        <button (click)="showEmailInput()" class="btn btn-info">Email Input</button>
-        <button (click)="showNumberInput()" class="btn btn-info">Number Input</button>
-        <button (click)="showRequiredInput()" class="btn btn-warning">Required Input</button>
-        <button (click)="showCustomValidationInput()" class="btn btn-warning">Custom Validation</button>
+        <button (click)="showTextInput()" class="btn btn-info">
+          Text Input
+        </button>
+        <button (click)="showEmailInput()" class="btn btn-info">
+          Email Input
+        </button>
+        <button (click)="showNumberInput()" class="btn btn-info">
+          Number Input
+        </button>
+        <button (click)="showRequiredInput()" class="btn btn-warning">
+          Required Input
+        </button>
+        <button (click)="showCustomValidationInput()" class="btn btn-warning">
+          Custom Validation
+        </button>
       </div>
 
-      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Alert Sizes</h3>
-        <button (click)="showSmallAlert()" class="btn btn-info">Small Alert</button>
-        <button (click)="showMediumAlert()" class="btn btn-info">Medium Alert (Default)</button>
-        <button (click)="showLargeAlert()" class="btn btn-info">Large Alert</button>
-        <button (click)="showExtraLargeAlert()" class="btn btn-info">Extra Large Alert</button>
+        <button (click)="showSmallAlert()" class="btn btn-info">
+          Small Alert
+        </button>
+        <button (click)="showMediumAlert()" class="btn btn-info">
+          Medium Alert (Default)
+        </button>
+        <button (click)="showLargeAlert()" class="btn btn-info">
+          Large Alert
+        </button>
+        <button (click)="showExtraLargeAlert()" class="btn btn-info">
+          Extra Large Alert
+        </button>
       </div>
 
-      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"
+      >
         <h3>Long Content Examples</h3>
-        <button (click)="showLongTextLarge()" class="btn btn-warning">Long Text (Large)</button>
-        <button (click)="showLongTextExtraLarge()" class="btn btn-warning">Long Text (Extra Large)</button>
-        <button (click)="showCodeSnippetLarge()" class="btn btn-info">Code Snippet (Large)</button>
-        <button (click)="showErrorLogExtraLarge()" class="btn btn-danger">Error Log (Extra Large)</button>
+        <button (click)="showLongTextLarge()" class="btn btn-warning">
+          Long Text (Large)
+        </button>
+        <button (click)="showLongTextExtraLarge()" class="btn btn-warning">
+          Long Text (Extra Large)
+        </button>
+        <button (click)="showCodeSnippetLarge()" class="btn btn-info">
+          Code Snippet (Large)
+        </button>
+        <button (click)="showErrorLogExtraLarge()" class="btn btn-danger">
+          Error Log (Extra Large)
+        </button>
       </div>
 
-      <div class="button-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <div
+        class="button-group"
+        style="display: flex; gap: 10px; flex-wrap: wrap;"
+      >
         <h3>Utilities</h3>
-        <button (click)="clearAll()" class="btn btn-outline-secondary">Clear All Alerts</button>
-      </div>      <div class="alert-result" style="margin-top: 20px;">
-        <p *ngIf="lastResult !== null"><strong>Last confirmation result:</strong> {{ lastResult }}</p>
-        <p *ngIf="lastInputResult !== null"><strong>Last input result:</strong> {{ lastInputResult }}</p>
+        <button (click)="clearAll()" class="btn btn-outline-secondary">
+          Clear All Alerts
+        </button>
+      </div>
+      <div class="alert-result" style="margin-top: 20px;">
+        <p *ngIf="lastResult !== null">
+          <strong>Last confirmation result:</strong> {{ lastResult }}
+        </p>
+        <p *ngIf="lastInputResult !== null">
+          <strong>Last input result:</strong> {{ lastInputResult }}
+        </p>
       </div>
     </div>
   `,
-  styles: [`
-    .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .btn-success { background-color: #28a745; color: white; }
-    .btn-danger { background-color: #dc3545; color: white; }
-    .btn-warning { background-color: #ffc107; color: black; }
-    .btn-info { background-color: #17a2b8; color: white; }
-    .btn-primary { background-color: #007bff; color: white; }
-    .btn-secondary { background-color: #6c757d; color: white; }
-    .btn-outline-secondary { 
-      background-color: transparent; 
-      color: #6c757d; 
-      border: 1px solid #6c757d; 
-    }
-    .btn:hover { opacity: 0.8; }
-    h3 { width: 100%; margin: 10px 0 5px 0; }
-  `]
+  styles: [
+    `
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn-success {
+        background-color: #28a745;
+        color: white;
+      }
+      .btn-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+      .btn-warning {
+        background-color: #ffc107;
+        color: black;
+      }
+      .btn-info {
+        background-color: #17a2b8;
+        color: white;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+      .btn-outline-secondary {
+        background-color: transparent;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+      }
+      .btn:hover {
+        opacity: 0.8;
+      }
+      h3 {
+        width: 100%;
+        margin: 10px 0 5px 0;
+      }
+    `,
+  ],
 })
 export class TestAlertsComponent {
   lastResult: boolean | null = null;
@@ -103,28 +204,46 @@ export class TestAlertsComponent {
   }
 
   showWarning() {
-    this.alertService.warning('Please review your input before proceeding.', 'Warning');
+    this.alertService.warning(
+      'Please review your input before proceeding.',
+      'Warning',
+    );
   }
 
   showInfo() {
-    this.alertService.info('Here is some useful information for you.', 'Information');
+    this.alertService.info(
+      'Here is some useful information for you.',
+      'Information',
+    );
   }
 
   // Centered alerts
   showSuccessCentered() {
-    this.alertService.successCentered('Your changes have been saved!', 'Success');
+    this.alertService.successCentered(
+      'Your changes have been saved!',
+      'Success',
+    );
   }
 
   showErrorCentered() {
-    this.alertService.errorCentered('Critical error occurred. Please contact support.', 'Critical Error');
+    this.alertService.errorCentered(
+      'Critical error occurred. Please contact support.',
+      'Critical Error',
+    );
   }
 
   showWarningCentered() {
-    this.alertService.warningCentered('Important: This action cannot be undone.', 'Important Warning');
+    this.alertService.warningCentered(
+      'Important: This action cannot be undone.',
+      'Important Warning',
+    );
   }
 
   showInfoCentered() {
-    this.alertService.infoCentered('Welcome to the new alert system!', 'Welcome');
+    this.alertService.infoCentered(
+      'Welcome to the new alert system!',
+      'Welcome',
+    );
   }
 
   // Confirmation dialogs
@@ -133,15 +252,21 @@ export class TestAlertsComponent {
       title: 'Confirm Action',
       message: 'Are you sure you want to proceed with this action?',
       confirmLabel: 'Yes, Continue',
-      cancelLabel: 'Cancel'
+      cancelLabel: 'Cancel',
     });
   }
 
   async showDeleteConfirm() {
-    this.lastResult = await this.alertService.confirmDelete('Test Item', 'This will permanently delete the selected item. This action cannot be undone.');
+    this.lastResult = await this.alertService.confirmDelete(
+      'Test Item',
+      'This will permanently delete the selected item. This action cannot be undone.',
+    );
   }
   async showActionConfirm() {
-    this.lastResult = await this.alertService.confirmAction('Do you want to save your changes before leaving?', 'Unsaved Changes');
+    this.lastResult = await this.alertService.confirmAction(
+      'Do you want to save your changes before leaving?',
+      'Unsaved Changes',
+    );
   }
 
   // Input prompts
@@ -150,7 +275,7 @@ export class TestAlertsComponent {
       'Please enter your name:',
       'Name Required',
       'Enter your full name',
-      'John Doe'
+      'John Doe',
     );
   }
 
@@ -158,7 +283,7 @@ export class TestAlertsComponent {
     this.lastInputResult = await this.alertService.promptEmail(
       'Please enter your email address:',
       'Email Required',
-      'your@email.com'
+      'your@email.com',
     );
   }
 
@@ -168,7 +293,7 @@ export class TestAlertsComponent {
       'Age Required',
       'Enter your age',
       18,
-      100
+      100,
     );
   }
 
@@ -179,7 +304,7 @@ export class TestAlertsComponent {
       placeholder: 'Enter something...',
       required: true,
       confirmLabel: 'Submit',
-      cancelLabel: 'Cancel'
+      cancelLabel: 'Cancel',
     });
   }
 
@@ -190,30 +315,48 @@ export class TestAlertsComponent {
       placeholder: 'username123',
       validation: (value) => {
         if (value.length < 3) return 'Username must be at least 3 characters';
-        if (value.length > 20) return 'Username must be less than 20 characters';
-        if (!/^[a-zA-Z0-9]+$/.test(value)) return 'Username can only contain letters and numbers';
+        if (value.length > 20)
+          return 'Username must be less than 20 characters';
+        if (!/^[a-zA-Z0-9]+$/.test(value))
+          return 'Username can only contain letters and numbers';
         return null;
       },
       confirmLabel: 'Create Username',
-      cancelLabel: 'Cancel'
+      cancelLabel: 'Cancel',
     });
   }
 
   // Size demonstration methods
   showSmallAlert() {
-    this.alertService.info('This is a small alert for brief notifications.', 'Small Alert', { size: AlertSize.SMALL });
+    this.alertService.info(
+      'This is a small alert for brief notifications.',
+      'Small Alert',
+      { size: AlertSize.SMALL },
+    );
   }
 
   showMediumAlert() {
-    this.alertService.info('This is a medium alert which is the default size for most notifications.', 'Medium Alert', { size: AlertSize.MEDIUM });
+    this.alertService.info(
+      'This is a medium alert which is the default size for most notifications.',
+      'Medium Alert',
+      { size: AlertSize.MEDIUM },
+    );
   }
 
   showLargeAlert() {
-    this.alertService.info('This is a large alert that provides more space for longer messages and content.', 'Large Alert', { size: AlertSize.LARGE });
+    this.alertService.info(
+      'This is a large alert that provides more space for longer messages and content.',
+      'Large Alert',
+      { size: AlertSize.LARGE },
+    );
   }
 
   showExtraLargeAlert() {
-    this.alertService.info('This is an extra large alert designed for displaying extensive content, detailed information, or when you need maximum visibility for important messages.', 'Extra Large Alert', { size: AlertSize.EXTRA_LARGE });
+    this.alertService.info(
+      'This is an extra large alert designed for displaying extensive content, detailed information, or when you need maximum visibility for important messages.',
+      'Extra Large Alert',
+      { size: AlertSize.EXTRA_LARGE },
+    );
   }
 
   // Long content examples
@@ -253,7 +396,10 @@ Additional Features:
 • Accessibility features for screen readers
 • Keyboard navigation support`;
 
-    this.alertService.infoExtraLarge(veryLongMessage, 'Extra Large Content Example');
+    this.alertService.infoExtraLarge(
+      veryLongMessage,
+      'Extra Large Content Example',
+    );
   }
 
   showCodeSnippetLarge() {

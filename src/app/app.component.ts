@@ -8,13 +8,24 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { MobileHeaderComponent } from './shared/components/mobile-header/mobile-header.component';
 import { MobileNavComponent } from './shared/components/mobile-nav/mobile-nav.component';
 import { AlertContainerComponent } from './shared/components/alert-container/alert-container.component';
-import { AppLifecycleService, AppState } from './core/services/app-lifecycle.service';
+import {
+  AppLifecycleService,
+  AppState,
+} from './core/services/app-lifecycle.service';
 import { SwUpdateService } from './core/services/sw-update.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, MobileHeaderComponent, MobileNavComponent, AlertContainerComponent],  template: `
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    MobileHeaderComponent,
+    MobileNavComponent,
+    AlertContainerComponent,
+  ],
+  template: `
     <div class="app">
       <app-header *ngIf="showHeader"></app-header>
       <app-mobile-header *ngIf="showHeader"></app-mobile-header>
@@ -24,7 +35,9 @@ import { SwUpdateService } from './core/services/sw-update.service';
       <app-mobile-nav *ngIf="showHeader"></app-mobile-nav>
       <app-alert-container></app-alert-container>
     </div>
-  `,  styles: [`
+  `,
+  styles: [
+    `
       :host {
         .app {
           min-height: 100vh;
@@ -43,7 +56,7 @@ import { SwUpdateService } from './core/services/sw-update.service';
 
         .main-content:not(.with-header) {
           padding: 0;
-        }        // Add bottom padding for mobile navigation
+        }
         @media (max-width: 991.98px) {
           .main-content {
             padding-bottom: calc(80px + env(safe-area-inset-bottom));
@@ -57,7 +70,6 @@ import { SwUpdateService } from './core/services/sw-update.service';
         }
       }
 
-      // Dark theme support
       [data-theme='dark'] {
         :host {
           .app {
@@ -65,7 +77,8 @@ import { SwUpdateService } from './core/services/sw-update.service';
           }
         }
       }
-  `]
+    `,
+  ],
 })
 export class AppComponent implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -76,33 +89,23 @@ export class AppComponent implements OnInit, OnDestroy {
   showHeader = false;
   isAppActive = true;
   ngOnInit() {
-    // Initialize lifecycle service
     this.lifecycleService.markAsActive();
-
-    // Initialize service worker updates
     this.swUpdateService.checkForUpdates();
 
-    // Monitor app state changes
     this.lifecycleService.appState$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
+      .subscribe((state) => {
         this.isAppActive = state === AppState.ACTIVE;
-        
-        // Handle app state changes
+
         if (state === AppState.ACTIVE) {
-          console.log('App became active');
-          // Check for updates when app becomes active
           this.swUpdateService.checkForUpdates();
-        } else if (state === AppState.HIDDEN) {
-          console.log('App hidden - saving state');
         }
       });
 
-    // Monitor route changes
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$),
       )
       .subscribe((event: NavigationEnd) => {
         this.showHeader = !event.url.startsWith('/auth');

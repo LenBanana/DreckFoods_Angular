@@ -1,17 +1,17 @@
 export enum AlertType {
   SUCCESS = 'success',
-  ERROR = 'error', 
+  ERROR = 'error',
   WARNING = 'warning',
   INFO = 'info',
   CONFIRM = 'confirm',
-  INPUT = 'input'
+  INPUT = 'input',
 }
 
 export enum AlertSize {
   SMALL = 'small',
   MEDIUM = 'medium',
   LARGE = 'large',
-  EXTRA_LARGE = 'extra-large'
+  EXTRA_LARGE = 'extra-large',
 }
 
 export interface Alert {
@@ -20,11 +20,11 @@ export interface Alert {
   title?: string;
   message: string;
   autoDismiss?: boolean;
-  duration?: number; // in milliseconds
+  duration?: number;
   actions?: AlertAction[];
-  centered?: boolean; // Flag to center the alert on screen
-  inputConfig?: InputConfig; // Configuration for input alerts
-  size?: AlertSize; // Size configuration for the alert
+  centered?: boolean;
+  inputConfig?: InputConfig;
+  size?: AlertSize;
 }
 
 export interface AlertAction {
@@ -40,7 +40,7 @@ export interface InputConfig {
   maxLength?: number;
   required?: boolean;
   inputType?: 'text' | 'email' | 'password' | 'number';
-  validation?: (value: string) => string | null; // Returns error message or null if valid
+  validation?: (value: string) => string | null;
 }
 
 export interface AlertConfig {
@@ -50,9 +50,9 @@ export interface AlertConfig {
   autoDismiss?: boolean;
   duration?: number;
   actions?: AlertAction[];
-  centered?: boolean; // Flag to center the alert on screen
-  inputConfig?: InputConfig; // Configuration for input alerts
-  size?: AlertSize; // Size configuration for the alert
+  centered?: boolean;
+  inputConfig?: InputConfig;
+  size?: AlertSize;
 }
 
 export interface ConfirmationConfig {

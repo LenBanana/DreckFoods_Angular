@@ -1,8 +1,20 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FoodSearchDto } from '../../../../core/models/food.models';
-import { FoodSearchContainerComponent, FoodSearchConfig } from '../../../../shared/components/food-search-container/food-search-container.component';
+import {
+  FoodSearchContainerComponent,
+  FoodSearchConfig,
+} from '../../../../shared/components/food-search-container/food-search-container.component';
+import { AlertService } from '../../../../core/services/alert.service';
 
 export interface MealItem {
   food: FoodSearchDto | null;
@@ -14,9 +26,11 @@ export interface MealItem {
   standalone: true,
   imports: [CommonModule, FormsModule, FoodSearchContainerComponent],
   templateUrl: './meal-item-manager.component.html',
-  styleUrls: ['./meal-item-manager.component.scss']
+  styleUrls: ['./meal-item-manager.component.scss'],
 })
 export class MealItemManagerComponent implements OnChanges {
+  alertService = inject(AlertService);
+
   @Input() items: MealItem[] = [];
   @Input() showValidation = false;
 
@@ -44,8 +58,9 @@ export class MealItemManagerComponent implements OnChanges {
     emptyRecentMessage: 'No recently added foods',
     emptySearchIcon: 'fas fa-search',
     emptyRecentIcon: 'fas fa-history',
-    initialStateMessage: 'Enter a food name above to search for foods to add to your meal.',
-    initialStateIcon: 'fas fa-search'
+    initialStateMessage:
+      'Enter a food name above to search for foods to add to your meal.',
+    initialStateIcon: 'fas fa-search',
   };
 
   ngOnChanges() {
@@ -79,14 +94,18 @@ export class MealItemManagerComponent implements OnChanges {
   get validationErrors(): string[] {
     const errors: string[] = [];
 
-    const itemsWithoutFood = this.items.filter(item => !item.food);
+    const itemsWithoutFood = this.items.filter((item) => !item.food);
     if (itemsWithoutFood.length > 0) {
       errors.push(`${itemsWithoutFood.length} item(s) need a food selected`);
     }
 
-    const itemsWithInvalidWeight = this.items.filter(item => !item.weight || item.weight <= 0);
+    const itemsWithInvalidWeight = this.items.filter(
+      (item) => !item.weight || item.weight <= 0,
+    );
     if (itemsWithInvalidWeight.length > 0) {
-      errors.push(`${itemsWithInvalidWeight.length} item(s) need a valid weight`);
+      errors.push(
+        `${itemsWithInvalidWeight.length} item(s) need a valid weight`,
+      );
     }
 
     return errors;
@@ -98,9 +117,8 @@ export class MealItemManagerComponent implements OnChanges {
 
   onSearchError(error: string) {
     console.error('Search error in meal manager:', error);
-  }
-
-  onSearchStateChange(state: { isSearching: boolean; isSearchMode: boolean; hasResults: boolean; currentQuery: string }) {
-    // Handle search state changes if needed
+    this.alertService.error(
+      'Failed to search for food items. Please try again later.',
+    );
   }
 }

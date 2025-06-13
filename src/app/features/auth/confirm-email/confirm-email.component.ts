@@ -23,14 +23,14 @@ export class ConfirmEmailComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit() {
-    console.log('ConfirmEmailComponent initialized');
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const userId = params['userId'];
       const token = params['token'];
 
       if (!userId || !token) {
         this.isLoading = false;
-        this.errorMessage = 'Invalid confirmation link. Please check your email and try again.';
+        this.errorMessage =
+          'Invalid confirmation link. Please check your email and try again.';
         return;
       }
 
@@ -39,15 +39,18 @@ export class ConfirmEmailComponent implements OnInit {
   }
 
   private confirmEmail(userId: number, token: string) {
-    this.authService.confirmEmail({ userId, token })
+    this.authService
+      .confirmEmail({ userId, token })
       .pipe(
-        catchError(error => {
-          this.errorMessage = error.error?.message || 'Email confirmation failed. The link may be expired or invalid.';
+        catchError((error) => {
+          this.errorMessage =
+            error.error?.message ||
+            'Email confirmation failed. The link may be expired or invalid.';
           this.isLoading = false;
           return of(null);
-        })
+        }),
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.isLoading = false;
         if (response) {
           this.confirmationSuccess = true;

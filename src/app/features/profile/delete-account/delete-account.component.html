@@ -1,14 +1,19 @@
-<div class="delete-account-container">  
-  <div *ngIf="message" 
-       class="message" 
-       [ngClass]="{'success': isSuccess, 'error': !isSuccess}">
+<div class="delete-account-container">
+  <div
+    *ngIf="message"
+    class="message"
+    [ngClass]="{ success: isSuccess, error: !isSuccess }"
+  >
     {{ message }}
   </div>
 
   <div *ngIf="!showConfirmation && !isSuccess" class="warning-section">
     <div class="warning-box">
       <h4>⚠️ Warning</h4>
-      <p>Deleting your account is a permanent action and cannot be undone. This will:</p>
+      <p>
+        Deleting your account is a permanent action and cannot be undone. This
+        will:
+      </p>
       <ul>
         <li>Permanently delete all your data</li>
         <li>Remove all your food entries and weight tracking</li>
@@ -16,11 +21,12 @@
       </ul>
       <p><strong>Are you sure you want to continue?</strong></p>
     </div>
-    
-    <button 
-      type="button" 
+
+    <button
+      type="button"
       class="btn btn-danger"
-      (click)="showDeleteConfirmation()">
+      (click)="showDeleteConfirmation()"
+    >
       Delete My Account
     </button>
   </div>
@@ -28,24 +34,29 @@
   <div *ngIf="showConfirmation" class="confirmation-section">
     <div class="confirmation-box">
       <h4 class="my-3">Final Confirmation</h4>
-      <p class="alert alert-warning">This action cannot be undone. Your account and all associated data will be permanently deleted.</p>
+      <p class="alert alert-warning">
+        This action cannot be undone. Your account and all associated data will
+        be permanently deleted.
+      </p>
       <p><strong>Do you really want to delete your account?</strong></p>
     </div>
-    
+
     <div class="button-group">
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="btn btn-secondary me-2"
         (click)="cancelDelete()"
-        [disabled]="isLoading">
+        [disabled]="isLoading"
+      >
         Cancel
       </button>
-      
-      <button 
-        type="button" 
+
+      <button
+        type="button"
         class="btn btn-danger"
         (click)="confirmDelete()"
-        [disabled]="isLoading">
+        [disabled]="isLoading"
+      >
         <span *ngIf="isLoading">Deleting...</span>
         <span *ngIf="!isLoading">Yes, Delete My Account</span>
       </button>

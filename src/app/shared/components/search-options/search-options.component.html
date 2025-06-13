@@ -1,22 +1,49 @@
 <div class="search-options">
-  <div class="row g-2 align-items-end">    <div class="col-auto">
+  <div class="row g-2 align-items-end">
+    <div class="col-auto">
       <label for="sortBy" class="form-label small">Sort by</label>
-      <select id="sortBy" class="form-select form-select-sm" (change)="onSortByChange($event)">
-        <option *ngFor="let option of sortByOptions" [value]="option.value" [selected]="option.value === sortBy">
+      <select
+        id="sortBy"
+        class="form-select form-select-sm"
+        (change)="onSortByChange($event)"
+      >
+        <option
+          *ngFor="let option of sortByOptions"
+          [value]="option.value"
+          [selected]="option.value === sortBy"
+        >
           {{ option.label }}
         </option>
       </select>
-    </div>    <div class="col-auto">
+    </div>
+    <div class="col-auto">
       <label for="sortDirection" class="form-label small">Direction</label>
-      <select id="sortDirection" class="form-select form-select-sm" (change)="onSortDirectionChange($event)">
-        <option *ngFor="let option of sortDirectionOptions" [value]="option.value" [selected]="option.value === sortDirection">
+      <select
+        id="sortDirection"
+        class="form-select form-select-sm"
+        (change)="onSortDirectionChange($event)"
+      >
+        <option
+          *ngFor="let option of sortDirectionOptions"
+          [value]="option.value"
+          [selected]="option.value === sortDirection"
+        >
           {{ option.label }}
         </option>
       </select>
-    </div><div class="col-auto">
+    </div>
+    <div class="col-auto">
       <label for="pageSize" class="form-label small">Results per page</label>
-      <select id="pageSize" class="form-select form-select-sm" (change)="onPageSizeChange($event)">
-        <option *ngFor="let size of possiblePageSizes" [value]="size" [selected]="size === pageSize">
+      <select
+        id="pageSize"
+        class="form-select form-select-sm"
+        (change)="onPageSizeChange($event)"
+      >
+        <option
+          *ngFor="let size of possiblePageSizes"
+          [value]="size"
+          [selected]="size === pageSize"
+        >
           {{ size }}
         </option>
       </select>
@@ -24,7 +51,12 @@
 
     <div class="col-auto" *ngIf="showLayoutOptions">
       <label for="layout" class="form-label small">Layout</label>
-      <select id="layout" class="form-select form-select-sm" [value]="layout" (change)="onLayoutChange($event)">
+      <select
+        id="layout"
+        class="form-select form-select-sm"
+        [value]="layout"
+        (change)="onLayoutChange($event)"
+      >
         <option value="grid">Grid</option>
         <option value="list">List</option>
         <option value="compact">Compact</option>
@@ -36,7 +68,9 @@
     <small class="text-muted">
       <i class="fas fa-info-circle me-1"></i>
       {{ totalCount }} results found
-      <span *ngIf="totalPages > 1"> • Page {{ currentPage }} of {{ totalPages }}</span>
+      <span *ngIf="totalPages > 1">
+        • Page {{ currentPage }} of {{ totalPages }}</span
+      >
     </small>
   </div>
 </div>

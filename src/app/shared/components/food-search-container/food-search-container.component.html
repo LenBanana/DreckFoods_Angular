@@ -1,5 +1,4 @@
 <div class="food-search-container">
-
   <!-- Search Input -->
   <div>
     <app-food-search-input
@@ -11,7 +10,8 @@
       (searchResults)="onSearchResults($event)"
       (searchError)="onSearchErrorEvent($event)"
       (isSearching)="onIsSearching($event)"
-      (searchQuery)="onSearchQuery($event)">
+      (searchQuery)="onSearchQuery($event)"
+    >
     </app-food-search-input>
   </div>
 
@@ -31,7 +31,8 @@
       (sortByChange)="onSortByChange($event)"
       (sortDirectionChange)="onSortDirectionChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
-      (layoutChange)="onLayoutChange($event)">
+      (layoutChange)="onLayoutChange($event)"
+    >
     </app-search-options>
   </div>
 
@@ -40,19 +41,26 @@
     <div class="d-flex align-items-center">
       <i class="fas fa-exclamation-triangle me-2"></i>
       <span class="flex-grow-1">{{ errorMessage }}</span>
-      <button type="button" class="btn-close btn-close-sm" (click)="clearError()"></button>
+      <button
+        type="button"
+        class="btn-close btn-close-sm"
+        (click)="clearError()"
+      ></button>
     </div>
   </div>
 
   <!-- Search Results -->
   <div *ngIf="hasQuery">
-    <div *ngIf="showResultsHeader" class="d-flex align-items-center justify-content-between mb-2">
+    <div
+      *ngIf="showResultsHeader"
+      class="d-flex align-items-center justify-content-between mb-2"
+    >
       <h6 class="mb-0">Search Results</h6>
       <small class="text-muted" *ngIf="!isSearching && hasResults">
         {{ searchResponse?.totalCount }} foods found
       </small>
     </div>
-    
+
     <app-food-search-results
       [searchResponse]="searchResponse"
       [layout]="layout"
@@ -68,19 +76,23 @@
       [emptyIcon]="currentEmptyIcon"
       (foodSelected)="onFoodSelected($event)"
       (imageError)="onImageError($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+    >
     </app-food-search-results>
   </div>
 
   <!-- Recent Foods Section -->
   <div *ngIf="showRecentSection">
-    <div *ngIf="showResultsHeader" class="d-flex align-items-center justify-content-between mb-2">
+    <div
+      *ngIf="showResultsHeader"
+      class="d-flex align-items-center justify-content-between mb-2"
+    >
       <h6 class="mb-0">Recently Added Foods</h6>
       <small class="text-muted" *ngIf="recentFoodsResponse">
         {{ recentFoodsResponse.totalCount }} foods total
       </small>
     </div>
-    
+
     <app-food-search-results
       [searchResponse]="recentFoodsResponse"
       [layout]="layout"
@@ -96,7 +108,8 @@
       [emptyIcon]="currentEmptyIcon"
       (foodSelected)="onFoodSelected($event)"
       (imageError)="onImageError($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+    >
     </app-food-search-results>
   </div>
 

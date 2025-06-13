@@ -15,11 +15,13 @@ export const adminEditorGuard: CanActivateFn = (route, state) => {
   }
 
   const user = authService.getCurrentUser();
-  if (user && (user.role === AppRole.Admin || user.role === AppRole.DataEditor)) {
+  if (
+    user &&
+    (user.role === AppRole.Admin || user.role === AppRole.DataEditor)
+  ) {
     return true;
   }
 
-  // Redirect to dashboard if user doesn't have the required role
   router.navigate(['/dashboard']);
   return false;
 };

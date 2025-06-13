@@ -74,11 +74,11 @@ export class WeightTrackerComponent implements OnInit {
           console.error('Error loading weight history:', error);
           this.isLoading = false;
           return of([]);
-        })
+        }),
       )
       .subscribe((entries) => {
         this.weightEntries = entries;
-        this.displayedEntries = entries.slice(0, 10); // Show latest 10 entries
+        this.displayedEntries = entries.slice(0, 10);
         this.isLoading = false;
       });
   }
@@ -96,7 +96,7 @@ export class WeightTrackerComponent implements OnInit {
               error.error?.message || 'Failed to log weight. Please try again.';
             this.isSubmitting = false;
             return of(null);
-          })
+          }),
         )
         .subscribe((response) => {
           if (response) {
@@ -118,7 +118,7 @@ export class WeightTrackerComponent implements OnInit {
   async deleteEntry(entry: WeightEntryDto) {
     var confirm = await this.alertService.confirm({
       message: `Are you sure you want to delete the weight entry from ${this.formatDate(
-        entry.recordedAt
+        entry.recordedAt,
       )}? This action cannot be undone.`,
       title: 'Delete Weight Entry',
       confirmLabel: 'Delete',
@@ -133,18 +133,18 @@ export class WeightTrackerComponent implements OnInit {
         .pipe(
           catchError((error) => {
             this.alertService.error(
-              'Failed to delete entry. Please try again.'
+              'Failed to delete entry. Please try again.',
             );
             this.deletingEntryId = null;
             return of(null);
-          })
+          }),
         )
         .subscribe((response) => {
           this.weightEntries = this.weightEntries.filter(
-            (e) => e.id !== entry.id
+            (e) => e.id !== entry.id,
           );
           this.displayedEntries = this.displayedEntries.filter(
-            (e) => e.id !== entry.id
+            (e) => e.id !== entry.id,
           );
           this.deletingEntryId = null;
         });
@@ -164,7 +164,7 @@ export class WeightTrackerComponent implements OnInit {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const oldEntry = this.weightEntries.find(
-      (entry) => parseISO(entry.recordedAt) <= thirtyDaysAgo
+      (entry) => parseISO(entry.recordedAt) <= thirtyDaysAgo,
     );
 
     if (!oldEntry) return '--';
@@ -188,7 +188,7 @@ export class WeightTrackerComponent implements OnInit {
 
   getWeightChangeForEntry(entry: WeightEntryDto): string {
     const index = this.weightEntries.findIndex((e) => e.id === entry.id);
-    if (index === this.weightEntries.length - 1) return '--'; // First entry
+    if (index === this.weightEntries.length - 1) return '--';
 
     const previousEntry = this.weightEntries[index + 1];
     const change = entry.weight - previousEntry.weight;

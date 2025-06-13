@@ -1,6 +1,18 @@
-import { Component, ElementRef, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { format, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
 import { catchError, of } from 'rxjs';
 
@@ -10,12 +22,23 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 import { NutritionProgressBarsComponent } from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
 import { DailyTimelineDto } from '../../core/models/timeline.models';
 import { FoodService } from '../../core/services/food.service';
-import { FoodEntryDto, EditFoodEntryRequest, NutritionData, NutritionTotals } from '../../core/models/food.models';
+import {
+  FoodEntryDto,
+  EditFoodEntryRequest,
+  NutritionData,
+  NutritionTotals,
+} from '../../core/models/food.models';
 
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, NutritionProgressBarsComponent, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    NutritionProgressBarsComponent,
+    FormsModule,
+  ],
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
 })
@@ -51,25 +74,21 @@ export class TimelineComponent implements OnInit {
 
     this.filterForm = this.fb.group({
       startDate: [format(startDate, 'yyyy-MM-dd')],
-      endDate: [format(endDate, 'yyyy-MM-dd')]
+      endDate: [format(endDate, 'yyyy-MM-dd')],
     });
   }
   ngOnInit() {
     this.loadTimeline();
-    
-    // Initialize the collapse state
+
     setTimeout(() => {
       const averagesElement = document.getElementById('averagesCollapse');
       if (averagesElement && this.averagesCollapsed) {
-        // Initialize as collapsed
         averagesElement.classList.remove('show');
       }
     }, 0);
   }
-
   storeAccordionState() {
     this.openAccordions.clear();
-    // Store open accordions by date (more reliable than index)
     this.timelineData.forEach((day, index) => {
       const accordionElement = document.getElementById(`c${index}`);
       if (accordionElement?.classList.contains('show')) {
@@ -77,14 +96,14 @@ export class TimelineComponent implements OnInit {
       }
     });
   }
-
   restoreAccordionState() {
-    // Use setTimeout to ensure DOM is fully rendered
     setTimeout(() => {
       this.timelineData.forEach((day, index) => {
         if (this.openAccordions.has(day.date)) {
           const accordionElement = document.getElementById(`c${index}`);
-          const buttonElement = document.querySelector(`[data-bs-target="#c${index}"]`) as HTMLElement;
+          const buttonElement = document.querySelector(
+            `[data-bs-target="#c${index}"]`,
+          ) as HTMLElement;
 
           if (accordionElement && buttonElement) {
             accordionElement.classList.add('show');
@@ -95,15 +114,13 @@ export class TimelineComponent implements OnInit {
       });
     }, 0);
   }
-
   startEditing(entry: FoodEntryDto) {
     entry.editing = true;
-    // Focus the input after it's rendered
     setTimeout(() => {
       const input = this.editInputs.last?.nativeElement;
       if (input) {
         input.focus();
-        input.select(); // Optional: select all text
+        input.select();
       }
     }, 0);
   }
@@ -116,17 +133,15 @@ export class TimelineComponent implements OnInit {
   toggleNutritionDetails(entry: FoodEntryDto) {
     entry.showNutrition = !entry.showNutrition;
   }
-
   toggleAllNutritionDetails(day: DailyTimelineDto) {
-    const anyExpanded = day.foodEntries.some(entry => entry.showNutrition);
-    // If any are expanded, collapse all. If none are expanded, expand all.
-    day.foodEntries.forEach(entry => {
+    const anyExpanded = day.foodEntries.some((entry) => entry.showNutrition);
+    day.foodEntries.forEach((entry) => {
       entry.showNutrition = !anyExpanded;
     });
   }
 
   areAnyNutritionDetailsExpanded(day: DailyTimelineDto): boolean {
-    return day.foodEntries.some(entry => entry.showNutrition);
+    return day.foodEntries.some((entry) => entry.showNutrition);
   }
 
   updateEntry(day: DailyTimelineDto, entry: FoodEntryDto) {
@@ -142,11 +157,10 @@ export class TimelineComponent implements OnInit {
         catchError((error) => {
           this.alertService.error('Failed to update entry. Please try again.');
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         if (!response) return;
-        // Silent refresh without loading states
         this.loadTimeline(true);
       });
   }
@@ -157,29 +171,28 @@ export class TimelineComponent implements OnInit {
 
     const utcStartDate = new Date(startDate);
     const utcEndDate = new Date(endDate);
-
     if (!startDate || !endDate) return;
 
-    // Only show loading states for user-initiated loads
     if (!silent) {
       this.isLoading = true;
     }
     this.errorMessage = '';
 
-    this.timelineService.getTimeline(utcStartDate.toISOString(), utcEndDate.toISOString())
+    this.timelineService
+      .getTimeline(utcStartDate.toISOString(), utcEndDate.toISOString())
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.errorMessage = 'Failed to load timeline data. Please try again.';
           if (!silent) {
             this.isLoading = false;
           }
           return of({ days: [], totalDays: 0 });
-        })
-      ).subscribe(response => {
+        }),
+      )
+      .subscribe((response) => {
         this.timelineData = response.days;
-        // Initialize showNutrition property for all entries
-        this.timelineData.forEach(day => {
-          day.foodEntries.forEach(entry => {
+        this.timelineData.forEach((day) => {
+          day.foodEntries.forEach((entry) => {
             if (entry.showNutrition === undefined) {
               entry.showNutrition = false;
             }
@@ -189,7 +202,6 @@ export class TimelineComponent implements OnInit {
         if (!silent) {
           this.isLoading = false;
         } else {
-          // Restore accordion state after silent refresh
           this.restoreAccordionState();
         }
       });
@@ -205,30 +217,53 @@ export class TimelineComponent implements OnInit {
 
     this.filterForm.patchValue({
       startDate: format(startDate, 'yyyy-MM-dd'),
-      endDate: format(endDate, 'yyyy-MM-dd')
+      endDate: format(endDate, 'yyyy-MM-dd'),
     });
 
     this.loadTimeline();
   }
   private calculateAverages() {
-    const daysWithEntries = this.timelineData.filter(day => day.foodEntries.length > 0);
+    const daysWithEntries = this.timelineData.filter(
+      (day) => day.foodEntries.length > 0,
+    );
     const totalDays = daysWithEntries.length;
 
     if (totalDays === 0) {
-      this.averages = { calories: 0, protein: 0, carbohydrates: 0, fat: 0, fiber: 0, sugar: 0, caffeine: 0, salt: 0 };
+      this.averages = {
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fat: 0,
+        fiber: 0,
+        sugar: 0,
+        caffeine: 0,
+        salt: 0,
+      };
       this.totalEntries = 0;
       this.weightEntries = 0;
       return;
     }
 
-    const totalCalories = daysWithEntries.reduce((sum, day) => sum + day.calories, 0);
-    const totalProtein = daysWithEntries.reduce((sum, day) => sum + day.protein, 0);
-    const totalCarbohydrates = daysWithEntries.reduce((sum, day) => sum + day.carbohydrates, 0);
+    const totalCalories = daysWithEntries.reduce(
+      (sum, day) => sum + day.calories,
+      0,
+    );
+    const totalProtein = daysWithEntries.reduce(
+      (sum, day) => sum + day.protein,
+      0,
+    );
+    const totalCarbohydrates = daysWithEntries.reduce(
+      (sum, day) => sum + day.carbohydrates,
+      0,
+    );
     const totalFat = daysWithEntries.reduce((sum, day) => sum + day.fat, 0);
     const totalFiber = daysWithEntries.reduce((sum, day) => sum + day.fiber, 0);
     const totalSugar = daysWithEntries.reduce((sum, day) => sum + day.sugar, 0);
-    const totalCaffeine = daysWithEntries.reduce((sum, day) => sum + day.caffeine, 0);
-    const totalSalt = daysWithEntries.reduce((sum, day) => sum + (day.salt || 0), 0);
+    const totalCaffeine = daysWithEntries.reduce(
+      (sum, day) => sum + day.caffeine,
+      0,
+    );
+    const totalSalt = daysWithEntries.reduce((sum, day) => sum + day.salt, 0);
 
     this.averages = {
       calories: totalCalories / totalDays,
@@ -238,11 +273,16 @@ export class TimelineComponent implements OnInit {
       fiber: totalFiber / totalDays,
       sugar: totalSugar / totalDays,
       caffeine: totalCaffeine / totalDays,
-      salt: totalSalt / totalDays
+      salt: totalSalt / totalDays,
     };
 
-    this.totalEntries = this.timelineData.reduce((sum, day) => sum + day.foodEntries.length, 0);
-    this.weightEntries = this.timelineData.filter(day => day.weightEntry).length;
+    this.totalEntries = this.timelineData.reduce(
+      (sum, day) => sum + day.foodEntries.length,
+      0,
+    );
+    this.weightEntries = this.timelineData.filter(
+      (day) => day.weightEntry,
+    ).length;
   }
 
   getMacroPercentage(macroCalories: number, totalCalories: number): number {
@@ -254,32 +294,37 @@ export class TimelineComponent implements OnInit {
     if (day.calories === 0) return 0;
 
     const calculatedCalories =
-      (day.protein * 4) +
-      (day.carbohydrates * 4) +
-      (day.fat * 9);
+      day.protein * 4 + day.carbohydrates * 4 + day.fat * 9;
 
     const unaccountedCalories = day.calories - calculatedCalories;
     const percentage = Math.max((unaccountedCalories / day.calories) * 100, 0);
-
     return Math.min(percentage, 100);
   }
 
-  // New methods for entry-level progress bars
   getEntryNutrientPercentage(entryValue: number, dayTotal: number): number {
     if (dayTotal === 0) return 0;
     return Math.min((entryValue / dayTotal) * 100, 100);
   }
 
-  getEntryCaloriePercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+  getEntryCaloriePercentage(
+    entry: FoodEntryDto,
+    day: DailyTimelineDto,
+  ): number {
     return this.getEntryNutrientPercentage(entry.calories, day.calories);
   }
 
-  getEntryProteinPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+  getEntryProteinPercentage(
+    entry: FoodEntryDto,
+    day: DailyTimelineDto,
+  ): number {
     return this.getEntryNutrientPercentage(entry.protein, day.protein);
   }
 
   getEntryCarbPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.carbohydrates, day.carbohydrates);
+    return this.getEntryNutrientPercentage(
+      entry.carbohydrates,
+      day.carbohydrates,
+    );
   }
 
   getEntryFatPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
@@ -317,7 +362,6 @@ export class TimelineComponent implements OnInit {
     event.target.style.display = 'none';
   }
 
-  // Helper methods for nutrition progress bars
   getEntryAsNutritionData(entry: FoodEntryDto): NutritionData {
     return {
       calories: entry.calories,
@@ -327,7 +371,7 @@ export class TimelineComponent implements OnInit {
       fiber: entry.fiber,
       sugar: entry.sugar,
       caffeine: entry.caffeine,
-      salt: entry.salt
+      salt: entry.salt,
     };
   }
 
@@ -340,19 +384,21 @@ export class TimelineComponent implements OnInit {
       fiber: day.fiber,
       sugar: day.sugar,
       caffeine: day.caffeine,
-      salt: day.salt
+      salt: day.salt,
     };
   }
   toggleAverages() {
     this.averagesCollapsed = !this.averagesCollapsed;
-    
-    // Use Bootstrap's collapse method for smooth animation
+
     const averagesElement = document.getElementById('averagesCollapse');
     if (averagesElement) {
-      const bsCollapse = new (window as any).bootstrap.Collapse(averagesElement, {
-        toggle: false
-      });
-      
+      const bsCollapse = new (window as any).bootstrap.Collapse(
+        averagesElement,
+        {
+          toggle: false,
+        },
+      );
+
       if (this.averagesCollapsed) {
         bsCollapse.hide();
       } else {

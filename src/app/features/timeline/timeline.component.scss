@@ -15,12 +15,10 @@
     transition: all 0.3s ease;
   }
 
-  // Averages collapse transition
   .collapse {
     transition: all 0.3s ease;
   }
 
-  // Icon rotation for averages toggle
   .fa-chevron-down {
     transition: transform 0.5s ease;
 
@@ -29,10 +27,9 @@
     }
   }
 
-  // Nutrition details styles
   .nutrition-toggle {
     transition: transform 0.2s ease;
-    
+
     &.fa-rotate-180 {
       transform: rotate(180deg);
     }
@@ -41,51 +38,43 @@
   .nutrition-details {
     transition: all 0.3s ease;
     overflow: hidden;
+
+    &.collapsed {
+      max-height: 0;
+      opacity: 0;
+      transform: scaleY(0);
+      transform-origin: top;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    &.expanded {
+      max-height: 1000px;
+      opacity: 1;
+      transform: scaleY(1);
+      transform-origin: top;
+    }
   }
 
-  // Collapse all button styling
   .btn-outline-secondary {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
-    
+
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
+
     .fa-chevron-down {
       transition: transform 0.2s ease;
     }
   }
 
-  .text-outline {
-    text-shadow: 0px 0px 1px rgba(0,0,0,1);
-  }
-
-  .bg-light {
-    background-color: #222 !important;
-  }
-
-  .bg-dark {
-    background-color: #ccc !important;
-  }
-
-  // Dark mode adjustments
   [data-theme="dark"] & {
-    .text-outline {
-      text-shadow: 0px 0px 1px rgba(200,200,200,1);
-    }
-
     .border-dark {
       border-color: #585e63 !important;
-    }
-
-    .bg-light {
-      background-color: #ccc !important;
-    }
-
-    .bg-dark {
-      background-color: #222 !important;
     }
   }
 }

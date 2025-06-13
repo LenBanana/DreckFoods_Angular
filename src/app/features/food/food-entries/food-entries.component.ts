@@ -1,33 +1,49 @@
-import { Component, ElementRef, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  format,
-  parseISO,
-  isToday,
-  isYesterday,
-} from 'date-fns';
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { format, parseISO, isToday, isYesterday } from 'date-fns';
 import { catchError, of } from 'rxjs';
 
 import { FoodService } from '../../../core/services/food.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { NutritionProgressBarsComponent } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
-import { NutritionCardComponent, NutritionCardData } from '../../../shared/components/nutrition-card/nutrition-card.component';
+import {
+  NutritionCardComponent,
+  NutritionCardData,
+} from '../../../shared/components/nutrition-card/nutrition-card.component';
 import { NutritionConfigService } from '../../../shared/services/nutrition-config.service';
-import { EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals } from '../../../core/models/food.models';
+import {
+  EditFoodEntryRequest,
+  FoodEntryDto,
+  NutritionData,
+  NutritionTotals,
+} from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-food-entries',
-  standalone: true, imports: [
+  standalone: true,
+  imports: [
     CommonModule,
     RouterLink,
     ReactiveFormsModule,
     LoadingSpinnerComponent,
     NutritionProgressBarsComponent,
     NutritionCardComponent,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './food-entries.component.html',
   styleUrls: ['./food-entries.component.scss'],
@@ -75,7 +91,6 @@ export class FoodEntriesComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Get the date parameter for API call
     let dateParam: string | undefined;
     if (!this.showingAll) {
       const selectedDate = this.filterForm.get('selectedDate')?.value;
@@ -91,11 +106,10 @@ export class FoodEntriesComponent implements OnInit {
           this.errorMessage = 'Failed to load food entries. Please try again.';
           this.isLoading = false;
           return of([]);
-        })
+        }),
       )
       .subscribe((entries) => {
-        // Initialize showNutrition property for all entries
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.showNutrition === undefined) {
             entry.showNutrition = false;
           }
@@ -104,10 +118,10 @@ export class FoodEntriesComponent implements OnInit {
         if (this.showingAll) {
           this.allEntries = entries;
           this.displayEntries = entries;
-          this.selectedDateEntries = []; // No specific date selected
+          this.selectedDateEntries = [];
         } else {
           this.allEntries = entries;
-          this.selectedDateEntries = entries; // These are already filtered by date from API
+          this.selectedDateEntries = entries;
           this.displayEntries = entries;
         }
 
@@ -115,15 +129,13 @@ export class FoodEntriesComponent implements OnInit {
         this.isLoading = false;
       });
   }
-
   startEditing(entry: FoodEntryDto) {
     entry.editing = true;
-    // Focus the input after it's rendered
     setTimeout(() => {
       const input = this.editInputs.last?.nativeElement;
       if (input) {
         input.focus();
-        input.select(); // Optional: select all text
+        input.select();
       }
     }, 0);
   }
@@ -144,7 +156,7 @@ export class FoodEntriesComponent implements OnInit {
         catchError((error) => {
           this.alertService.error('Failed to update entry. Please try again.');
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         if (!response) return;
@@ -196,39 +208,19 @@ export class FoodEntriesComponent implements OnInit {
     }
   }
   private calculateDailyTotals() {
-    // Use selectedDateEntries for specific date totals, or displayEntries for "All Time"
-    const entriesToSum = this.showingAll ? this.displayEntries : this.selectedDateEntries;
+    const entriesToSum = this.showingAll
+      ? this.displayEntries
+      : this.selectedDateEntries;
 
     this.dailyTotals = {
-      calories: entriesToSum.reduce(
-        (sum, entry) => sum + entry.calories,
-        0
-      ),
-      protein: entriesToSum.reduce(
-        (sum, entry) => sum + entry.protein,
-        0
-      ),
-      carbs: entriesToSum.reduce(
-        (sum, entry) => sum + entry.carbohydrates,
-        0
-      ),
+      calories: entriesToSum.reduce((sum, entry) => sum + entry.calories, 0),
+      protein: entriesToSum.reduce((sum, entry) => sum + entry.protein, 0),
+      carbs: entriesToSum.reduce((sum, entry) => sum + entry.carbohydrates, 0),
       fat: entriesToSum.reduce((sum, entry) => sum + entry.fat, 0),
-      fiber: entriesToSum.reduce(
-        (sum, entry) => sum + entry.fiber,
-        0
-      ),
-      sugar: entriesToSum.reduce(
-        (sum, entry) => sum + (entry.sugar),
-        0
-      ),
-      caffeine: entriesToSum.reduce(
-        (sum, entry) => sum + (entry.caffeine),
-        0
-      ),
-      salt: entriesToSum.reduce(
-        (sum, entry) => sum + (entry.salt),
-        0
-      ),
+      fiber: entriesToSum.reduce((sum, entry) => sum + entry.fiber, 0),
+      sugar: entriesToSum.reduce((sum, entry) => sum + entry.sugar, 0),
+      caffeine: entriesToSum.reduce((sum, entry) => sum + entry.caffeine, 0),
+      salt: entriesToSum.reduce((sum, entry) => sum + entry.salt, 0),
     };
   }
   async deleteEntry(entry: FoodEntryDto) {
@@ -241,18 +233,20 @@ export class FoodEntriesComponent implements OnInit {
         .deleteFoodEntry(entry.id)
         .pipe(
           catchError((error) => {
-            this.alertService.error('Failed to delete entry. Please try again.');
+            this.alertService.error(
+              'Failed to delete entry. Please try again.',
+            );
             this.deletingEntryId = null;
             return of(null);
-          })
-        ).subscribe((response) => {
-          // Remove from local arrays
+          }),
+        )
+        .subscribe((response) => {
           this.allEntries = this.allEntries.filter((e) => e.id !== entry.id);
           this.selectedDateEntries = this.selectedDateEntries.filter(
-            (e) => e.id !== entry.id
+            (e) => e.id !== entry.id,
           );
           this.displayEntries = this.displayEntries.filter(
-            (e) => e.id !== entry.id
+            (e) => e.id !== entry.id,
           );
           this.calculateDailyTotals();
           this.deletingEntryId = null;
@@ -297,12 +291,10 @@ export class FoodEntriesComponent implements OnInit {
   trackByEntryId(index: number, entry: FoodEntryDto): number {
     return entry.id;
   }
-
   onImageError(event: any) {
     event.target.style.display = 'none';
   }
 
-  // Helper methods for nutrition progress bars
   get dailyTotalsAsNutritionData(): NutritionData {
     return {
       calories: this.dailyTotals.calories,
@@ -312,7 +304,7 @@ export class FoodEntriesComponent implements OnInit {
       fiber: this.dailyTotals.fiber,
       sugar: this.dailyTotals.sugar,
       caffeine: this.dailyTotals.caffeine,
-      salt: this.dailyTotals.salt
+      salt: this.dailyTotals.salt,
     };
   }
 
@@ -325,7 +317,7 @@ export class FoodEntriesComponent implements OnInit {
       fiber: this.dailyTotals.fiber,
       caffeine: this.dailyTotals.caffeine,
       sugar: this.dailyTotals.sugar,
-      salt: this.dailyTotals.salt
+      salt: this.dailyTotals.salt,
     };
   }
 
@@ -338,25 +330,26 @@ export class FoodEntriesComponent implements OnInit {
       fiber: entry.fiber,
       sugar: entry.sugar,
       caffeine: entry.caffeine,
-      salt: entry.salt
+      salt: entry.salt,
     };
   }
 
   toggleNutritionDetails(entry: FoodEntryDto) {
     entry.showNutrition = !entry.showNutrition;
   }
-
   toggleAllNutritionDetails() {
-    const anyExpanded = this.displayEntries.some(entry => entry.showNutrition);
-    // If any are expanded, collapse all. If none are expanded, expand all.
-    this.displayEntries.forEach(entry => {
+    const anyExpanded = this.displayEntries.some(
+      (entry) => entry.showNutrition,
+    );
+    this.displayEntries.forEach((entry) => {
       entry.showNutrition = !anyExpanded;
     });
   }
 
   areAnyNutritionDetailsExpanded(): boolean {
-    return this.displayEntries.some(entry => entry.showNutrition);
-  }  getNutrientCount(entry: FoodEntryDto): number {
+    return this.displayEntries.some((entry) => entry.showNutrition);
+  }
+  getNutrientCount(entry: FoodEntryDto): number {
     let count = 0;
     if (entry.calories > 0) count++;
     if (entry.protein > 0) count++;
@@ -369,12 +362,30 @@ export class FoodEntriesComponent implements OnInit {
 
   getDailySummaryCards(): NutritionCardData[] {
     return [
-      this.nutritionConfigService.createNutritionCard('calories', this.dailyTotals.calories),
-      this.nutritionConfigService.createNutritionCard('protein', this.dailyTotals.protein),
-      this.nutritionConfigService.createNutritionCard('carbs', this.dailyTotals.carbs),
-      this.nutritionConfigService.createNutritionCard('fat', this.dailyTotals.fat),
-      this.nutritionConfigService.createNutritionCard('fiber', this.dailyTotals.fiber),
-      this.nutritionConfigService.createNutritionCard('caffeine', this.dailyTotals.caffeine)
+      this.nutritionConfigService.createNutritionCard(
+        'calories',
+        this.dailyTotals.calories,
+      ),
+      this.nutritionConfigService.createNutritionCard(
+        'protein',
+        this.dailyTotals.protein,
+      ),
+      this.nutritionConfigService.createNutritionCard(
+        'carbs',
+        this.dailyTotals.carbs,
+      ),
+      this.nutritionConfigService.createNutritionCard(
+        'fat',
+        this.dailyTotals.fat,
+      ),
+      this.nutritionConfigService.createNutritionCard(
+        'fiber',
+        this.dailyTotals.fiber,
+      ),
+      this.nutritionConfigService.createNutritionCard(
+        'caffeine',
+        this.dailyTotals.caffeine,
+      ),
     ];
   }
 }

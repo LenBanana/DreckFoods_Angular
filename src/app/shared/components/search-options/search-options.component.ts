@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FoodSortBy, SortDirection } from '../../../core/models/enums/sorting.models';
+import {
+  FoodSortBy,
+  SortDirection,
+} from '../../../core/models/enums/sorting.models';
 import { FoodResultsLayout } from '../food-search-results/food-search-results.component';
 
 @Component({
@@ -8,7 +11,7 @@ import { FoodResultsLayout } from '../food-search-results/food-search-results.co
   standalone: true,
   imports: [CommonModule],
   templateUrl: './search-options.component.html',
-  styleUrls: ['./search-options.component.scss']
+  styleUrls: ['./search-options.component.scss'],
 })
 export class SearchOptionsComponent {
   @Input() sortBy: FoodSortBy = FoodSortBy.Name;
@@ -33,13 +36,14 @@ export class SearchOptionsComponent {
     { value: FoodSortBy.Protein, label: 'Protein' },
     { value: FoodSortBy.Carbs, label: 'Carbohydrates' },
     { value: FoodSortBy.Fat, label: 'Fat' },
-    { value: FoodSortBy.Brand, label: 'Brand' }
+    { value: FoodSortBy.Brand, label: 'Brand' },
   ];
 
   sortDirectionOptions = [
     { value: SortDirection.Ascending, label: 'Ascending' },
-    { value: SortDirection.Descending, label: 'Descending' }
-  ];  onSortByChange(event: Event) {
+    { value: SortDirection.Descending, label: 'Descending' },
+  ];
+  onSortByChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.sortByChange.emit(Number(target.value) as FoodSortBy);
   }
@@ -52,7 +56,8 @@ export class SearchOptionsComponent {
   onPageSizeChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.pageSizeChange.emit(Number(target.value));
-  }  onLayoutChange(event: Event) {
+  }
+  onLayoutChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.layoutChange.emit(target.value as FoodResultsLayout);
   }

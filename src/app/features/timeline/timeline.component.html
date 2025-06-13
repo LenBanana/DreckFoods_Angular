@@ -5,9 +5,7 @@
       <i class="fas fa-chart-line me-2 text-primary"></i>
       Nutrition Timeline
     </h2>
-    <p class="text-muted">
-      View your food and weight entries over time.
-    </p>
+    <p class="text-muted">View your food and weight entries over time.</p>
   </header>
 
   <!-- filter card -->
@@ -16,22 +14,44 @@
       <form [formGroup]="filterForm" class="row gy-3 align-items-end">
         <div class="col-6">
           <label for="startDate" class="form-label">From</label>
-          <input id="startDate" type="date" class="form-control" formControlName="startDate"
-            (change)="onDateRangeChange()" />
+          <input
+            id="startDate"
+            type="date"
+            class="form-control"
+            formControlName="startDate"
+            (change)="onDateRangeChange()"
+          />
         </div>
         <div class="col-6">
           <label for="endDate" class="form-label">To</label>
-          <input id="endDate" type="date" class="form-control" formControlName="endDate"
-            (change)="onDateRangeChange()" />
+          <input
+            id="endDate"
+            type="date"
+            class="form-control"
+            formControlName="endDate"
+            (change)="onDateRangeChange()"
+          />
         </div>
         <div class="col-12 justify-content-center d-flex">
-          <button type="button" class="btn btn-outline-primary me-2 px-4" (click)="setRange(7)">
+          <button
+            type="button"
+            class="btn btn-outline-primary me-2 px-4"
+            (click)="setRange(7)"
+          >
             7d
           </button>
-          <button type="button" class="btn btn-outline-primary me-2 px-4" (click)="setRange(30)">
+          <button
+            type="button"
+            class="btn btn-outline-primary me-2 px-4"
+            (click)="setRange(30)"
+          >
             30d
           </button>
-          <button type="button" class="btn btn-outline-primary px-4" (click)="setRange(90)">
+          <button
+            type="button"
+            class="btn btn-outline-primary px-4"
+            (click)="setRange(90)"
+          >
             3m
           </button>
         </div>
@@ -39,32 +59,83 @@
     </div>
   </div>
   <ng-container *ngIf="!isLoading; else loadingTpl">
-    <ng-container *ngIf="timelineData.length; else emptyTpl"> <!-- averages section with collapsible toggle -->
+    <ng-container *ngIf="timelineData.length; else emptyTpl">
+      <!-- averages section with collapsible toggle -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">
           <i class="fas fa-calculator me-2 text-primary"></i>
           Daily Averages
         </h5>
-        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="toggleAverages()">
-          <i class="fas fa-chevron-down" [class.fa-rotate-180]="averagesCollapsed"></i>
-          <span class="ms-1">{{ averagesCollapsed ? 'Show' : 'Hide' }}</span>
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          type="button"
+          (click)="toggleAverages()"
+        >
+          <i
+            class="fas fa-chevron-down"
+            [class.fa-rotate-180]="averagesCollapsed"
+          ></i>
+          <span class="ms-1">{{ averagesCollapsed ? "Show" : "Hide" }}</span>
         </button>
-      </div>      <!-- collapsible summary grid -->
+      </div>
+      <!-- collapsible summary grid -->
       <div class="collapse" id="averagesCollapse">
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 mb-4 text-center">
-          <div class="col" *ngFor="let s of [
-              { v: averages.calories|number:'1.0-0', label:'Avg Calories/Day', color: 'primary' },
-              { v: averages.protein|number:'1.1-1', label:'Avg Protein/Day (g)', color: 'success' },
-              { v: averages.carbohydrates|number:'1.1-1', label:'Avg Carbs/Day (g)', color: 'warning' },
-              { v: averages.fat|number:'1.1-1', label:'Avg Fat/Day (g)', color: 'danger' },
-              { v: averages.fiber|number:'1.1-1', label:'Avg Fiber/Day (g)', color: 'secondary' },
-              { v: averages.caffeine|number:'1.1-1', label:'Avg Caffeine/Day (mg)', color: 'dark' },
-              { v: averages.sugar|number:'1.1-1', label:'Avg Sugar/Day (g)', color: 'info' },
-              { v: totalEntries, label:'Avg Salt/Day (g)', color: 'light' }
-            ]">
+        <div
+          class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 mb-4 text-center"
+        >
+          <div
+            class="col"
+            *ngFor="
+              let s of [
+                {
+                  v: averages.calories | number: '1.0-0',
+                  label: 'Avg Calories/Day',
+                  color: 'primary',
+                },
+                {
+                  v: averages.protein | number: '1.1-1',
+                  label: 'Avg Protein/Day (g)',
+                  color: 'success',
+                },
+                {
+                  v: averages.carbohydrates | number: '1.1-1',
+                  label: 'Avg Carbs/Day (g)',
+                  color: 'warning',
+                },
+                {
+                  v: averages.fat | number: '1.1-1',
+                  label: 'Avg Fat/Day (g)',
+                  color: 'danger',
+                },
+                {
+                  v: averages.fiber | number: '1.1-1',
+                  label: 'Avg Fiber/Day (g)',
+                  color: 'secondary',
+                },
+                {
+                  v: averages.caffeine | number: '1.1-1',
+                  label: 'Avg Caffeine/Day (mg)',
+                  color: 'dark',
+                },
+                {
+                  v: averages.sugar | number: '1.1-1',
+                  label: 'Avg Sugar/Day (g)',
+                  color: 'info',
+                },
+                {
+                  v: averages.salt | number: '1.1-1',
+                  label: 'Avg Salt/Day (g)',
+                  color: 'light',
+                },
+              ]
+            "
+          >
             <div class="card h-100" [class]="'border-' + s.color">
               <div class="card-body">
-                <h3 class="card-title fw-bold text-outline" [class]="'text-' + s.color">
+                <h3
+                  class="card-title fw-bold text-outline"
+                  [class]="'text-' + s.color"
+                >
                   {{ s.v }}
                 </h3>
                 <p class="card-text small text-uppercase">{{ s.label }}</p>
@@ -76,115 +147,232 @@
 
       <!-- accordion for each day -->
       <div class="accordion" id="timelineAcc">
-        <div class="accordion-item" *ngFor="let day of timelineData; let i = index" style="border-radius: 0;">
-          <h2 class="accordion-header" id="h{{i}}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              style="background-color: transparent;" [attr.data-bs-target]="'#c'+i" aria-expanded="false"
-              [attr.aria-controls]="'c'+i">
+        <div
+          class="accordion-item"
+          *ngFor="let day of timelineData; let i = index"
+          style="border-radius: 0"
+        >
+          <h2 class="accordion-header" id="h{{ i }}">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              style="background-color: transparent"
+              [attr.data-bs-target]="'#c' + i"
+              aria-expanded="false"
+              [attr.aria-controls]="'c' + i"
+            >
               <span class="me-auto badge bg-primary">
-                {{ day.calories|number:'1.0-0' }} Cal
+                {{ day.calories | number: "1.0-0" }} Cal
               </span>
               {{ formatDayHeader(day.date) }}
             </button>
           </h2>
-          <div [id]="'c'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'h'+i"
-            data-bs-parent="#timelineAcc">
+          <div
+            [id]="'c' + i"
+            class="accordion-collapse collapse"
+            [attr.aria-labelledby]="'h' + i"
+            data-bs-parent="#timelineAcc"
+          >
             <div class="accordion-body">
-
               <!-- Macro Summary -->
               <h6>Macros</h6>
               <div class="d-flex flex-wrap gap-3 small text-muted">
-                <span><span class="badge bg-success me-1">&nbsp;</span>{{ day.protein|number:'1.1-1' }}g
-                  Protein</span>
-                <span><span class="badge bg-info me-1">&nbsp;</span>{{ (day.carbohydrates -
-                  day.sugar)|number:'1.1-1' }}g Carbs</span>
-                <span><span class="badge bg-primary me-1">&nbsp;</span>{{ day.sugar|number:'1.1-1' }}g Sugar</span>
-                <span><span class="badge bg-warning me-1">&nbsp;</span>{{ day.fat|number:'1.1-1' }}g Fat</span>
-                <span><span class="badge bg-secondary me-1">&nbsp;</span>{{ day.fiber|number:'1.1-1' }}g
-                  Fiber</span>
-                <span *ngIf="day.caffeine > 0"><span class="badge bg-dark me-1">&nbsp;</span>{{
-                  day.caffeine|number:'1.1-1' }}mg Caffeine</span>
-                <span *ngIf="day.salt > 0"><span class="badge bg-light text-dark me-1">&nbsp;</span>{{
-                  day.salt|number:'1.1-1' }}g Salt</span>
+                <span
+                  ><span class="badge bg-success me-1">&nbsp;</span
+                  >{{ day.protein | number: "1.1-1" }}g Protein</span
+                >
+                <span
+                  ><span class="badge bg-info me-1">&nbsp;</span
+                  >{{ day.carbohydrates - day.sugar | number: "1.1-1" }}g
+                  Carbs</span
+                >
+                <span
+                  ><span class="badge bg-primary me-1">&nbsp;</span
+                  >{{ day.sugar | number: "1.1-1" }}g Sugar</span
+                >
+                <span
+                  ><span class="badge bg-warning me-1">&nbsp;</span
+                  >{{ day.fat | number: "1.1-1" }}g Fat</span
+                >
+                <span
+                  ><span class="badge bg-secondary me-1">&nbsp;</span
+                  >{{ day.fiber | number: "1.1-1" }}g Fiber</span
+                >
+                <span *ngIf="day.caffeine > 0"
+                  ><span class="badge bg-dark me-1">&nbsp;</span
+                  >{{ day.caffeine | number: "1.1-1" }}mg Caffeine</span
+                >
+                <span *ngIf="day.salt > 0"
+                  ><span class="badge text-dark me-1">&nbsp;</span
+                  >{{ day.salt | number: "1.1-1" }}g Salt</span
+                >
               </div>
 
               <!-- Combined Macros Progress Bar -->
               <h6 class="mt-3">Calorie Breakdown</h6>
-              <div class="progress mb-3" style="height: 24px;">
+              <div class="progress mb-3" style="height: 24px">
                 <!-- Protein -->
-                <div class="progress-bar bg-success" [style.width.%]="getMacroPercentage(day.protein*4, day.calories)"
-                  data-bs-toggle="tooltip" [title]="(day.protein | number:'1.1-1' ) + 'g Protein'">
-                </div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width.%]="
+                    getMacroPercentage(day.protein * 4, day.calories)
+                  "
+                  data-bs-toggle="tooltip"
+                  [title]="(day.protein | number: '1.1-1') + 'g Protein'"
+                ></div>
 
                 <!-- Complex Carbs -->
-                <div class="progress-bar bg-info"
-                  [style.width.%]="getMacroPercentage((day.carbohydrates - day.sugar)*4, day.calories)"
+                <div
+                  class="progress-bar bg-info"
+                  [style.width.%]="
+                    getMacroPercentage(
+                      (day.carbohydrates - day.sugar) * 4,
+                      day.calories
+                    )
+                  "
                   data-bs-toggle="tooltip"
-                  [title]="((day.carbohydrates - day.sugar) | number:'1.1-1' ) + 'g Complex Carbs'">
-                </div>
+                  [title]="
+                    (day.carbohydrates - day.sugar | number: '1.1-1') +
+                    'g Complex Carbs'
+                  "
+                ></div>
 
                 <!-- Sugar -->
-                <div class="progress-bar bg-primary" [style.width.%]="getMacroPercentage(day.sugar*4, day.calories)"
-                  data-bs-toggle="tooltip" [title]="(day.sugar | number:'1.1-1' ) + 'g Sugar'">
-                </div>
+                <div
+                  class="progress-bar bg-primary"
+                  [style.width.%]="
+                    getMacroPercentage(day.sugar * 4, day.calories)
+                  "
+                  data-bs-toggle="tooltip"
+                  [title]="(day.sugar | number: '1.1-1') + 'g Sugar'"
+                ></div>
 
                 <!-- Fat -->
-                <div class="progress-bar bg-warning" [style.width.%]="getMacroPercentage(day.fat*9, day.calories)"
-                  data-bs-toggle="tooltip" [title]="(day.fat | number:'1.1-1' ) + 'g Fat'">
-                </div>
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width.%]="
+                    getMacroPercentage(day.fat * 9, day.calories)
+                  "
+                  data-bs-toggle="tooltip"
+                  [title]="(day.fat | number: '1.1-1') + 'g Fat'"
+                ></div>
 
                 <!-- Unaccounted/Other calories -->
-                <div class="progress-bar progress-bar-striped" style="background-color: #ccc;"
-                  [style.width.%]="getUnaccountedPercentage(day)" data-bs-toggle="tooltip"
-                  title="Other/Unaccounted calories">
-                </div>
+                <div
+                  class="progress-bar progress-bar-striped"
+                  style="background-color: #ccc"
+                  [style.width.%]="getUnaccountedPercentage(day)"
+                  data-bs-toggle="tooltip"
+                  title="Other/Unaccounted calories"
+                ></div>
               </div>
 
               <!-- entries list -->
-              <div class="d-flex justify-content-between align-items-center mb-2" *ngIf="day.foodEntries.length > 0">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+                *ngIf="day.foodEntries.length > 0"
+              >
                 <h6 class="mb-0">Food Entries</h6>
-                <button class="btn btn-sm btn-outline-secondary" (click)="toggleAllNutritionDetails(day)"
-                  [title]="areAnyNutritionDetailsExpanded(day) ? 'Collapse all nutrition details' : 'Expand all nutrition details'">
-                  <i class="fas fa-chevron-down me-1" [class.fa-rotate-180]="areAnyNutritionDetailsExpanded(day)"></i>
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="toggleAllNutritionDetails(day)"
+                  [title]="
+                    areAnyNutritionDetailsExpanded(day)
+                      ? 'Collapse all nutrition details'
+                      : 'Expand all nutrition details'
+                  "
+                >
+                  <i
+                    class="fas fa-chevron-down me-1"
+                    [class.fa-rotate-180]="areAnyNutritionDetailsExpanded(day)"
+                  ></i>
                   Nutritions
                 </button>
               </div>
               <ul class="list-group">
-                <li class="list-group-item d-flex align-items-center" *ngFor="let entry of day.foodEntries">
-                  <img *ngIf="entry.imageUrl" [src]="entry.imageUrl" class="rounded me-3 object-fit-cover" width="40"
-                    height="40" alt="{{entry.foodName}}" />
-                  <span *ngIf="!entry.imageUrl" class="badge bg-light text-dark rounded me-3 d-flex"
-                    style="width: 40px; height: 40px;">
+                <li
+                  class="list-group-item d-flex align-items-center"
+                  *ngFor="let entry of day.foodEntries"
+                >
+                  <img
+                    *ngIf="entry.imageUrl"
+                    [src]="entry.imageUrl"
+                    class="rounded me-3 object-fit-cover"
+                    width="40"
+                    height="40"
+                    alt="{{ entry.foodName }}"
+                  />
+                  <span
+                    *ngIf="!entry.imageUrl"
+                    class="badge text-dark rounded me-3 d-flex"
+                    style="width: 40px; height: 40px"
+                  >
                     <i class="fas fa-utensils text-primary m-auto"></i>
                   </span>
                   <div class="w-100">
-                    <div><strong>{{ entry.foodName }}</strong></div> <small
-                      class="text-muted d-flex align-items-center justify-content-between">
+                    <div>
+                      <strong>{{ entry.foodName }}</strong>
+                    </div>
+                    <small
+                      class="text-muted d-flex align-items-center justify-content-between"
+                    >
                       <span>
-                        <span (click)="startEditing(entry)" class="pointer" *ngIf="!entry.editing">{{
-                          entry.gramsConsumed | number:'1.0-1' }}g</span>
+                        <span
+                          (click)="startEditing(entry)"
+                          class="pointer"
+                          *ngIf="!entry.editing"
+                          >{{ entry.gramsConsumed | number: "1.0-1" }}g</span
+                        >
                         <span *ngIf="entry.editing">
-                          <input #editInput type="number" class="form-control form-control-sm d-inline-block w-auto"
-                            [(ngModel)]="entry.gramsConsumed" (keyup.enter)="finishEditing(entry, day)"
-                            (blur)="finishEditing(entry, day)">
+                          <input
+                            #editInput
+                            type="number"
+                            class="form-control form-control-sm d-inline-block w-auto"
+                            [(ngModel)]="entry.gramsConsumed"
+                            (keyup.enter)="finishEditing(entry, day)"
+                            (blur)="finishEditing(entry, day)"
+                          />
                         </span>
                       </span>
                       <span class="d-flex align-items-center">
-                        <span class="me-2" *ngIf="!entry.showNutrition && getNutrientCount(entry) > 0">
+                        <span
+                          class="me-2"
+                          *ngIf="
+                            !entry.showNutrition && getNutrientCount(entry) > 0
+                          "
+                        >
                           {{ getNutrientCount(entry) }} nutrients
                         </span>
-                        <button class="btn btn-sm btn-link text-muted p-0" (click)="toggleNutritionDetails(entry)"
-                          [title]="entry.showNutrition ? 'Hide nutrition details' : 'Show nutrition details'">
-                          <i class="fas fa-chevron-down nutrition-toggle"
-                            [class.fa-rotate-180]="entry.showNutrition"></i>
+                        <button
+                          class="btn btn-sm btn-link text-muted p-0"
+                          (click)="toggleNutritionDetails(entry)"
+                          [title]="
+                            entry.showNutrition
+                              ? 'Hide nutrition details'
+                              : 'Show nutrition details'
+                          "
+                        >
+                          <i
+                            class="fas fa-chevron-down nutrition-toggle"
+                            [class.fa-rotate-180]="entry.showNutrition"
+                          ></i>
                         </button>
                       </span>
-                    </small> <!-- Nutrition Info Progress Bars (Collapsible) -->
-                    <div class="mt-2 nutrition-details" [class.collapsed]="!entry.showNutrition"
-                      [class.expanded]="entry.showNutrition">
-                      <app-nutrition-progress-bars [nutritionData]="getEntryAsNutritionData(entry)"
-                        [totals]="getDayAsNutritionTotals(day)" [height]="'6px'" [showValues]="true"
-                        [showLabels]="true">
+                    </small>
+                    <!-- Nutrition Info Progress Bars (Collapsible) -->
+                    <div
+                      class="mt-2 nutrition-details"
+                      [class.collapsed]="!entry.showNutrition"
+                      [class.expanded]="entry.showNutrition"
+                    >
+                      <app-nutrition-progress-bars
+                        [nutritionData]="getEntryAsNutritionData(entry)"
+                        [totals]="getDayAsNutritionTotals(day)"
+                        [height]="'6px'"
+                        [showValues]="true"
+                        [showLabels]="true"
+                      >
                       </app-nutrition-progress-bars>
                     </div>
                   </div>
@@ -202,7 +390,10 @@
     <div class="text-center text-muted py-5">
       <i class="fas fa-chart-pie fa-3x mb-3"></i>
       <h4 class="mt-3">No data for this period</h4>
-      <p>Try selecting a different date range or start logging your food and weight.</p>
+      <p>
+        Try selecting a different date range or start logging your food and
+        weight.
+      </p>
     </div>
   </ng-template>
 

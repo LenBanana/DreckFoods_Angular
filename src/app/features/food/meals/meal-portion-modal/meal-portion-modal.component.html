@@ -1,4 +1,8 @@
-<div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+<div
+  class="modal d-block"
+  tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -11,28 +15,48 @@
       <form [formGroup]="portionForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
           <!-- Meal Info -->
-          <div *ngIf="meal" class="meal-info mb-4 p-3 bg-light rounded">
+          <div *ngIf="meal" class="meal-info mb-4 p-3 rounded">
             <h6 class="mb-1">{{ meal.name }}</h6>
-            <p *ngIf="meal.description" class="text-muted mb-2 small">{{ meal.description }}</p>
+            <p *ngIf="meal.description" class="text-muted mb-2 small">
+              {{ meal.description }}
+            </p>
             <div class="meal-stats">
-              <span class="badge bg-primary me-2">{{ meal.totalWeight }}g total</span>
-              <span class="badge bg-secondary">{{ meal.items.length }} ingredients</span>
+              <span class="badge bg-primary me-2"
+                >{{ meal.totalWeight }}g total</span
+              >
+              <span class="badge bg-secondary"
+                >{{ meal.items.length }} ingredients</span
+              >
             </div>
           </div>
 
           <!-- Portion Weight -->
           <div class="mb-3">
-            <label for="portionWeight" class="form-label">Portion Weight<small class="text-danger"> *</small></label>
+            <label for="portionWeight" class="form-label"
+              >Portion Weight<small class="text-danger"> *</small></label
+            >
             <div class="input-group">
-              <input type="number" class="form-control" id="portionWeight" formControlName="weight" min="1" max="9999"
-                placeholder="Enter weight">
+              <input
+                type="number"
+                class="form-control"
+                id="portionWeight"
+                formControlName="weight"
+                min="1"
+                max="9999"
+                placeholder="Enter weight"
+              />
               <span class="input-group-text">grams</span>
             </div>
             <div class="form-text">
               Enter the weight of the portion you consumed
             </div>
-            <div *ngIf="portionForm.get('weight')?.invalid && portionForm.get('weight')?.touched"
-              class="text-danger small mt-1">
+            <div
+              *ngIf="
+                portionForm.get('weight')?.invalid &&
+                portionForm.get('weight')?.touched
+              "
+              class="text-danger small mt-1"
+            >
               Please enter a valid weight (1-9999g)
             </div>
           </div>
@@ -41,8 +65,12 @@
           <div class="mb-3">
             <label class="form-label">Quick amounts</label>
             <div class="quick-weights">
-              <button *ngFor="let weight of quickWeights" type="button" class="btn btn-outline-primary btn-sm me-2 mb-2"
-                (click)="setWeight(weight)">
+              <button
+                *ngFor="let weight of quickWeights"
+                type="button"
+                class="btn btn-outline-primary btn-sm me-2 mb-2"
+                (click)="setWeight(weight)"
+              >
                 {{ weight }}g
               </button>
             </div>
@@ -51,25 +79,37 @@
           <!-- Consumed At -->
           <div class="mb-3">
             <label for="consumedAt" class="form-label">Consumed At</label>
-            <input type="datetime-local" class="form-control" id="consumedAt" formControlName="consumedAt">
-            <div class="form-text">
-              When did you eat this meal?
-            </div>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="consumedAt"
+              formControlName="consumedAt"
+            />
+            <div class="form-text">When did you eat this meal?</div>
           </div>
 
           <!-- Nutrition Estimate -->
-          <div *ngIf="portionForm.get('weight')?.value && meal" class="nutrition-estimate mt-4">
-            <h6 class="mb-3">Estimated Nutrition for {{ portionForm.get('weight')?.value }}g</h6>
+          <div
+            *ngIf="portionForm.get('weight')?.value && meal"
+            class="nutrition-estimate mt-4"
+          >
+            <h6 class="mb-3">
+              Estimated Nutrition for {{ portionForm.get("weight")?.value }}g
+            </h6>
             <div class="row g-3">
               <div class="col-6">
                 <div class="nutrition-item text-center">
-                  <div class="nutrition-value">{{ getEstimatedCalories() }}</div>
+                  <div class="nutrition-value">
+                    {{ getEstimatedCalories() }}
+                  </div>
                   <div class="nutrition-label">Calories</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="nutrition-item text-center">
-                  <div class="nutrition-value">{{ getEstimatedProtein() }}g</div>
+                  <div class="nutrition-value">
+                    {{ getEstimatedProtein() }}g
+                  </div>
                   <div class="nutrition-label">Protein</div>
                 </div>
               </div>
@@ -93,8 +133,15 @@
           <button type="button" class="btn btn-secondary" (click)="onClose()">
             Cancel
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="portionForm.invalid || isSubmitting">
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="portionForm.invalid || isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
             Log Portion
           </button>
         </div>

@@ -13,7 +13,8 @@
       (searchResults)="onSearchResults($event)"
       (searchError)="onSearchError($event)"
       (isSearching)="onIsSearching($event)"
-      (searchQuery)="onSearchQuery($event)">
+      (searchQuery)="onSearchQuery($event)"
+    >
     </app-food-search-input>
   </div>
 
@@ -21,7 +22,12 @@
   <div *ngIf="showSortOptions && hasQuery" class="row mb-3">
     <div class="col-md-6">
       <label for="sortBy" class="form-label small">Sort by</label>
-      <select id="sortBy" class="form-select form-select-sm" [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+      <select
+        id="sortBy"
+        class="form-select form-select-sm"
+        [(ngModel)]="sortBy"
+        (ngModelChange)="onSortChange()"
+      >
         <option *ngFor="let option of sortByOptions" [value]="option.value">
           {{ option.label }}
         </option>
@@ -29,8 +35,16 @@
     </div>
     <div class="col-md-6">
       <label for="sortDirection" class="form-label small">Direction</label>
-      <select id="sortDirection" class="form-select form-select-sm" [(ngModel)]="sortDirection" (ngModelChange)="onSortChange()">
-        <option *ngFor="let option of sortDirectionOptions" [value]="option.value">
+      <select
+        id="sortDirection"
+        class="form-select form-select-sm"
+        [(ngModel)]="sortDirection"
+        (ngModelChange)="onSortChange()"
+      >
+        <option
+          *ngFor="let option of sortDirectionOptions"
+          [value]="option.value"
+        >
           {{ option.label }}
         </option>
       </select>
@@ -42,16 +56,23 @@
     <div class="d-flex align-items-center">
       <i class="fas fa-exclamation-triangle me-2"></i>
       <span class="flex-grow-1">{{ errorMessage }}</span>
-      <button type="button" class="btn-close btn-close-sm" (click)="clearError()"></button>
+      <button
+        type="button"
+        class="btn-close btn-close-sm"
+        (click)="clearError()"
+      ></button>
     </div>
   </div>
 
   <!-- Search Results -->
-  <div *ngIf="hasQuery">    <div class="d-flex align-items-center justify-content-between mb-2">
+  <div *ngIf="hasQuery">
+    <div class="d-flex align-items-center justify-content-between mb-2">
       <h6 class="mb-0">Search Results</h6>
-      <small class="text-muted" *ngIf="!isSearching && hasSearchResults">{{ searchResponse?.totalCount }} foods found</small>
+      <small class="text-muted" *ngIf="!isSearching && hasSearchResults"
+        >{{ searchResponse?.totalCount }} foods found</small
+      >
     </div>
-    
+
     <app-food-search-results
       [searchResponse]="searchResponse"
       [layout]="layout"
@@ -62,16 +83,19 @@
       [emptyIcon]="'fas fa-search'"
       [showPagination]="true"
       (foodSelected)="onFoodSelected($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+    >
     </app-food-search-results>
   </div>
   <!-- Recent Foods Section -->
   <div *ngIf="showRecentSection">
     <div class="d-flex align-items-center justify-content-between mb-2">
       <h6 class="mb-0">Recently Added Foods</h6>
-      <small class="text-muted" *ngIf="recentFoodsResponse">{{ recentFoodsResponse.totalCount }} foods total</small>
+      <small class="text-muted" *ngIf="recentFoodsResponse"
+        >{{ recentFoodsResponse.totalCount }} foods total</small
+      >
     </div>
-      <app-food-search-results
+    <app-food-search-results
       [searchResponse]="recentFoodsResponse"
       [layout]="layout"
       [isLoading]="isLoadingRecent"
@@ -81,14 +105,20 @@
       [emptyMessage]="'No recently added foods'"
       [emptyIcon]="'fas fa-history'"
       (foodSelected)="onFoodSelected($event)"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onPageChange($event)"
+    >
     </app-food-search-results>
   </div>
 
   <!-- Initial State -->
-  <div *ngIf="!hasQuery && !showRecentSection && !isLoadingRecent" class="text-center py-4">
+  <div
+    *ngIf="!hasQuery && !showRecentSection && !isLoadingRecent"
+    class="text-center py-4"
+  >
     <i class="fas fa-search fa-2x text-muted mb-3"></i>
     <h6>Ready to search</h6>
-    <p class="text-muted small mb-0">Enter a food name above or scan a barcode to find foods.</p>
+    <p class="text-muted small mb-0">
+      Enter a food name above or scan a barcode to find foods.
+    </p>
   </div>
 </div>

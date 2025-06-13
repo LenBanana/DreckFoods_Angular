@@ -12,7 +12,7 @@ export interface UpdateUserProfileRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private http = inject(HttpClient);

@@ -9,9 +9,10 @@ import { provideServiceWorker } from '@angular/service-worker';
 bootstrapApplication(AppComponent, {
   providers: [
     ...appConfig.providers,
-    importProvidersFrom(BrowserAnimationsModule), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
-  ]
-}).catch(err => console.error(err));
+    importProvidersFrom(BrowserAnimationsModule),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
+  ],
+}).catch((err) => console.error(err));

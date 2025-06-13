@@ -1,5 +1,3 @@
-
-
 export interface MealItemDTO {
   fddbFoodId: number;
   weight: number;

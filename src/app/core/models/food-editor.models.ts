@@ -9,23 +9,18 @@ export interface FddbFoodUpdateDTO {
 }
 
 export interface FddbFoodNutritionUpdateDTO {
-  // Kilojoules
   kilojoulesValue?: number;
   kilojoulesUnit?: string;
 
-  // Calories
   caloriesValue?: number;
   caloriesUnit?: string;
 
-  // Protein
   proteinValue?: number;
   proteinUnit?: string;
 
-  // Fat
   fatValue?: number;
   fatUnit?: string;
 
-  // Carbohydrates
   carbohydratesTotalValue?: number;
   carbohydratesTotalUnit?: string;
   carbohydratesSugarValue?: number;
@@ -33,11 +28,9 @@ export interface FddbFoodNutritionUpdateDTO {
   carbohydratesPolyolsValue?: number;
   carbohydratesPolyolsUnit?: string;
 
-  // Fiber
   fiberValue?: number;
   fiberUnit?: string;
 
-  // Minerals
   saltValue?: number;
   saltUnit?: string;
   ironValue?: number;
@@ -59,7 +52,8 @@ export interface FddbFoodNutritionUpdateDTO {
   phosphorusValue?: number;
   phosphorusUnit?: string;
   copperValue?: number;
-  copperUnit?: string;  fluorideValue?: number;
+  copperUnit?: string;
+  fluorideValue?: number;
   fluorideUnit?: string;
   iodineValue?: number;
   iodineUnit?: string;

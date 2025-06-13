@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -11,7 +16,7 @@ import { ForgotPasswordRequest } from '../../../core/models/auth.models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.scss'
+  styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
@@ -25,7 +30,7 @@ export class ForgotPasswordComponent {
 
   constructor() {
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -33,20 +38,23 @@ export class ForgotPasswordComponent {
     if (this.forgotPasswordForm.valid) {
       this.isLoading = true;
       const request: ForgotPasswordRequest = {
-        email: this.forgotPasswordForm.value.email
+        email: this.forgotPasswordForm.value.email,
       };
 
       this.authService.forgotPassword(request).subscribe({
         next: (response) => {
           this.isLoading = false;
           this.isSuccess = true;
-          this.message = response.message || 'If an account with that email exists, we\'ve sent you a password reset link.';
+          this.message =
+            response.message ||
+            "If an account with that email exists, we've sent you a password reset link.";
         },
         error: (error) => {
           this.isLoading = false;
           this.isSuccess = false;
-          this.message = error.error?.message || 'An error occurred. Please try again.';
-        }
+          this.message =
+            error.error?.message || 'An error occurred. Please try again.';
+        },
       });
     }
   }

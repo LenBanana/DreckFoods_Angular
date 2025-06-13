@@ -11,11 +11,11 @@ export enum AppState {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
   HIDDEN = 'hidden',
-  SUSPENDED = 'suspended'
+  SUSPENDED = 'suspended',
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppLifecycleService {
   private authService = inject(AuthService);
@@ -36,7 +36,6 @@ export class AppLifecycleService {
   }
 
   private initializeLifecycleListeners(): void {
-    // Page Visibility API - most reliable for mobile browsers
     if (typeof document !== 'undefined') {
       fromEvent(document, 'visibilitychange').subscribe(() => {
         if (document.hidden) {
@@ -47,33 +46,23 @@ export class AppLifecycleService {
       });
     }
 
-    // Window focus/blur events
     if (typeof window !== 'undefined') {
       merge(
         fromEvent(window, 'focus'),
         fromEvent(window, 'blur'),
         fromEvent(window, 'beforeunload'),
         fromEvent(window, 'pagehide'),
-        fromEvent(window, 'pageshow')
-      ).pipe(
-        debounceTime(100),
-        distinctUntilChanged()
-      ).subscribe((event) => {
-        this.handleWindowEvent(event);
-      });
+        fromEvent(window, 'pageshow'),
+      )
+        .pipe(debounceTime(100), distinctUntilChanged())
+        .subscribe((event) => {
+          this.handleWindowEvent(event);
+        });
 
-      // Listen for storage changes (multiple tabs)
       fromEvent(window, 'storage').subscribe((event: any) => {
         if (event.key === this.stateStorageKey) {
           this.handleStorageChange(event);
         }
-      });
-    }
-
-    // Mobile-specific events
-    if ('navigator' in window && 'connection' in navigator) {
-      fromEvent(navigator.connection as any, 'change').subscribe(() => {
-        this.handleNetworkChange();
       });
     }
   }
@@ -99,11 +88,9 @@ export class AppLifecycleService {
   private handleAppVisible(): void {
     this.lastActiveTime = Date.now();
     this.appStateSubject.next(AppState.ACTIVE);
-    
-    // Check if we need to refresh authentication
+
     this.validateAndRefreshAuth();
-    
-    // Restore route if needed
+
     this.restoreRoute();
   }
 
@@ -113,12 +100,10 @@ export class AppLifecycleService {
   }
 
   private handleStorageChange(event: StorageEvent): void {
-    // Handle cross-tab state synchronization
     if (event.newValue) {
       try {
         const state = JSON.parse(event.newValue);
         if (state.timestamp && Date.now() - state.timestamp < 5000) {
-          // Recent state change from another tab
           this.appStateSubject.next(state.appState);
         }
       } catch (error) {
@@ -126,49 +111,38 @@ export class AppLifecycleService {
       }
     }
   }
-
-  private handleNetworkChange(): void {
-    const connection = (navigator as any).connection;
-    if (connection && connection.effectiveType) {
-      // Handle network state changes
-      console.log('Network changed:', connection.effectiveType);
-    }
-  }
   private validateAndRefreshAuth(): void {
     const timeSinceActive = Date.now() - this.lastActiveTime;
-    
-    // If app was inactive for more than 30 seconds, validate auth
+
     if (timeSinceActive > 30000) {
       const token = this.tokenService.getToken();
-      
+
       if (token && !this.tokenService.isTokenValid()) {
-        console.log('Token expired during app suspension, logging out');
         this.authService.logout();
         return;
       }
 
-      // Only refresh user profile if we have network connection
-      if (token && this.tokenService.isTokenValid() && this.networkService.isOnline()) {
+      if (
+        token &&
+        this.tokenService.isTokenValid() &&
+        this.networkService.isOnline()
+      ) {
         this.refreshUserSession();
       }
     }
   }
 
   private refreshUserSession(): void {
-    // Subscribe to current user to trigger profile refresh
-    this.authService.currentUser$.pipe(
-      filter(user => user !== null)
-    ).subscribe({
-      next: () => {
-        console.log('User session refreshed successfully');
-      },
-      error: (error) => {
-        console.error('Failed to refresh user session:', error);
-        if (error.status === 401 || error.status === 403) {
-          this.authService.logout();
-        }
-      }
-    });
+    this.authService.currentUser$
+      .pipe(filter((user) => user !== null))
+      .subscribe({
+        error: (error) => {
+          console.error('Failed to refresh user session:', error);
+          if (error.status === 401 || error.status === 403) {
+            this.authService.logout();
+          }
+        },
+      });
   }
 
   private saveAppState(): void {
@@ -178,7 +152,7 @@ export class AppLifecycleService {
         appState: this.appStateSubject.value,
         timestamp: Date.now(),
         lastActiveTime: this.lastActiveTime,
-        route: currentRoute
+        route: currentRoute,
       };
 
       localStorage.setItem(this.stateStorageKey, JSON.stringify(state));
@@ -195,15 +169,13 @@ export class AppLifecycleService {
         const state = JSON.parse(savedState);
         const timeSinceLastActive = Date.now() - (state.lastActiveTime || 0);
 
-        // If app was inactive for more than 5 minutes, treat as fresh start
         if (timeSinceLastActive > 300000) {
           this.clearStoredState();
           return;
         }
 
         this.lastActiveTime = state.lastActiveTime || Date.now();
-        
-        // Don't automatically restore hidden state, let visibility API handle it
+
         if (state.appState !== AppState.HIDDEN) {
           this.appStateSubject.next(state.appState || AppState.ACTIVE);
         }
@@ -218,7 +190,6 @@ export class AppLifecycleService {
     try {
       const savedRoute = localStorage.getItem(this.lastRouteKey);
       if (savedRoute && savedRoute !== this.router.url) {
-        // Only restore if it's not a sensitive route (like auth pages)
         if (!savedRoute.includes('/auth/') && savedRoute !== '/') {
           setTimeout(() => {
             this.router.navigateByUrl(savedRoute);

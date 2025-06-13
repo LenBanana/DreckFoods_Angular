@@ -11,13 +11,13 @@ import {
   ConfirmEmailRequest,
   ChangePasswordRequest,
   ForgotPasswordRequest,
-  ResetPasswordRequest
+  ResetPasswordRequest,
 } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
 import { TokenService } from './token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -30,8 +30,8 @@ export class AuthService {
   private userKey = 'food_tracker_user';
   constructor() {
     this.initializeAuth();
-  }  private initializeAuth(): void {
-    // Check if user data exists in localStorage first
+  }
+  private initializeAuth(): void {
     const storedUser = localStorage.getItem(this.userKey);
     const token = this.tokenService.getToken();
 
@@ -40,7 +40,6 @@ export class AuthService {
         const user = JSON.parse(storedUser);
         this.currentUserSubject.next(user);
 
-        // Only refresh profile if we have a valid connection
         if (navigator.onLine !== false) {
           this.refreshUserProfile();
         }
@@ -49,7 +48,6 @@ export class AuthService {
         this.logout();
       }
     } else {
-      // Clear any invalid data
       this.tokenService.removeToken();
       localStorage.removeItem(this.userKey);
       this.currentUserSubject.next(null);
@@ -64,50 +62,72 @@ export class AuthService {
       },
       error: (err: any) => {
         console.error('Error fetching user profile:', err);
-        // Only logout on authentication errors, not network errors
+
         if (err.status === 401 || err.status === 403) {
           this.logout();
         }
-        // For network errors, keep the cached user data
-      }
+      },
     });
   }
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, request)
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, request)
       .pipe(
-        tap(response => {
+        tap((response) => {
           this.setAuthData(response.token, response.user);
           this.refreshUserProfile();
-        })
+        }),
       );
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, request);
+    return this.http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/register`,
+      request,
+    );
   }
 
   confirmEmail(request: ConfirmEmailRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/confirm-email`, request);
+    return this.http.post<{ message: string }>(
+      `${environment.apiUrl}/auth/confirm-email`,
+      request,
+    );
   }
 
-  changePassword(request: ChangePasswordRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/change-password`, request);
+  changePassword(
+    request: ChangePasswordRequest,
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${environment.apiUrl}/auth/change-password`,
+      request,
+    );
   }
 
-  forgotPassword(request: ForgotPasswordRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/forgot-password`, request);
+  forgotPassword(
+    request: ForgotPasswordRequest,
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${environment.apiUrl}/auth/forgot-password`,
+      request,
+    );
   }
 
-  resetPassword(request: ResetPasswordRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/reset-password`, request);
+  resetPassword(
+    request: ResetPasswordRequest,
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${environment.apiUrl}/auth/reset-password`,
+      request,
+    );
   }
 
   deleteAccount(): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${environment.apiUrl}/auth/delete-account`)
+    return this.http
+      .delete<{ message: string }>(`${environment.apiUrl}/auth/delete-account`)
       .pipe(
         tap(() => {
           this.logout();
-        })
+        }),
       );
   }
   logout(): void {
@@ -138,7 +158,7 @@ export class AuthService {
       tap((user: User) => {
         this.currentUserSubject.next(user);
         localStorage.setItem(this.userKey, JSON.stringify(user));
-      })
+      }),
     );
   }
 

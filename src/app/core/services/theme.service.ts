@@ -4,28 +4,28 @@ import { BehaviorSubject } from 'rxjs';
 export type Theme = 'light' | 'dark';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private readonly THEME_KEY = 'dreckfoods-theme';
   private themeSubject = new BehaviorSubject<Theme>(this.getInitialTheme());
-  
+
   public theme$ = this.themeSubject.asObservable();
 
   constructor() {
-    // Apply initial theme
     this.applyTheme(this.themeSubject.value);
   }
 
   private getInitialTheme(): Theme {
-    // Check localStorage first
     const savedTheme = localStorage.getItem(this.THEME_KEY) as Theme;
     if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       return savedTheme;
     }
 
-    // Fall back to system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
       return 'dark';
     }
 
@@ -37,7 +37,8 @@ export class ThemeService {
   }
 
   public toggleTheme(): void {
-    const newTheme: Theme = this.themeSubject.value === 'light' ? 'dark' : 'light';
+    const newTheme: Theme =
+      this.themeSubject.value === 'light' ? 'dark' : 'light';
     this.setTheme(newTheme);
   }
 
@@ -49,7 +50,7 @@ export class ThemeService {
 
   private applyTheme(theme: Theme): void {
     const htmlElement = document.documentElement;
-    
+
     if (theme === 'dark') {
       htmlElement.setAttribute('data-theme', 'dark');
       htmlElement.setAttribute('data-bs-theme', 'dark');

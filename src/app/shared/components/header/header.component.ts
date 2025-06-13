@@ -1,6 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService, Theme } from '../../../core/services/theme.service';
@@ -24,8 +29,8 @@ export class HeaderComponent implements OnInit {
       children: [
         { path: '/food/entries', label: 'Food Entries' },
         { path: '/food/meals', label: 'Meals' },
-        { path: '/food/search', label: 'Food Search' }
-      ]
+        { path: '/food/search', label: 'Food Search' },
+      ],
     },
     { path: '/weight', label: 'Weight' },
     { path: '/timeline', label: 'Timeline' },
@@ -41,12 +46,10 @@ export class HeaderComponent implements OnInit {
       this.currentUser = user;
     });
 
-    // Subscribe to theme changes
     this.themeService.theme$.subscribe((theme) => {
       this.currentTheme = theme;
     });
 
-    // Close user menu when clicking outside
     document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       if (!target.closest('.user-menu')) {
@@ -55,12 +58,9 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit() {
-    // Auto-collapse navbar on route change
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.collapseNavbar();
       });
@@ -68,16 +68,19 @@ export class HeaderComponent implements OnInit {
 
   private collapseNavbar() {
     const navbarCollapse = document.getElementById('mainNav');
-    const navbarToggler = document.querySelector('.navbar-toggler') as HTMLElement;
+    const navbarToggler = document.querySelector(
+      '.navbar-toggler',
+    ) as HTMLElement;
 
     if (navbarCollapse?.classList.contains('show')) {
-      // Use Bootstrap's collapse method
-      const bsCollapse = new (window as any).bootstrap.Collapse(navbarCollapse, {
-        toggle: false
-      });
+      const bsCollapse = new (window as any).bootstrap.Collapse(
+        navbarCollapse,
+        {
+          toggle: false,
+        },
+      );
       bsCollapse.hide();
 
-      // Update toggler button state
       navbarToggler?.setAttribute('aria-expanded', 'false');
     }
   }
@@ -103,7 +106,8 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.closeUserMenu();
-  }  toggleTheme() {
+  }
+  toggleTheme() {
     this.themeService.toggleTheme();
   }
 

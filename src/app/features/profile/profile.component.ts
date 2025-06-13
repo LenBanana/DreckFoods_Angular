@@ -1,6 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { catchError, of } from 'rxjs';
 
 import { UserService } from '../../core/services/user.service';
@@ -14,7 +19,13 @@ import { format, parseISO } from 'date-fns';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, ChangePasswordComponent, DeleteAccountComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    ChangePasswordComponent,
+    DeleteAccountComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
@@ -36,18 +47,18 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      currentWeight: [null, [Validators.min(0), Validators.max(1000)]]
+      currentWeight: [null, [Validators.min(0), Validators.max(1000)]],
     });
   }
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       if (user) {
         this.profileForm.patchValue({
           firstName: user.firstName,
           lastName: user.lastName,
-          currentWeight: user.currentWeight
+          currentWeight: user.currentWeight,
         });
         this.originalFormValues = this.profileForm.value;
       }
@@ -60,24 +71,25 @@ export class ProfileComponent implements OnInit {
       this.errorMessage = '';
       this.successMessage = '';
 
-      this.userService.updateProfile(this.profileForm.value)
+      this.userService
+        .updateProfile(this.profileForm.value)
         .pipe(
-          catchError(error => {
-            this.errorMessage = error.error?.message || 'Failed to update profile. Please try again.';
+          catchError((error) => {
+            this.errorMessage =
+              error.error?.message ||
+              'Failed to update profile. Please try again.';
             this.isSubmitting = false;
             return of(null);
-          })
+          }),
         )
-        .subscribe(response => {
+        .subscribe((response) => {
           if (response) {
             this.successMessage = 'Profile updated successfully!';
             this.originalFormValues = this.profileForm.value;
 
-            // Update the current user in auth service
             const updatedUser = { ...this.currentUser!, ...response };
             this.authService.pushUserToSubject(updatedUser);
 
-            // Clear success message after 3 seconds
             setTimeout(() => {
               this.successMessage = '';
             }, 3000);
@@ -95,14 +107,19 @@ export class ProfileComponent implements OnInit {
 
   hasChanges(): boolean {
     const currentValues = this.profileForm.value;
-    return JSON.stringify(currentValues) !== JSON.stringify(this.originalFormValues);
+    return (
+      JSON.stringify(currentValues) !== JSON.stringify(this.originalFormValues)
+    );
   }
 
   getUserInitials(): string {
     if (!this.currentUser) return 'U';
     const first = this.currentUser.firstName?.charAt(0) || '';
     const last = this.currentUser.lastName?.charAt(0) || '';
-    return (first + last).toUpperCase() || this.currentUser.email.charAt(0).toUpperCase();
+    return (
+      (first + last).toUpperCase() ||
+      this.currentUser.email.charAt(0).toUpperCase()
+    );
   }
 
   formatMemberSince(): string {

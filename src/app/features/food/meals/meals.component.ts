@@ -36,13 +36,11 @@ export class MealsComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  // Modal states
   showCreateModal = false;
   showEditModal = false;
   showPortionModal = false;
   selectedMeal: MealResponseDTO | null = null;
 
-  // Loading states
   isCreating = false;
   isUpdating = false;
   isLoggingPortion = false;
@@ -52,7 +50,6 @@ export class MealsComponent implements OnInit {
     this.loadMeals();
   }
 
-  // Data loading
   loadMeals() {
     this.isLoading = true;
     this.errorMessage = '';
@@ -64,7 +61,7 @@ export class MealsComponent implements OnInit {
           this.errorMessage = 'Failed to load meals. Please try again.';
           this.isLoading = false;
           return of([]);
-        })
+        }),
       )
       .subscribe((meals) => {
         this.meals = meals;
@@ -72,7 +69,6 @@ export class MealsComponent implements OnInit {
       });
   }
 
-  // Modal handlers
   openCreateModal() {
     this.showCreateModal = true;
   }
@@ -114,7 +110,7 @@ export class MealsComponent implements OnInit {
           this.alertService.error('Failed to create meal. Please try again.');
           this.isCreating = false;
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         if (response) {
@@ -136,7 +132,7 @@ export class MealsComponent implements OnInit {
           this.alertService.error('Failed to update meal. Please try again.');
           this.isUpdating = false;
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         if (response) {
@@ -155,18 +151,17 @@ export class MealsComponent implements OnInit {
           console.error('Error getting share ID:', error);
           this.alertService.error('Failed to get share ID. Please try again.');
           return of(null);
-        })
+        }),
       )
       .subscribe((shareId) => {
         if (shareId) {
-          // Show meal share ID to the user
           this.alertService.successExtraLarge(
             `Meal "${meal.name}" can be shared using ID:\n${shareId}`,
             'Share ID',
             {
               autoDismiss: false,
               centered: true,
-            }
+            },
           );
         }
       });
@@ -185,7 +180,7 @@ export class MealsComponent implements OnInit {
         if (!value.trim()) {
           return 'Share ID cannot be empty.';
         }
-        return null; // Valid input
+        return null;
       },
     });
 
@@ -201,11 +196,11 @@ export class MealsComponent implements OnInit {
         catchError((error) => {
           console.error('Error adding meal by share ID:', error);
           this.alertService.error(
-            'Failed to add meal by share ID. Please try again.'
+            'Failed to add meal by share ID. Please try again.',
           );
           this.isCreating = false;
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         if (response) {
@@ -225,7 +220,7 @@ export class MealsComponent implements OnInit {
           this.alertService.error('Failed to delete meal. Please try again.');
           this.deletingMealId = null;
           return of(null);
-        })
+        }),
       )
       .subscribe((response) => {
         this.meals = this.meals.filter((m) => m.id !== meal.id);
@@ -245,24 +240,23 @@ export class MealsComponent implements OnInit {
         catchError((error) => {
           console.error('Error adding meal portion:', error);
           this.alertService.error(
-            'Failed to add meal portion. Please try again.'
+            'Failed to add meal portion. Please try again.',
           );
           this.isLoggingPortion = false;
           return of([]);
-        })
+        }),
       )
       .subscribe((entries) => {
         if (entries.length > 0) {
           this.closePortionModal();
           this.alertService.success(
-            `Successfully added ${entries.length} food entries from this meal!`
+            `Successfully added ${entries.length} food entries from this meal!`,
           );
         }
         this.isLoggingPortion = false;
       });
   }
 
-  // Utility methods
   trackByMealId(index: number, meal: MealResponseDTO): number {
     return meal.id;
   }

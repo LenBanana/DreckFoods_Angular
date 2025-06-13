@@ -1,18 +1,22 @@
 <div *ngIf="shouldShow()" class="nutrition-progress mb-1">
-  <div *ngIf="showLabels || showValues" class="d-flex justify-content-between align-items-center mb-1">
+  <div
+    *ngIf="showLabels || showValues"
+    class="d-flex justify-content-between align-items-center mb-1"
+  >
     <small *ngIf="showLabels" class="text-muted">{{ config.label }}</small>
     <small *ngIf="showValues" class="text-muted">
-      {{ config.value | number:'1.1-1' }}{{ config.unit }} / {{ config.total | number:'1.1-1' }}{{ config.unit }}
+      {{ config.value | number: "1.1-1" }}{{ config.unit }} /
+      {{ config.total | number: "1.1-1" }}{{ config.unit }}
     </small>
   </div>
   <div class="progress" [style.height]="height">
-    <div 
+    <div
       class="progress-bar"
       [class]="'bg-' + config.color"
       [style.width.%]="getPercentage()"
       [attr.aria-valuenow]="config.value"
       [attr.aria-valuemin]="0"
-      [attr.aria-valuemax]="config.total">
-    </div>
+      [attr.aria-valuemax]="config.total"
+    ></div>
   </div>
 </div>

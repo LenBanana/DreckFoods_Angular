@@ -1,6 +1,18 @@
-import { Component, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { format } from 'date-fns';
 import { catchError, of } from 'rxjs';
 
@@ -34,13 +46,19 @@ export class AddFoodModalComponent implements OnInit {
     fat: 0,
     fiber: 0,
     caffeine: 0,
-    sugar: 0
+    sugar: 0,
   };
 
   constructor() {
     this.addFoodForm = this.fb.group({
-      gramsConsumed: [100, [Validators.required, Validators.min(0.1), Validators.max(10000)]],
-      consumedAt: [format(new Date(), "yyyy-MM-dd'T'HH:mm"), Validators.required]
+      gramsConsumed: [
+        100,
+        [Validators.required, Validators.min(0.1), Validators.max(10000)],
+      ],
+      consumedAt: [
+        format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+        Validators.required,
+      ],
     });
   }
 
@@ -54,7 +72,7 @@ export class AddFoodModalComponent implements OnInit {
 
   private calculateNutrition() {
     const grams = this.addFoodForm.get('gramsConsumed')?.value || 0;
-    const multiplier = grams / 100; // Convert from per 100g to actual amount
+    const multiplier = grams / 100;
 
     this.calculatedNutrition = {
       calories: this.food.nutrition.calories.value * multiplier,
@@ -62,8 +80,10 @@ export class AddFoodModalComponent implements OnInit {
       carbs: this.food.nutrition.carbohydrates.total.value * multiplier,
       fat: this.food.nutrition.fat.value * multiplier,
       fiber: this.food.nutrition.fiber.value * multiplier,
-      caffeine: this.food.nutrition.caffeine?.value ? this.food.nutrition.caffeine.value * multiplier : 0,
-      sugar: this.food.nutrition.carbohydrates.sugar.value * multiplier
+      caffeine: this.food.nutrition.caffeine?.value
+        ? this.food.nutrition.caffeine.value * multiplier
+        : 0,
+      sugar: this.food.nutrition.carbohydrates.sugar.value * multiplier,
     };
   }
 
@@ -75,18 +95,21 @@ export class AddFoodModalComponent implements OnInit {
       const request = {
         fddbFoodId: this.food.id,
         gramsConsumed: this.addFoodForm.get('gramsConsumed')?.value,
-        consumedAt: this.addFoodForm.get('consumedAt')?.value
+        consumedAt: this.addFoodForm.get('consumedAt')?.value,
       };
 
-      this.foodService.addFoodEntry(request)
+      this.foodService
+        .addFoodEntry(request)
         .pipe(
-          catchError(error => {
-            this.errorMessage = error.error?.message || 'Failed to add food entry. Please try again.';
+          catchError((error) => {
+            this.errorMessage =
+              error.error?.message ||
+              'Failed to add food entry. Please try again.';
             this.isLoading = false;
             return of(null);
-          })
+          }),
         )
-        .subscribe(response => {
+        .subscribe((response) => {
           if (response) {
             this.foodAdded.emit();
           }

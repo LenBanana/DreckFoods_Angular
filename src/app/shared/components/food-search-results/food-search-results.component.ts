@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FoodSearchDto, FoodSearchResponse } from '../../../core/models/food.models';
+import {
+  FoodSearchDto,
+  FoodSearchResponse,
+} from '../../../core/models/food.models';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppRole } from '../../../core/models/auth.models';
@@ -13,7 +16,7 @@ export type FoodResultsLayout = 'grid' | 'list' | 'compact';
   standalone: true,
   imports: [CommonModule, PaginationComponent],
   templateUrl: './food-search-results.component.html',
-  styleUrls: ['./food-search-results.component.scss']
+  styleUrls: ['./food-search-results.component.scss'],
 })
 export class FoodSearchResultsComponent {
   private authService = inject(AuthService);
@@ -39,13 +42,22 @@ export class FoodSearchResultsComponent {
 
   get displayFoods(): FoodSearchDto[] {
     return this.searchResponse?.foods || this.foods;
-  }  get hasPagination(): boolean {
-    return this.showPagination && this.searchResponse != null && this.searchResponse.totalPages > 1;
+  }
+  get hasPagination(): boolean {
+    return (
+      this.showPagination &&
+      this.searchResponse != null &&
+      this.searchResponse.totalPages > 1
+    );
   }
 
   get canEditFoods(): boolean {
     const user = this.authService.getCurrentUser();
-    return user && (user.role === AppRole.Admin || user.role === AppRole.DataEditor) || false;
+    return (
+      (user &&
+        (user.role === AppRole.Admin || user.role === AppRole.DataEditor)) ||
+      false
+    );
   }
 
   onFoodSelect(food: FoodSearchDto) {
@@ -53,7 +65,7 @@ export class FoodSearchResultsComponent {
   }
 
   onEditFood(food: FoodSearchDto, event: Event) {
-    event.stopPropagation(); // Prevent triggering food selection
+    event.stopPropagation();
     this.router.navigate(['/food/editor', food.id]);
   }
 

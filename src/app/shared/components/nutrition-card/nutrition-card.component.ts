@@ -14,7 +14,7 @@ export interface NutritionCardData {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './nutrition-card.component.html',
-  styleUrls: ['./nutrition-card.component.scss']
+  styleUrls: ['./nutrition-card.component.scss'],
 })
 export class NutritionCardComponent {
   @Input() data!: NutritionCardData;

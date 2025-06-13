@@ -9,11 +9,12 @@
       </button>
     </div>
     <div class="submenu-items">
-      <button 
-        *ngFor="let child of navItems[1].children" 
+      <button
+        *ngFor="let child of navItems[1].children"
         class="submenu-item"
         [class.active]="isActive(child.path)"
-        (click)="navigateToFoodChild(child.path)">
+        (click)="navigateToFoodChild(child.path)"
+      >
         <i [class]="child.icon"></i>
         <span>{{ child.label }}</span>
       </button>
@@ -24,22 +25,27 @@
   <div class="nav-items">
     <ng-container *ngFor="let item of navItems; let i = index">
       <!-- Food item with special handling -->
-      <button 
-        *ngIf="item.path === '/food'" 
+      <button
+        *ngIf="item.path === '/food'"
         class="nav-item"
         [class.active]="isActive(item.path)"
-        (click)="navigateToFood()">
+        (click)="navigateToFood()"
+      >
         <i [class]="item.icon"></i>
         <span class="nav-label">{{ item.label }}</span>
-        <i class="submenu-indicator fas fa-chevron-up" [class.rotated]="!showFoodSubmenu"></i>
+        <i
+          class="submenu-indicator fas fa-chevron-up"
+          [class.rotated]="!showFoodSubmenu"
+        ></i>
       </button>
 
       <!-- Regular navigation items -->
-      <a 
-        *ngIf="item.path !== '/food'" 
-        [routerLink]="item.path" 
+      <a
+        *ngIf="item.path !== '/food'"
+        [routerLink]="item.path"
         routerLinkActive="active"
-        class="nav-item">
+        class="nav-item"
+      >
         <i [class]="item.icon"></i>
         <span class="nav-label">{{ item.label }}</span>
       </a>

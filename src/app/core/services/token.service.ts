@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenService {
   private tokenKey = 'food_tracker_token';
@@ -38,9 +38,8 @@ export class TokenService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const currentTime = Date.now() / 1000;
-      
-      // Add 5 minute buffer before expiration
-      return payload.exp > (currentTime + 300);
+
+      return payload.exp > currentTime + 300;
     } catch (error) {
       console.warn('Failed to validate token:', error);
       return false;
@@ -53,7 +52,7 @@ export class TokenService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000; // Convert to milliseconds
+      return payload.exp * 1000;
     } catch (error) {
       console.warn('Failed to get token expiration:', error);
       return null;
