@@ -1,15 +1,15 @@
 <div
   *ngIf="hasAnyNutrients()"
-  class="nutrition-progress-bars"
   [class]="'layout-' + layout"
+  class="nutrition-progress-bars"
 >
   <div class="progress-container">
     <app-nutrition-progress-bar
       *ngFor="let config of visibleConfigs"
       [config]="config"
       [height]="height"
-      [showValues]="showValues"
       [showLabels]="showLabels"
+      [showValues]="showValues"
     >
     </app-nutrition-progress-bar>
   </div>

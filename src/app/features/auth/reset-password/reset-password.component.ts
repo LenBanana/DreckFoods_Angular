@@ -1,15 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {CommonModule} from '@angular/common';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ResetPasswordRequest } from '../../../core/models/auth.models';
+import {AuthService} from '../../../core/services/auth.service';
+import {ResetPasswordRequest} from '../../../core/models/auth.models';
 
 @Component({
   selector: 'app-reset-password',
@@ -19,17 +14,16 @@ import { ResetPasswordRequest } from '../../../core/models/auth.models';
   styleUrl: './reset-password.component.scss',
 })
 export class ResetPasswordComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-
   resetPasswordForm: FormGroup;
   isLoading = false;
   message = '';
   isSuccess = false;
   email = '';
   resetCode = '';
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   constructor() {
     this.resetPasswordForm = this.fb.group(
@@ -37,8 +31,16 @@ export class ResetPasswordComponent implements OnInit {
         newPassword: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.passwordMatchValidator },
+      {validators: this.passwordMatchValidator},
     );
+  }
+
+  get newPassword() {
+    return this.resetPasswordForm.get('newPassword');
+  }
+
+  get confirmPassword() {
+    return this.resetPasswordForm.get('confirmPassword');
   }
 
   ngOnInit(): void {
@@ -63,8 +65,8 @@ export class ResetPasswordComponent implements OnInit {
       confirmPassword &&
       password.value !== confirmPassword.value
     ) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
+      confirmPassword.setErrors({passwordMismatch: true});
+      return {passwordMismatch: true};
     }
 
     if (confirmPassword?.hasError('passwordMismatch')) {
@@ -106,13 +108,5 @@ export class ResetPasswordComponent implements OnInit {
         },
       });
     }
-  }
-
-  get newPassword() {
-    return this.resetPasswordForm.get('newPassword');
-  }
-
-  get confirmPassword() {
-    return this.resetPasswordForm.get('confirmPassword');
   }
 }

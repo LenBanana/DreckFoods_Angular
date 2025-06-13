@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MealResponseDTO } from '../../../../core/models/meal.models';
-import { AlertService } from '../../../../core/services/alert.service';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MealResponseDTO} from '../../../../core/models/meal.models';
+import {AlertService} from '../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-meal-card',
@@ -11,15 +11,13 @@ import { AlertService } from '../../../../core/services/alert.service';
   styleUrls: ['./meal-card.component.scss'],
 })
 export class MealCardComponent {
-  private alertService = inject(AlertService);
-
   @Input() meal!: MealResponseDTO;
   @Input() isDeleting = false;
-
   @Output() edit = new EventEmitter<MealResponseDTO>();
   @Output() delete = new EventEmitter<MealResponseDTO>();
   @Output() share = new EventEmitter<MealResponseDTO>();
   @Output() logPortion = new EventEmitter<MealResponseDTO>();
+  private alertService = inject(AlertService);
 
   onEdit() {
     this.edit.emit(this.meal);

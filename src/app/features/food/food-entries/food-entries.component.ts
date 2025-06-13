@@ -1,37 +1,22 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { format, parseISO, isToday, isYesterday } from 'date-fns';
-import { catchError, of } from 'rxjs';
+import {Component, ElementRef, inject, OnInit, QueryList, ViewChildren,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
+import {format, isToday, isYesterday, parseISO} from 'date-fns';
+import {catchError, of} from 'rxjs';
 
-import { FoodService } from '../../../core/services/food.service';
-import { AlertService } from '../../../core/services/alert.service';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { NutritionProgressBarsComponent } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
+import {FoodService} from '../../../core/services/food.service';
+import {AlertService} from '../../../core/services/alert.service';
+import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
+import {
+  NutritionProgressBarsComponent
+} from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
 import {
   NutritionCardComponent,
   NutritionCardData,
 } from '../../../shared/components/nutrition-card/nutrition-card.component';
-import { NutritionConfigService } from '../../../shared/services/nutrition-config.service';
-import {
-  EditFoodEntryRequest,
-  FoodEntryDto,
-  NutritionData,
-  NutritionTotals,
-} from '../../../core/models/food.models';
+import {NutritionConfigService} from '../../../shared/services/nutrition-config.service';
+import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals,} from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-food-entries',
@@ -49,12 +34,7 @@ import {
   styleUrls: ['./food-entries.component.scss'],
 })
 export class FoodEntriesComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private foodService = inject(FoodService);
-  private alertService = inject(AlertService);
-  private nutritionConfigService = inject(NutritionConfigService);
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
-
   filterForm: FormGroup;
   allEntries: FoodEntryDto[] = [];
   selectedDateEntries: FoodEntryDto[] = [];
@@ -65,7 +45,6 @@ export class FoodEntriesComponent implements OnInit {
   showingAll = false;
   isToday = false;
   isYesterday = false;
-
   dailyTotals = {
     calories: 0,
     protein: 0,
@@ -76,6 +55,10 @@ export class FoodEntriesComponent implements OnInit {
     caffeine: 0,
     salt: 0,
   };
+  private fb = inject(FormBuilder);
+  private foodService = inject(FoodService);
+  private alertService = inject(AlertService);
+  private nutritionConfigService = inject(NutritionConfigService);
 
   constructor() {
     this.filterForm = this.fb.group({
@@ -83,10 +66,37 @@ export class FoodEntriesComponent implements OnInit {
     });
   }
 
+  get dailyTotalsAsNutritionData(): NutritionData {
+    return {
+      calories: this.dailyTotals.calories,
+      protein: this.dailyTotals.protein,
+      carbohydrates: this.dailyTotals.carbs,
+      fat: this.dailyTotals.fat,
+      fiber: this.dailyTotals.fiber,
+      sugar: this.dailyTotals.sugar,
+      caffeine: this.dailyTotals.caffeine,
+      salt: this.dailyTotals.salt,
+    };
+  }
+
+  get dailyTotalsAsNutritionTotals(): NutritionTotals {
+    return {
+      calories: this.dailyTotals.calories,
+      protein: this.dailyTotals.protein,
+      carbohydrates: this.dailyTotals.carbs,
+      fat: this.dailyTotals.fat,
+      fiber: this.dailyTotals.fiber,
+      caffeine: this.dailyTotals.caffeine,
+      sugar: this.dailyTotals.sugar,
+      salt: this.dailyTotals.salt,
+    };
+  }
+
   ngOnInit() {
     this.loadEntries();
     this.updateDateFlags();
   }
+
   loadEntries() {
     this.isLoading = true;
     this.errorMessage = '';
@@ -129,6 +139,7 @@ export class FoodEntriesComponent implements OnInit {
         this.isLoading = false;
       });
   }
+
   startEditing(entry: FoodEntryDto) {
     entry.editing = true;
     setTimeout(() => {
@@ -144,6 +155,7 @@ export class FoodEntriesComponent implements OnInit {
     entry.editing = false;
     this.updateEntry(entry);
   }
+
   updateEntry(entry: FoodEntryDto) {
     let updateRequest: EditFoodEntryRequest = {
       fddbFoodId: entry.id,
@@ -196,33 +208,6 @@ export class FoodEntriesComponent implements OnInit {
     this.loadEntries();
   }
 
-  private updateDateFlags() {
-    const selectedDate = this.filterForm.get('selectedDate')?.value;
-    if (selectedDate && !this.showingAll) {
-      const selected = parseISO(selectedDate);
-      this.isToday = isToday(selected);
-      this.isYesterday = isYesterday(selected);
-    } else {
-      this.isToday = false;
-      this.isYesterday = false;
-    }
-  }
-  private calculateDailyTotals() {
-    const entriesToSum = this.showingAll
-      ? this.displayEntries
-      : this.selectedDateEntries;
-
-    this.dailyTotals = {
-      calories: entriesToSum.reduce((sum, entry) => sum + entry.calories, 0),
-      protein: entriesToSum.reduce((sum, entry) => sum + entry.protein, 0),
-      carbs: entriesToSum.reduce((sum, entry) => sum + entry.carbohydrates, 0),
-      fat: entriesToSum.reduce((sum, entry) => sum + entry.fat, 0),
-      fiber: entriesToSum.reduce((sum, entry) => sum + entry.fiber, 0),
-      sugar: entriesToSum.reduce((sum, entry) => sum + entry.sugar, 0),
-      caffeine: entriesToSum.reduce((sum, entry) => sum + entry.caffeine, 0),
-      salt: entriesToSum.reduce((sum, entry) => sum + entry.salt, 0),
-    };
-  }
   async deleteEntry(entry: FoodEntryDto) {
     const confirmed = await this.alertService.confirmDelete(entry.foodName);
 
@@ -291,34 +276,9 @@ export class FoodEntriesComponent implements OnInit {
   trackByEntryId(index: number, entry: FoodEntryDto): number {
     return entry.id;
   }
+
   onImageError(event: any) {
     event.target.style.display = 'none';
-  }
-
-  get dailyTotalsAsNutritionData(): NutritionData {
-    return {
-      calories: this.dailyTotals.calories,
-      protein: this.dailyTotals.protein,
-      carbohydrates: this.dailyTotals.carbs,
-      fat: this.dailyTotals.fat,
-      fiber: this.dailyTotals.fiber,
-      sugar: this.dailyTotals.sugar,
-      caffeine: this.dailyTotals.caffeine,
-      salt: this.dailyTotals.salt,
-    };
-  }
-
-  get dailyTotalsAsNutritionTotals(): NutritionTotals {
-    return {
-      calories: this.dailyTotals.calories,
-      protein: this.dailyTotals.protein,
-      carbohydrates: this.dailyTotals.carbs,
-      fat: this.dailyTotals.fat,
-      fiber: this.dailyTotals.fiber,
-      caffeine: this.dailyTotals.caffeine,
-      sugar: this.dailyTotals.sugar,
-      salt: this.dailyTotals.salt,
-    };
   }
 
   getEntryAsNutritionData(entry: FoodEntryDto): NutritionData {
@@ -337,6 +297,7 @@ export class FoodEntriesComponent implements OnInit {
   toggleNutritionDetails(entry: FoodEntryDto) {
     entry.showNutrition = !entry.showNutrition;
   }
+
   toggleAllNutritionDetails() {
     const anyExpanded = this.displayEntries.some(
       (entry) => entry.showNutrition,
@@ -349,6 +310,7 @@ export class FoodEntriesComponent implements OnInit {
   areAnyNutritionDetailsExpanded(): boolean {
     return this.displayEntries.some((entry) => entry.showNutrition);
   }
+
   getNutrientCount(entry: FoodEntryDto): number {
     let count = 0;
     if (entry.calories > 0) count++;
@@ -387,5 +349,34 @@ export class FoodEntriesComponent implements OnInit {
         this.dailyTotals.caffeine,
       ),
     ];
+  }
+
+  private updateDateFlags() {
+    const selectedDate = this.filterForm.get('selectedDate')?.value;
+    if (selectedDate && !this.showingAll) {
+      const selected = parseISO(selectedDate);
+      this.isToday = isToday(selected);
+      this.isYesterday = isYesterday(selected);
+    } else {
+      this.isToday = false;
+      this.isYesterday = false;
+    }
+  }
+
+  private calculateDailyTotals() {
+    const entriesToSum = this.showingAll
+      ? this.displayEntries
+      : this.selectedDateEntries;
+
+    this.dailyTotals = {
+      calories: entriesToSum.reduce((sum, entry) => sum + entry.calories, 0),
+      protein: entriesToSum.reduce((sum, entry) => sum + entry.protein, 0),
+      carbs: entriesToSum.reduce((sum, entry) => sum + entry.carbohydrates, 0),
+      fat: entriesToSum.reduce((sum, entry) => sum + entry.fat, 0),
+      fiber: entriesToSum.reduce((sum, entry) => sum + entry.fiber, 0),
+      sugar: entriesToSum.reduce((sum, entry) => sum + entry.sugar, 0),
+      caffeine: entriesToSum.reduce((sum, entry) => sum + entry.caffeine, 0),
+      salt: entriesToSum.reduce((sum, entry) => sum + entry.salt, 0),
+    };
   }
 }

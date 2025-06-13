@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../core/models/auth.models';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {AuthService} from '../../../core/services/auth.service';
+import {User} from '../../../core/models/auth.models';
 
 interface NavItem {
   path: string;
@@ -19,11 +19,7 @@ interface NavItem {
   styleUrls: ['./mobile-nav.component.scss'],
 })
 export class MobileNavComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
   currentUser: User | null = null;
-
   navItems: NavItem[] = [
     {
       path: '/dashboard',
@@ -35,9 +31,9 @@ export class MobileNavComponent {
       label: 'Food',
       icon: 'fas fa-utensils',
       children: [
-        { path: '/food/entries', label: 'Food Entries', icon: 'fas fa-list' },
-        { path: '/food/meals', label: 'Meals', icon: 'fas fa-hamburger' },
-        { path: '/food/search', label: 'Food Search', icon: 'fas fa-search' },
+        {path: '/food/entries', label: 'Food Entries', icon: 'fas fa-list'},
+        {path: '/food/meals', label: 'Meals', icon: 'fas fa-hamburger'},
+        {path: '/food/search', label: 'Food Search', icon: 'fas fa-search'},
       ],
     },
     {
@@ -51,8 +47,9 @@ export class MobileNavComponent {
       icon: 'fas fa-chart-line',
     },
   ];
-
   showFoodSubmenu = false;
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor() {
     this.authService.currentUser$.subscribe((user) => {

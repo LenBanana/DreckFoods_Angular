@@ -27,7 +27,8 @@
         ]
       }
     }
-  ],  "dataGroups": [
+  ],
+  "dataGroups": [
     {
       "name": "api-static-data",
       "urls": [
@@ -42,7 +43,7 @@
       }
     },
     {
-      "name": "api-dynamic-data", 
+      "name": "api-dynamic-data",
       "urls": [
         "/api/food/entries**",
         "/api/meals**",

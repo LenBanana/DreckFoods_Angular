@@ -17,21 +17,21 @@
     class="row"
   >
     <div
-      class="col-12 col-md-6 col-lg-4 mb-4"
       *ngFor="let food of displayFoods; trackBy: trackByFoodId"
+      class="col-12 col-md-6 col-lg-4 mb-4"
     >
-      <div class="card h-100 food-card" (click)="onFoodSelect(food)">
+      <div (click)="onFoodSelect(food)" class="card h-100 food-card">
         <img
+          (error)="onImageError($event)"
           *ngIf="
             showImages &&
             food.imageUrl &&
             !food.imageUrl.startsWith('/static/image/nophoto')
           "
+          [alt]="food.name"
           [src]="food.imageUrl"
           class="card-img-top"
-          [alt]="food.name"
           style="object-fit: cover; height: 200px"
-          (error)="onImageError($event)"
         />
         <div
           *ngIf="
@@ -54,7 +54,7 @@
             <span
               *ngFor="let tag of food.tags.slice(0, 2)"
               class="badge bg-info me-1 small"
-              >{{ tag }}</span
+            >{{ tag }}</span
             >
           </div>
 
@@ -70,7 +70,7 @@
               </div>
               <div class="col-3">
                 <strong
-                  >{{ food.nutrition.carbohydrates.total.value || 0 }}g</strong
+                >{{ food.nutrition.carbohydrates.total.value || 0 }}g</strong
                 >
                 <div class="text-muted">carbs</div>
               </div>
@@ -83,15 +83,15 @@
         </div>
         <div class="card-footer bg-transparent border-0 pt-0">
           <div class="d-flex gap-2">
-            <button type="button" class="btn btn-primary btn-sm flex-grow-1">
+            <button class="btn btn-primary btn-sm flex-grow-1" type="button">
               <i [class]="actionButtonIcon + ' me-1'"></i>{{ actionButtonText }}
             </button>
             <button
-              *ngIf="canEditFoods"
-              type="button"
-              class="btn btn-outline-secondary btn-sm"
               (click)="onEditFood(food, $event)"
+              *ngIf="canEditFoods"
+              class="btn btn-outline-secondary btn-sm"
               title="Edit food data"
+              type="button"
             >
               <i class="fas fa-edit"></i>
             </button>
@@ -107,21 +107,21 @@
     class="list-group"
   >
     <button
-      *ngFor="let food of displayFoods; trackBy: trackByFoodId"
-      type="button"
-      class="list-group-item list-group-item-action d-flex align-items-center p-3 food-list-item"
       (click)="onFoodSelect(food)"
+      *ngFor="let food of displayFoods; trackBy: trackByFoodId"
+      class="list-group-item list-group-item-action d-flex align-items-center p-3 food-list-item"
+      type="button"
     >
       <div *ngIf="showImages" class="flex-shrink-0 me-3">
         <img
+          (error)="onImageError($event)"
           *ngIf="
             food.imageUrl && !food.imageUrl.startsWith('/static/image/nophoto')
           "
+          [alt]="food.name"
           [src]="food.imageUrl"
           class="rounded"
           style="width: 60px; height: 60px; object-fit: cover"
-          [alt]="food.name"
-          (error)="onImageError($event)"
         />
         <div
           *ngIf="
@@ -138,11 +138,11 @@
           <h6 class="mb-0">{{ food.name }}</h6>
           <div class="d-flex align-items-center gap-2">
             <button
-              *ngIf="canEditFoods"
-              type="button"
-              class="btn btn-outline-secondary btn-sm p-1"
               (click)="onEditFood(food, $event)"
+              *ngIf="canEditFoods"
+              class="btn btn-outline-secondary btn-sm p-1"
               title="Edit food data"
+              type="button"
             >
               <i class="fas fa-edit"></i>
             </button>
@@ -163,7 +163,7 @@
           <span
             *ngFor="let tag of food.tags.slice(0, 3)"
             class="badge me-1 small"
-            >{{ tag }}</span
+          >{{ tag }}</span
           >
         </div>
       </div>
@@ -176,24 +176,24 @@
     class="list-group"
   >
     <button
-      *ngFor="let food of displayFoods; trackBy: trackByFoodId"
-      type="button"
-      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 food-compact-item"
       (click)="onFoodSelect(food)"
+      *ngFor="let food of displayFoods; trackBy: trackByFoodId"
+      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 food-compact-item"
+      type="button"
     >
       <div>
         <strong>{{ food.name }}</strong>
         <small *ngIf="showBrand && food.brand" class="text-muted d-block">{{
-          food.brand
-        }}</small>
+            food.brand
+          }}</small>
       </div>
       <div class="d-flex align-items-center gap-2">
         <button
-          *ngIf="canEditFoods"
-          type="button"
-          class="btn btn-outline-secondary btn-sm p-1"
           (click)="onEditFood(food, $event)"
+          *ngIf="canEditFoods"
+          class="btn btn-outline-secondary btn-sm p-1"
           title="Edit food data"
+          type="button"
         >
           <i class="fas fa-edit"></i>
         </button>
@@ -204,12 +204,12 @@
 
   <!-- Pagination -->
   <app-pagination
+    (pageChange)="onPageChange($event)"
     *ngIf="hasPagination"
     [currentPage]="searchResponse!.page"
-    [totalPages]="searchResponse!.totalPages"
-    [totalCount]="searchResponse!.totalCount"
     [pageSize]="searchResponse!.pageSize"
-    (pageChange)="onPageChange($event)"
+    [totalCount]="searchResponse!.totalCount"
+    [totalPages]="searchResponse!.totalPages"
     class="mt-4"
   >
   </app-pagination>

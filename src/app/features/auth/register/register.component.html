@@ -12,33 +12,33 @@
         We've sent a confirmation email to
         <strong>{{ registeredEmail }}</strong>
       </p>
-      <a routerLink="/auth/login" class="btn btn-primary mt-3">Go to Login</a>
+      <a class="btn btn-primary mt-3" routerLink="/auth/login">Go to Login</a>
     </div>
 
     <!-- Form -->
     <ng-template #formTpl>
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <label class="form-label">First Name</label>
             <input
-              type="text"
-              formControlName="firstName"
               class="form-control"
+              formControlName="firstName"
+              type="text"
             />
           </div>
           <div class="col-md-6">
             <label class="form-label">Last Name</label>
             <input
-              type="text"
-              formControlName="lastName"
               class="form-control"
+              formControlName="lastName"
+              type="text"
             />
           </div>
         </div>
         <div class="mb-3">
           <label class="form-label">Email Address</label>
-          <input type="email" formControlName="email" class="form-control" />
+          <input class="form-control" formControlName="email" type="email"/>
           <div
             *ngIf="
               registerForm.get('email')?.invalid &&
@@ -57,9 +57,9 @@
         <div class="mb-3">
           <label class="form-label">Password</label>
           <input
-            type="password"
-            formControlName="password"
             class="form-control"
+            formControlName="password"
+            type="password"
           />
           <div
             *ngIf="
@@ -77,19 +77,19 @@
             <small class="text-muted">(Optional)</small>
           </label>
           <input
-            type="number"
-            formControlName="currentWeight"
             class="form-control"
+            formControlName="currentWeight"
             step="0.1"
+            type="number"
           />
         </div>
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
         <button
-          type="submit"
-          class="btn btn-primary w-100"
           [disabled]="registerForm.invalid || isLoading"
+          class="btn btn-primary w-100"
+          type="submit"
         >
           <app-loading-spinner
             *ngIf="isLoading"

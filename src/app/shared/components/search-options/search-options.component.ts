@@ -1,10 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FoodSortBy,
-  SortDirection,
-} from '../../../core/models/enums/sorting.models';
-import { FoodResultsLayout } from '../food-search-results/food-search-results.component';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodResultsLayout} from '../food-search-results/food-search-results.component';
 
 @Component({
   selector: 'app-search-options',
@@ -31,18 +28,19 @@ export class SearchOptionsComponent {
   @Output() layoutChange = new EventEmitter<FoodResultsLayout>();
 
   sortByOptions = [
-    { value: FoodSortBy.Name, label: 'Name' },
-    { value: FoodSortBy.Calories, label: 'Calories' },
-    { value: FoodSortBy.Protein, label: 'Protein' },
-    { value: FoodSortBy.Carbs, label: 'Carbohydrates' },
-    { value: FoodSortBy.Fat, label: 'Fat' },
-    { value: FoodSortBy.Brand, label: 'Brand' },
+    {value: FoodSortBy.Name, label: 'Name'},
+    {value: FoodSortBy.Calories, label: 'Calories'},
+    {value: FoodSortBy.Protein, label: 'Protein'},
+    {value: FoodSortBy.Carbs, label: 'Carbohydrates'},
+    {value: FoodSortBy.Fat, label: 'Fat'},
+    {value: FoodSortBy.Brand, label: 'Brand'},
   ];
 
   sortDirectionOptions = [
-    { value: SortDirection.Ascending, label: 'Ascending' },
-    { value: SortDirection.Descending, label: 'Descending' },
+    {value: SortDirection.Ascending, label: 'Ascending'},
+    {value: SortDirection.Descending, label: 'Descending'},
   ];
+
   onSortByChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.sortByChange.emit(Number(target.value) as FoodSortBy);
@@ -57,6 +55,7 @@ export class SearchOptionsComponent {
     const target = event.target as HTMLSelectElement;
     this.pageSizeChange.emit(Number(target.value));
   }
+
   onLayoutChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     this.layoutChange.emit(target.value as FoodResultsLayout);

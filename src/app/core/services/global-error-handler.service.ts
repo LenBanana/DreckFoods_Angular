@@ -1,6 +1,6 @@
-import { Injectable, ErrorHandler, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertService } from './alert.service';
+import {ErrorHandler, inject, Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {AlertService} from './alert.service';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +67,8 @@ export class GlobalErrorHandler implements ErrorHandler {
           },
           {
             label: 'Later',
-            action: () => {},
+            action: () => {
+            },
             primary: false,
           },
         ],

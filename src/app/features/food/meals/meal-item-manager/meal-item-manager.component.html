@@ -3,8 +3,8 @@
   <div class="mb-3">
     <label class="form-label">Add Foods to Meal</label>
     <app-food-search-container
-      [config]="searchConfig"
       (foodSelected)="onFoodSelected($event)"
+      [config]="searchConfig"
     >
     </app-food-search-container>
   </div>
@@ -34,14 +34,14 @@
           <label class="form-label small">Weight</label>
           <div class="input-group input-group-sm">
             <input
-              type="number"
-              class="form-control"
+              (ngModelChange)="onItemChange()"
               [(ngModel)]="item.weight"
               [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="onItemChange()"
-              min="1"
+              class="form-control"
               max="9999"
+              min="1"
               placeholder="Weight"
+              type="number"
             />
             <span class="input-group-text">g</span>
           </div>
@@ -52,10 +52,10 @@
         </div>
 
         <button
-          type="button"
-          class="btn btn-outline-danger btn-sm"
           (click)="removeItem(i)"
+          class="btn btn-outline-danger btn-sm"
           title="Remove item"
+          type="button"
         >
           <i class="fas fa-trash"></i>
         </button>

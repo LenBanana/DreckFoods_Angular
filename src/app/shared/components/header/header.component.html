@@ -1,7 +1,7 @@
 <nav
   class="navbar navbar-expand-lg navbar-dark position-fixed w-100 d-none d-lg-block"
-  style="background-color: var(--navbar-bg)"
   data-bs-theme="dark"
+  style="background-color: var(--navbar-bg)"
 >
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" routerLink="/dashboard">
@@ -10,24 +10,24 @@
     </a>
 
     <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#mainNav"
       aria-controls="mainNav"
       aria-expanded="false"
       aria-label="Toggle navigation"
+      class="navbar-toggler"
+      data-bs-target="#mainNav"
+      data-bs-toggle="collapse"
+      type="button"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item" *ngFor="let link of navLinks">
+        <li *ngFor="let link of navLinks" class="nav-item">
           <!-- Simple link without children -->
           <a
             *ngIf="!link.children"
-            class="nav-link me-3"
             [routerLink]="link.path"
+            class="nav-link me-3"
             routerLinkActive="active"
           >
             {{ link.label }}
@@ -36,19 +36,19 @@
           <!-- Dropdown link with children -->
           <div *ngIf="link.children" class="nav-item dropdown">
             <a
+              aria-expanded="false"
               class="nav-link dropdown-toggle me-3"
+              data-bs-toggle="dropdown"
               href="#"
               role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
             >
               {{ link.label }}
             </a>
             <ul class="dropdown-menu">
               <li *ngFor="let child of link.children">
                 <a
-                  class="dropdown-item"
                   [routerLink]="child.path"
+                  class="dropdown-item"
                   routerLinkActive="active"
                 >
                   {{ child.label }}
@@ -62,8 +62,6 @@
       <div class="d-flex align-items-center gap-3">
         <!-- Theme Toggle Button -->
         <button
-          type="button"
-          class="theme-toggle"
           (click)="toggleTheme()"
           [attr.aria-label]="
             isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
@@ -71,6 +69,8 @@
           [attr.title]="
             isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
           "
+          class="theme-toggle"
+          type="button"
         >
           <i [class]="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
@@ -78,15 +78,15 @@
         <!-- User Menu -->
         <div class="btn-group d-flex">
           <button
-            type="button"
+            aria-expanded="false"
             class="btn dropdown-toggle"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
+            type="button"
           >
             <span class="avatar text-light">{{ getUserInitials() }}</span>
             <span
-              class="ms-2 d-none d-md-inline user-name"
               [class.text-primary]="currentUser?.role !== AppRole.User"
+              class="ms-2 d-none d-md-inline user-name"
             >
               {{ currentUser?.firstName }} {{ currentUser?.lastName }}
             </span>
@@ -99,10 +99,10 @@
               </a>
             </li>
             <li>
-              <hr class="dropdown-divider" />
+              <hr class="dropdown-divider"/>
             </li>
             <li>
-              <button class="dropdown-item text-danger" (click)="logout()">
+              <button (click)="logout()" class="dropdown-item text-danger">
                 <i class="fas fa-sign-out-alt me-2"></i>
                 Sign Out
               </button>

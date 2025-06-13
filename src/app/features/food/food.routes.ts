@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
-import { adminEditorGuard } from '../../core/guards/admin-editor.guard';
+import {Routes} from '@angular/router';
+import {adminEditorGuard} from '../../core/guards/admin-editor.guard';
 
 export const foodRoutes: Routes = [
   {

@@ -1,18 +1,15 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { filter, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {filter, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
-import { HeaderComponent } from './shared/components/header/header.component';
-import { MobileHeaderComponent } from './shared/components/mobile-header/mobile-header.component';
-import { MobileNavComponent } from './shared/components/mobile-nav/mobile-nav.component';
-import { AlertContainerComponent } from './shared/components/alert-container/alert-container.component';
-import {
-  AppLifecycleService,
-  AppState,
-} from './core/services/app-lifecycle.service';
-import { SwUpdateService } from './core/services/sw-update.service';
+import {HeaderComponent} from './shared/components/header/header.component';
+import {MobileHeaderComponent} from './shared/components/mobile-header/mobile-header.component';
+import {MobileNavComponent} from './shared/components/mobile-nav/mobile-nav.component';
+import {AlertContainerComponent} from './shared/components/alert-container/alert-container.component';
+import {AppLifecycleService, AppState,} from './core/services/app-lifecycle.service';
+import {SwUpdateService} from './core/services/sw-update.service';
 
 @Component({
   selector: 'app-root',
@@ -81,13 +78,13 @@ import { SwUpdateService } from './core/services/sw-update.service';
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  showHeader = false;
+  isAppActive = true;
   private router = inject(Router);
   private lifecycleService = inject(AppLifecycleService);
   private swUpdateService = inject(SwUpdateService);
   private destroy$ = new Subject<void>();
 
-  showHeader = false;
-  isAppActive = true;
   ngOnInit() {
     this.lifecycleService.markAsActive();
     this.swUpdateService.checkForUpdates();

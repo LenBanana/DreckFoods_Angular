@@ -1,12 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import {
-  WeightEntryDto,
-  CreateWeightEntryRequest,
-} from '../models/weight.models';
-import { environment } from '../../../environments/environment';
+import {CreateWeightEntryRequest, WeightEntryDto,} from '../models/weight.models';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

@@ -1,7 +1,7 @@
 <div
   class="modal d-block"
-  tabindex="-1"
   style="background-color: rgba(0, 0, 0, 0.5)"
+  tabindex="-1"
 >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -9,10 +9,10 @@
         <h5 class="modal-title">
           <i class="fas fa-utensils me-2"></i>Log Meal Portion
         </h5>
-        <button type="button" class="btn-close" (click)="onClose()"></button>
+        <button (click)="onClose()" class="btn-close" type="button"></button>
       </div>
 
-      <form [formGroup]="portionForm" (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()" [formGroup]="portionForm">
         <div class="modal-body">
           <!-- Meal Info -->
           <div *ngIf="meal" class="meal-info mb-4 p-3 rounded">
@@ -22,28 +22,28 @@
             </p>
             <div class="meal-stats">
               <span class="badge bg-primary me-2"
-                >{{ meal.totalWeight }}g total</span
+              >{{ meal.totalWeight }}g total</span
               >
               <span class="badge bg-secondary"
-                >{{ meal.items.length }} ingredients</span
+              >{{ meal.items.length }} ingredients</span
               >
             </div>
           </div>
 
           <!-- Portion Weight -->
           <div class="mb-3">
-            <label for="portionWeight" class="form-label"
-              >Portion Weight<small class="text-danger"> *</small></label
+            <label class="form-label" for="portionWeight"
+            >Portion Weight<small class="text-danger"> *</small></label
             >
             <div class="input-group">
               <input
-                type="number"
                 class="form-control"
-                id="portionWeight"
                 formControlName="weight"
-                min="1"
+                id="portionWeight"
                 max="9999"
+                min="1"
                 placeholder="Enter weight"
+                type="number"
               />
               <span class="input-group-text">grams</span>
             </div>
@@ -66,10 +66,10 @@
             <label class="form-label">Quick amounts</label>
             <div class="quick-weights">
               <button
-                *ngFor="let weight of quickWeights"
-                type="button"
-                class="btn btn-outline-primary btn-sm me-2 mb-2"
                 (click)="setWeight(weight)"
+                *ngFor="let weight of quickWeights"
+                class="btn btn-outline-primary btn-sm me-2 mb-2"
+                type="button"
               >
                 {{ weight }}g
               </button>
@@ -78,12 +78,12 @@
 
           <!-- Consumed At -->
           <div class="mb-3">
-            <label for="consumedAt" class="form-label">Consumed At</label>
+            <label class="form-label" for="consumedAt">Consumed At</label>
             <input
-              type="datetime-local"
               class="form-control"
-              id="consumedAt"
               formControlName="consumedAt"
+              id="consumedAt"
+              type="datetime-local"
             />
             <div class="form-text">When did you eat this meal?</div>
           </div>
@@ -130,13 +130,13 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="onClose()">
+          <button (click)="onClose()" class="btn btn-secondary" type="button">
             Cancel
           </button>
           <button
-            type="submit"
-            class="btn btn-primary"
             [disabled]="portionForm.invalid || isSubmitting"
+            class="btn btn-primary"
+            type="submit"
           >
             <span
               *ngIf="isSubmitting"

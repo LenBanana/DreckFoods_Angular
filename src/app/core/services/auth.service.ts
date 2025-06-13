@@ -1,20 +1,20 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, Observable, tap} from 'rxjs';
+import {Router} from '@angular/router';
 
 import {
-  User,
+  AuthResponse,
+  ChangePasswordRequest,
+  ConfirmEmailRequest,
+  ForgotPasswordRequest,
   LoginRequest,
   RegisterRequest,
-  AuthResponse,
-  ConfirmEmailRequest,
-  ChangePasswordRequest,
-  ForgotPasswordRequest,
   ResetPasswordRequest,
+  User,
 } from '../models/auth.models';
-import { environment } from '../../../environments/environment';
-import { TokenService } from './token.service';
+import {environment} from '../../../environments/environment';
+import {TokenService} from './token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,47 +28,11 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   private userKey = 'food_tracker_user';
+
   constructor() {
     this.initializeAuth();
   }
-  private initializeAuth(): void {
-    const storedUser = localStorage.getItem(this.userKey);
-    const token = this.tokenService.getToken();
 
-    if (storedUser && token && this.tokenService.isTokenValid()) {
-      try {
-        const user = JSON.parse(storedUser);
-        this.currentUserSubject.next(user);
-
-        if (navigator.onLine !== false) {
-          this.refreshUserProfile();
-        }
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        this.logout();
-      }
-    } else {
-      this.tokenService.removeToken();
-      localStorage.removeItem(this.userKey);
-      this.currentUserSubject.next(null);
-    }
-  }
-
-  private refreshUserProfile(): void {
-    this.http.get<User>(`${environment.apiUrl}/user/profile`).subscribe({
-      next: (user: User) => {
-        this.currentUserSubject.next(user);
-        localStorage.setItem(this.userKey, JSON.stringify(user));
-      },
-      error: (err: any) => {
-        console.error('Error fetching user profile:', err);
-
-        if (err.status === 401 || err.status === 403) {
-          this.logout();
-        }
-      },
-    });
-  }
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, request)
@@ -130,17 +94,12 @@ export class AuthService {
         }),
       );
   }
+
   logout(): void {
     this.tokenService.removeToken();
     localStorage.removeItem(this.userKey);
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
-  }
-
-  private setAuthData(token: string, user: User): void {
-    this.tokenService.setToken(token);
-    localStorage.setItem(this.userKey, JSON.stringify(user));
-    this.currentUserSubject.next(user);
   }
 
   getToken(): string | null {
@@ -150,9 +109,11 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.tokenService.isTokenValid();
   }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+
   refreshCurrentUser(): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/user/profile`).pipe(
       tap((user: User) => {
@@ -165,5 +126,50 @@ export class AuthService {
   pushUserToSubject(user: User): void {
     this.currentUserSubject.next(user);
     localStorage.setItem(this.userKey, JSON.stringify(user));
+  }
+
+  private initializeAuth(): void {
+    const storedUser = localStorage.getItem(this.userKey);
+    const token = this.tokenService.getToken();
+
+    if (storedUser && token && this.tokenService.isTokenValid()) {
+      try {
+        const user = JSON.parse(storedUser);
+        this.currentUserSubject.next(user);
+
+        if (navigator.onLine !== false) {
+          this.refreshUserProfile();
+        }
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        this.logout();
+      }
+    } else {
+      this.tokenService.removeToken();
+      localStorage.removeItem(this.userKey);
+      this.currentUserSubject.next(null);
+    }
+  }
+
+  private refreshUserProfile(): void {
+    this.http.get<User>(`${environment.apiUrl}/user/profile`).subscribe({
+      next: (user: User) => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem(this.userKey, JSON.stringify(user));
+      },
+      error: (err: any) => {
+        console.error('Error fetching user profile:', err);
+
+        if (err.status === 401 || err.status === 403) {
+          this.logout();
+        }
+      },
+    });
+  }
+
+  private setAuthData(token: string, user: User): void {
+    this.tokenService.setToken(token);
+    localStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 }

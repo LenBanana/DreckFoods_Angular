@@ -12,9 +12,9 @@
   <!-- Search Container -->
   <div class="container mb-5">
     <app-food-search-container
-      [config]="searchConfig"
       (foodSelected)="onFoodSelected($event)"
       (searchError)="onSearchError($event)"
+      [config]="searchConfig"
     >
     </app-food-search-container>
   </div>
@@ -22,9 +22,9 @@
 
 <!-- Add Food Modal -->
 <app-add-food-modal
-  *ngIf="selectedFood"
-  [food]="selectedFood"
   (close)="closeAddFoodModal()"
   (foodAdded)="onFoodAdded()"
+  *ngIf="selectedFood"
+  [food]="selectedFood"
 >
 </app-add-food-modal>

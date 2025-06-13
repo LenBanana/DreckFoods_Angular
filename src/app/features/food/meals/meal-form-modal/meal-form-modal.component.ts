@@ -1,28 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MealItemManagerComponent,
-  MealItem,
-} from '../meal-item-manager/meal-item-manager.component';
-import { FoodSearchDto } from '../../../../core/models/food.models';
-import {
-  MealResponseDTO,
-  CreateMealDTO,
-  MealItemDTO,
-} from '../../../../core/models/meal.models';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {MealItem, MealItemManagerComponent,} from '../meal-item-manager/meal-item-manager.component';
+import {FoodSearchDto} from '../../../../core/models/food.models';
+import {CreateMealDTO, MealItemDTO, MealResponseDTO,} from '../../../../core/models/meal.models';
 
 @Component({
   selector: 'app-meal-form-modal',
@@ -37,111 +18,17 @@ export class MealFormModalComponent implements OnInit {
 
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<CreateMealDTO>();
-
-  private fb = inject(FormBuilder);
-
   mealForm: FormGroup;
   mealItems: MealItem[] = [];
   isItemsValid = false;
   showValidation = false;
+  private fb = inject(FormBuilder);
 
   constructor() {
     this.mealForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       description: [''],
     });
-  }
-
-  ngOnInit() {
-    if (this.meal) {
-      this.mealForm.patchValue({
-        name: this.meal.name,
-        description: this.meal.description || '',
-      });
-
-      this.mealItems = this.meal.items.map((item) => ({
-        food: this.createFoodFromMealItem(item),
-        weight: item.weight,
-      }));
-    } else {
-      this.mealItems = [];
-    }
-  }
-
-  private createFoodFromMealItem(item: any): FoodSearchDto {
-    return {
-      id: item.fddbFoodId,
-      name: item.foodName,
-      url: '',
-      description: '',
-      imageUrl: '',
-      brand: '',
-      tags: [],
-      nutrition: {
-        calories: { value: 0, unit: 'kcal' },
-        protein: { value: 0, unit: 'g' },
-        fat: { value: 0, unit: 'g' },
-        carbohydrates: {
-          total: { value: 0, unit: 'g' },
-          sugar: { value: 0, unit: 'g' },
-          polyols: { value: 0, unit: 'g' },
-        },
-        minerals: {
-          salt: { value: 0, unit: 'g' },
-          iron: { value: 0, unit: 'mg' },
-          zinc: { value: 0, unit: 'mg' },
-          magnesium: { value: 0, unit: 'mg' },
-          chloride: { value: 0, unit: 'mg' },
-          manganese: { value: 0, unit: 'mg' },
-          sulfur: { value: 0, unit: 'mg' },
-          potassium: { value: 0, unit: 'mg' },
-          calcium: { value: 0, unit: 'mg' },
-          phosphorus: { value: 0, unit: 'mg' },
-          copper: { value: 0, unit: 'mg' },
-          fluoride: { value: 0, unit: 'mg' },
-          iodine: { value: 0, unit: 'mg' },
-        },
-        fiber: { value: 0, unit: 'g' },
-        kilojoules: { value: 0, unit: 'kJ' },
-        caffeine: { value: 0, unit: 'mg' },
-      },
-    } as FoodSearchDto;
-  }
-  onItemsChange(items: MealItem[]) {
-    this.mealItems = items;
-
-    if (items.length > 0) {
-      this.showValidation = false;
-    }
-  }
-
-  onValidationChange(isValid: boolean) {
-    this.isItemsValid = isValid;
-  }
-
-  onSubmit() {
-    if (this.isFormInvalid) {
-      this.showValidation = true;
-      return;
-    }
-
-    const mealData: CreateMealDTO = {
-      name: this.mealForm.value.name,
-      description: this.mealForm.value.description || undefined,
-      items: this.mealItems.map(
-        (item) =>
-          ({
-            fddbFoodId: item.food!.id,
-            weight: item.weight,
-          }) as MealItemDTO,
-      ),
-    };
-
-    this.submit.emit(mealData);
-  }
-
-  onClose() {
-    this.close.emit();
   }
 
   get isEdit(): boolean {
@@ -217,5 +104,98 @@ export class MealFormModalComponent implements OnInit {
     });
 
     return totalNutrition;
+  }
+
+  ngOnInit() {
+    if (this.meal) {
+      this.mealForm.patchValue({
+        name: this.meal.name,
+        description: this.meal.description || '',
+      });
+
+      this.mealItems = this.meal.items.map((item) => ({
+        food: this.createFoodFromMealItem(item),
+        weight: item.weight,
+      }));
+    } else {
+      this.mealItems = [];
+    }
+  }
+
+  onItemsChange(items: MealItem[]) {
+    this.mealItems = items;
+
+    if (items.length > 0) {
+      this.showValidation = false;
+    }
+  }
+
+  onValidationChange(isValid: boolean) {
+    this.isItemsValid = isValid;
+  }
+
+  onSubmit() {
+    if (this.isFormInvalid) {
+      this.showValidation = true;
+      return;
+    }
+
+    const mealData: CreateMealDTO = {
+      name: this.mealForm.value.name,
+      description: this.mealForm.value.description || undefined,
+      items: this.mealItems.map(
+        (item) =>
+          ({
+            fddbFoodId: item.food!.id,
+            weight: item.weight,
+          }) as MealItemDTO,
+      ),
+    };
+
+    this.submit.emit(mealData);
+  }
+
+  onClose() {
+    this.close.emit();
+  }
+
+  private createFoodFromMealItem(item: any): FoodSearchDto {
+    return {
+      id: item.fddbFoodId,
+      name: item.foodName,
+      url: '',
+      description: '',
+      imageUrl: '',
+      brand: '',
+      tags: [],
+      nutrition: {
+        calories: {value: 0, unit: 'kcal'},
+        protein: {value: 0, unit: 'g'},
+        fat: {value: 0, unit: 'g'},
+        carbohydrates: {
+          total: {value: 0, unit: 'g'},
+          sugar: {value: 0, unit: 'g'},
+          polyols: {value: 0, unit: 'g'},
+        },
+        minerals: {
+          salt: {value: 0, unit: 'g'},
+          iron: {value: 0, unit: 'mg'},
+          zinc: {value: 0, unit: 'mg'},
+          magnesium: {value: 0, unit: 'mg'},
+          chloride: {value: 0, unit: 'mg'},
+          manganese: {value: 0, unit: 'mg'},
+          sulfur: {value: 0, unit: 'mg'},
+          potassium: {value: 0, unit: 'mg'},
+          calcium: {value: 0, unit: 'mg'},
+          phosphorus: {value: 0, unit: 'mg'},
+          copper: {value: 0, unit: 'mg'},
+          fluoride: {value: 0, unit: 'mg'},
+          iodine: {value: 0, unit: 'mg'},
+        },
+        fiber: {value: 0, unit: 'g'},
+        kilojoules: {value: 0, unit: 'kJ'},
+        caffeine: {value: 0, unit: 'mg'},
+      },
+    } as FoodSearchDto;
   }
 }

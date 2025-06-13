@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { NutritionCardData } from '../components/nutrition-card/nutrition-card.component';
+import {Injectable} from '@angular/core';
+import {NutritionCardData} from '../components/nutrition-card/nutrition-card.component';
 
 @Injectable({
   providedIn: 'root',

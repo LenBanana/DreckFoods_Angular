@@ -1,31 +1,13 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { catchError, of } from 'rxjs';
+import {CommonModule} from '@angular/common';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {catchError, of} from 'rxjs';
 
-import { FoodService } from '../../../core/services/food.service';
-import {
-  FoodSearchDto,
-  FoodSearchResponse,
-} from '../../../core/models/food.models';
-import {
-  FoodSortBy,
-  SortDirection,
-} from '../../../core/models/enums/sorting.models';
-import { FoodSearchInputComponent } from '../food-search-input/food-search-input.component';
-import {
-  FoodSearchResultsComponent,
-  FoodResultsLayout,
-} from '../food-search-results/food-search-results.component';
-import { PaginationComponent } from '../pagination/pagination.component';
-import { SearchOptionsComponent } from '../search-options/search-options.component';
+import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
+import {FoodService} from '../../../core/services/food.service';
+import {FoodSearchInputComponent} from '../food-search-input/food-search-input.component';
+import {FoodResultsLayout, FoodSearchResultsComponent,} from '../food-search-results/food-search-results.component';
 
 @Component({
   selector: 'app-food-selector',
@@ -35,8 +17,7 @@ import { SearchOptionsComponent } from '../search-options/search-options.compone
     ReactiveFormsModule,
     FormsModule,
     FoodSearchInputComponent,
-    FoodSearchResultsComponent,
-    SearchOptionsComponent,
+    FoodSearchResultsComponent
   ],
   templateUrl: './food-selector.component.html',
   styleUrls: ['./food-selector.component.scss'],
@@ -54,8 +35,6 @@ export class FoodSelectorComponent implements OnInit {
 
   @Output() foodSelected = new EventEmitter<FoodSearchDto>();
   @Output() searchError = new EventEmitter<string>();
-  private foodService = inject(FoodService);
-
   searchResponse: FoodSearchResponse | null = null;
   recentFoods: FoodSearchDto[] = [];
   recentFoodsResponse: FoodSearchResponse | null = null;
@@ -65,20 +44,33 @@ export class FoodSelectorComponent implements OnInit {
   currentQuery = '';
   sortBy: FoodSortBy = FoodSortBy.Name;
   sortDirection: SortDirection = SortDirection.Ascending;
-
   sortByOptions = [
-    { value: FoodSortBy.Name, label: 'Name' },
-    { value: FoodSortBy.Calories, label: 'Calories' },
-    { value: FoodSortBy.Protein, label: 'Protein' },
-    { value: FoodSortBy.Carbs, label: 'Carbohydrates' },
-    { value: FoodSortBy.Fat, label: 'Fat' },
-    { value: FoodSortBy.Brand, label: 'Brand' },
+    {value: FoodSortBy.Name, label: 'Name'},
+    {value: FoodSortBy.Calories, label: 'Calories'},
+    {value: FoodSortBy.Protein, label: 'Protein'},
+    {value: FoodSortBy.Carbs, label: 'Carbohydrates'},
+    {value: FoodSortBy.Fat, label: 'Fat'},
+    {value: FoodSortBy.Brand, label: 'Brand'},
   ];
-
   sortDirectionOptions = [
-    { value: SortDirection.Ascending, label: 'Ascending' },
-    { value: SortDirection.Descending, label: 'Descending' },
+    {value: SortDirection.Ascending, label: 'Ascending'},
+    {value: SortDirection.Descending, label: 'Descending'},
   ];
+  private foodService = inject(FoodService);
+
+  get hasSearchResults(): boolean {
+    return (this.searchResponse?.foods?.length ?? 0) > 0;
+  }
+
+  get hasQuery(): boolean {
+    return this.currentQuery.length > 0;
+  }
+
+  get showRecentSection(): boolean {
+    return (
+      this.showRecentFoods && !this.hasQuery && this.recentFoods.length > 0
+    );
+  }
 
   ngOnInit() {
     if (this.showRecentFoods) {
@@ -106,6 +98,7 @@ export class FoodSelectorComponent implements OnInit {
   onFoodSelected(food: FoodSearchDto) {
     this.foodSelected.emit(food);
   }
+
   onPageChange(page: number) {
     if (!this.currentQuery) {
       this.loadRecentFoods(page);
@@ -142,6 +135,10 @@ export class FoodSelectorComponent implements OnInit {
     }
   }
 
+  clearError() {
+    this.errorMessage = '';
+  }
+
   private performSearch() {
     if (!this.currentQuery) return;
 
@@ -168,6 +165,7 @@ export class FoodSelectorComponent implements OnInit {
         this.isSearching = false;
       });
   }
+
   private loadRecentFoods(page: number = 1) {
     this.isLoadingRecent = true;
     this.foodService
@@ -185,22 +183,5 @@ export class FoodSelectorComponent implements OnInit {
         }
         this.isLoadingRecent = false;
       });
-  }
-
-  clearError() {
-    this.errorMessage = '';
-  }
-  get hasSearchResults(): boolean {
-    return (this.searchResponse?.foods?.length ?? 0) > 0;
-  }
-
-  get hasQuery(): boolean {
-    return this.currentQuery.length > 0;
-  }
-
-  get showRecentSection(): boolean {
-    return (
-      this.showRecentFoods && !this.hasQuery && this.recentFoods.length > 0
-    );
   }
 }

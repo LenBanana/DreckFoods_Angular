@@ -1,15 +1,10 @@
-import { Component, inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {CommonModule} from '@angular/common';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ForgotPasswordRequest } from '../../../core/models/auth.models';
+import {AuthService} from '../../../core/services/auth.service';
+import {ForgotPasswordRequest} from '../../../core/models/auth.models';
 
 @Component({
   selector: 'app-forgot-password',
@@ -19,19 +14,22 @@ import { ForgotPasswordRequest } from '../../../core/models/auth.models';
   styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
   forgotPasswordForm: FormGroup;
   isLoading = false;
   message = '';
   isSuccess = false;
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor() {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  get email() {
+    return this.forgotPasswordForm.get('email');
   }
 
   onSubmit(): void {
@@ -57,9 +55,5 @@ export class ForgotPasswordComponent {
         },
       });
     }
-  }
-
-  get email() {
-    return this.forgotPasswordForm.get('email');
   }
 }

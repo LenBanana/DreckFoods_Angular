@@ -12,8 +12,6 @@
       <div class="d-flex align-items-center gap-2">
         <!-- Theme Toggle -->
         <button
-          type="button"
-          class="theme-toggle btn btn-sm"
           (click)="toggleTheme()"
           [attr.aria-label]="
             isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
@@ -21,6 +19,8 @@
           [attr.title]="
             isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'
           "
+          class="theme-toggle btn btn-sm"
+          type="button"
         >
           <i [class]="isDarkTheme ? 'fas fa-sun' : 'fas fa-moon'"></i>
         </button>
@@ -28,10 +28,10 @@
         <!-- User Menu -->
         <div class="dropdown">
           <button
-            type="button"
+            aria-expanded="false"
             class="btn btn-sm user-menu-btn"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
+            type="button"
           >
             <span class="avatar">{{ getUserInitials() }}</span>
           </button>
@@ -43,10 +43,10 @@
               </a>
             </li>
             <li>
-              <hr class="dropdown-divider" />
+              <hr class="dropdown-divider"/>
             </li>
             <li>
-              <button class="dropdown-item text-danger" (click)="logout()">
+              <button (click)="logout()" class="dropdown-item text-danger">
                 <i class="fas fa-sign-out-alt me-2"></i>
                 Sign Out
               </button>

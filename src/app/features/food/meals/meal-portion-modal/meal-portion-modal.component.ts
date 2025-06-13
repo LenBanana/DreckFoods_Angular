@@ -1,22 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MealResponseDTO,
-  AddMealPortionDTO,
-} from '../../../../core/models/meal.models';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {AddMealPortionDTO, MealResponseDTO,} from '../../../../core/models/meal.models';
 
 @Component({
   selector: 'app-meal-portion-modal',
@@ -31,11 +16,9 @@ export class MealPortionModalComponent implements OnInit {
 
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<AddMealPortionDTO>();
-
-  private fb = inject(FormBuilder);
-
   portionForm: FormGroup;
   quickWeights = [50, 100, 150, 200, 250, 300, 500];
+  private fb = inject(FormBuilder);
 
   constructor() {
     this.portionForm = this.fb.group({
@@ -54,7 +37,7 @@ export class MealPortionModalComponent implements OnInit {
   }
 
   setWeight(weight: number) {
-    this.portionForm.patchValue({ weight });
+    this.portionForm.patchValue({weight});
   }
 
   onSubmit(event?: Event) {

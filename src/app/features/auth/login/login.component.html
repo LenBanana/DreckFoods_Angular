@@ -4,10 +4,10 @@
       <h3>Welcome Back</h3>
       <p class="mb-0 text-muted">Sign in to your DreckFoods account</p>
     </div>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
       <div class="mb-3">
         <label class="form-label">Email Address</label>
-        <input type="email" formControlName="email" class="form-control" />
+        <input class="form-control" formControlName="email" type="email"/>
         <div
           *ngIf="
             loginForm.get('email')?.invalid && loginForm.get('email')?.touched
@@ -25,9 +25,9 @@
       <div class="mb-3">
         <label class="form-label">Password</label>
         <input
-          type="password"
-          formControlName="password"
           class="form-control"
+          formControlName="password"
+          type="password"
         />
         <div
           *ngIf="
@@ -43,9 +43,9 @@
         <small>{{ errorMessage }}</small>
       </div>
       <button
-        type="submit"
-        class="btn btn-primary w-100"
         [disabled]="loginForm.invalid || isLoading"
+        class="btn btn-primary w-100"
+        type="submit"
       >
         <app-loading-spinner
           *ngIf="isLoading"

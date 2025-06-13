@@ -1,8 +1,8 @@
 <div class="delete-account-container">
   <div
     *ngIf="message"
-    class="message"
     [ngClass]="{ success: isSuccess, error: !isSuccess }"
+    class="message"
   >
     {{ message }}
   </div>
@@ -23,9 +23,9 @@
     </div>
 
     <button
-      type="button"
-      class="btn btn-danger"
       (click)="showDeleteConfirmation()"
+      class="btn btn-danger"
+      type="button"
     >
       Delete My Account
     </button>
@@ -43,19 +43,19 @@
 
     <div class="button-group">
       <button
-        type="button"
-        class="btn btn-secondary me-2"
         (click)="cancelDelete()"
         [disabled]="isLoading"
+        class="btn btn-secondary me-2"
+        type="button"
       >
         Cancel
       </button>
 
       <button
-        type="button"
-        class="btn btn-danger"
         (click)="confirmDelete()"
         [disabled]="isLoading"
+        class="btn btn-danger"
+        type="button"
       >
         <span *ngIf="isLoading">Deleting...</span>
         <span *ngIf="!isLoading">Yes, Delete My Account</span>

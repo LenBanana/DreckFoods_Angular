@@ -1,15 +1,15 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {
-  FddbFoodUpdateDTO,
-  FddbFoodNutritionUpdateDTO,
   FddbFoodCompleteUpdateDTO,
+  FddbFoodNutritionUpdateDTO,
+  FddbFoodUpdateDTO,
   FoodEditorResponse,
 } from '../models/food-editor.models';
-import { FoodSearchDto } from '../models/food.models';
+import {FoodSearchDto} from '../models/food.models';
 
 @Injectable({
   providedIn: 'root',

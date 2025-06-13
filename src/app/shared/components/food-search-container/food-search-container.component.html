@@ -2,15 +2,15 @@
   <!-- Search Input -->
   <div>
     <app-food-search-input
+      (isSearching)="onIsSearching($event)"
+      (searchError)="onSearchErrorEvent($event)"
+      (searchQuery)="onSearchQuery($event)"
+      (searchResults)="onSearchResults($event)"
+      [pageSize]="pageSize"
       [placeholder]="placeholder"
       [showBarcodeScanner]="showBarcodeScanner"
-      [pageSize]="pageSize"
       [sortBy]="sortBy"
       [sortDirection]="sortDirection"
-      (searchResults)="onSearchResults($event)"
-      (searchError)="onSearchErrorEvent($event)"
-      (isSearching)="onIsSearching($event)"
-      (searchQuery)="onSearchQuery($event)"
     >
     </app-food-search-input>
   </div>
@@ -18,20 +18,20 @@
   <!-- Search Options (show when searching and enabled) -->
   <div *ngIf="showSearchOptions" class="mb-3">
     <app-search-options
-      [sortBy]="sortBy"
-      [sortDirection]="sortDirection"
-      [pageSize]="pageSize"
+      (layoutChange)="onLayoutChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (sortByChange)="onSortByChange($event)"
+      (sortDirectionChange)="onSortDirectionChange($event)"
+      [currentPage]="getCurrentResults()?.page || 1"
       [layout]="layout"
+      [pageSize]="pageSize"
       [possiblePageSizes]="possiblePageSizes"
       [showLayoutOptions]="showLayoutOptions"
       [showResultsInfo]="showResultsHeader && hasResults"
-      [currentPage]="getCurrentResults()?.page || 1"
-      [totalPages]="getCurrentResults()?.totalPages || 1"
+      [sortBy]="sortBy"
+      [sortDirection]="sortDirection"
       [totalCount]="getCurrentResults()?.totalCount || 0"
-      (sortByChange)="onSortByChange($event)"
-      (sortDirectionChange)="onSortDirectionChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
-      (layoutChange)="onLayoutChange($event)"
+      [totalPages]="getCurrentResults()?.totalPages || 1"
     >
     </app-search-options>
   </div>
@@ -42,9 +42,9 @@
       <i class="fas fa-exclamation-triangle me-2"></i>
       <span class="flex-grow-1">{{ errorMessage }}</span>
       <button
-        type="button"
-        class="btn-close btn-close-sm"
         (click)="clearError()"
+        class="btn-close btn-close-sm"
+        type="button"
       ></button>
     </div>
   </div>
@@ -56,27 +56,27 @@
       class="d-flex align-items-center justify-content-between mb-2"
     >
       <h6 class="mb-0">Search Results</h6>
-      <small class="text-muted" *ngIf="!isSearching && hasResults">
+      <small *ngIf="!isSearching && hasResults" class="text-muted">
         {{ searchResponse?.totalCount }} foods found
       </small>
     </div>
 
     <app-food-search-results
-      [searchResponse]="searchResponse"
-      [layout]="layout"
-      [isLoading]="isSearching"
-      [showImages]="showImages"
-      [showNutrition]="showNutrition"
-      [showBrand]="showBrand"
-      [showTags]="showTags"
-      [showPagination]="showPagination"
-      [actionButtonText]="actionButtonText"
-      [actionButtonIcon]="actionButtonIcon"
-      [emptyMessage]="currentEmptyMessage"
-      [emptyIcon]="currentEmptyIcon"
       (foodSelected)="onFoodSelected($event)"
       (imageError)="onImageError($event)"
       (pageChange)="onPageChange($event)"
+      [actionButtonIcon]="actionButtonIcon"
+      [actionButtonText]="actionButtonText"
+      [emptyIcon]="currentEmptyIcon"
+      [emptyMessage]="currentEmptyMessage"
+      [isLoading]="isSearching"
+      [layout]="layout"
+      [searchResponse]="searchResponse"
+      [showBrand]="showBrand"
+      [showImages]="showImages"
+      [showNutrition]="showNutrition"
+      [showPagination]="showPagination"
+      [showTags]="showTags"
     >
     </app-food-search-results>
   </div>
@@ -88,27 +88,27 @@
       class="d-flex align-items-center justify-content-between mb-2"
     >
       <h6 class="mb-0">Recently Added Foods</h6>
-      <small class="text-muted" *ngIf="recentFoodsResponse">
+      <small *ngIf="recentFoodsResponse" class="text-muted">
         {{ recentFoodsResponse.totalCount }} foods total
       </small>
     </div>
 
     <app-food-search-results
-      [searchResponse]="recentFoodsResponse"
-      [layout]="layout"
-      [isLoading]="isLoadingRecent"
-      [showImages]="showImages"
-      [showNutrition]="showNutrition"
-      [showBrand]="showBrand"
-      [showTags]="showTags"
-      [showPagination]="showPagination"
-      [actionButtonText]="actionButtonText"
-      [actionButtonIcon]="actionButtonIcon"
-      [emptyMessage]="currentEmptyMessage"
-      [emptyIcon]="currentEmptyIcon"
       (foodSelected)="onFoodSelected($event)"
       (imageError)="onImageError($event)"
       (pageChange)="onPageChange($event)"
+      [actionButtonIcon]="actionButtonIcon"
+      [actionButtonText]="actionButtonText"
+      [emptyIcon]="currentEmptyIcon"
+      [emptyMessage]="currentEmptyMessage"
+      [isLoading]="isLoadingRecent"
+      [layout]="layout"
+      [searchResponse]="recentFoodsResponse"
+      [showBrand]="showBrand"
+      [showImages]="showImages"
+      [showNutrition]="showNutrition"
+      [showPagination]="showPagination"
+      [showTags]="showTags"
     >
     </app-food-search-results>
   </div>

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { AuthService } from '../../../core/services/auth.service';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-delete-account',
@@ -11,13 +11,12 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './delete-account.component.scss',
 })
 export class DeleteAccountComponent {
-  private authService = inject(AuthService);
   @Output() cancelDeletion: EventEmitter<void> = new EventEmitter<void>();
-
   isLoading = false;
   message = '';
   isSuccess = false;
   showConfirmation = false;
+  private authService = inject(AuthService);
 
   showDeleteConfirmation(): void {
     this.showConfirmation = true;

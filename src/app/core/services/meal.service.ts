@@ -1,14 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { FoodEntryDto } from '../models/food.models';
-import { environment } from '../../../environments/environment';
-import {
-  MealResponseDTO,
-  CreateMealDTO,
-  UpdateMealDTO,
-  AddMealPortionDTO,
-} from '../models/meal.models';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {FoodEntryDto} from '../models/food.models';
+import {environment} from '../../../environments/environment';
+import {AddMealPortionDTO, CreateMealDTO, MealResponseDTO, UpdateMealDTO,} from '../models/meal.models';
 
 @Injectable({
   providedIn: 'root',

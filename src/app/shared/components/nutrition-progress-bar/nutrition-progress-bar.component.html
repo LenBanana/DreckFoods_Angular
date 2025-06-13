@@ -9,14 +9,14 @@
       {{ config.total | number: "1.1-1" }}{{ config.unit }}
     </small>
   </div>
-  <div class="progress" [style.height]="height">
+  <div [style.height]="height" class="progress">
     <div
-      class="progress-bar"
+      [attr.aria-valuemax]="config.total"
+      [attr.aria-valuemin]="0"
+      [attr.aria-valuenow]="config.value"
       [class]="'bg-' + config.color"
       [style.width.%]="getPercentage()"
-      [attr.aria-valuenow]="config.value"
-      [attr.aria-valuemin]="0"
-      [attr.aria-valuemax]="config.total"
+      class="progress-bar"
     ></div>
   </div>
 </div>

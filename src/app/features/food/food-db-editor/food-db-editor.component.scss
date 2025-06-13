@@ -95,9 +95,8 @@
   }
 
   .form-control {
-    transition:
-      border-color 0.15s ease-in-out,
-      box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 
     &:focus {
       border-color: #86b7fe;

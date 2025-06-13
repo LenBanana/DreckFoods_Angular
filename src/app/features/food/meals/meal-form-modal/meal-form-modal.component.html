@@ -1,7 +1,7 @@
 <div
   class="modal d-block"
-  tabindex="-1"
   style="background-color: rgba(0, 0, 0, 0.5)"
+  tabindex="-1"
 >
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
@@ -10,12 +10,12 @@
           <i class="fas fa-pizza-slice me-2"></i>
           {{ isEdit ? "Edit Meal" : "Create New Meal" }}
         </h5>
-        <button type="button" class="btn-close" (click)="onClose()"></button>
+        <button (click)="onClose()" class="btn-close" type="button"></button>
       </div>
 
       <form
-        [formGroup]="mealForm"
         (ngSubmit)="onSubmit()"
+        [formGroup]="mealForm"
         class="overflow-auto"
       >
         <div class="modal-body">
@@ -24,13 +24,13 @@
             <h6 class="section-title">Meal Information</h6>
 
             <div class="mb-3">
-              <label for="mealName" class="form-label">Meal Name *</label>
+              <label class="form-label" for="mealName">Meal Name *</label>
               <input
-                type="text"
                 class="form-control"
-                id="mealName"
                 formControlName="name"
+                id="mealName"
                 placeholder="e.g., Protein Smoothie"
+                type="text"
               />
               <div
                 *ngIf="
@@ -43,15 +43,15 @@
             </div>
 
             <div class="mb-3">
-              <label for="mealDescription" class="form-label"
-                >Description</label
+              <label class="form-label" for="mealDescription"
+              >Description</label
               >
               <textarea
                 class="form-control"
-                id="mealDescription"
                 formControlName="description"
-                rows="2"
+                id="mealDescription"
                 placeholder="Optional description of the meal"
+                rows="2"
               >
               </textarea>
             </div>
@@ -61,10 +61,10 @@
           <div class="meal-items">
             <h6 class="section-title">Meal Ingredients</h6>
             <app-meal-item-manager
-              [items]="mealItems"
-              [showValidation]="showValidation"
               (itemsChange)="onItemsChange($event)"
               (validationChange)="onValidationChange($event)"
+              [items]="mealItems"
+              [showValidation]="showValidation"
             >
             </app-meal-item-manager>
           </div>
@@ -116,13 +116,13 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="onClose()">
+          <button (click)="onClose()" class="btn btn-secondary" type="button">
             Cancel
           </button>
           <button
-            type="submit"
-            class="btn btn-primary"
             [disabled]="isFormInvalid || isSubmitting"
+            class="btn btn-primary"
+            type="submit"
           >
             <span
               *ngIf="isSubmitting"

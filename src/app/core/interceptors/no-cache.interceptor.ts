@@ -1,4 +1,4 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import {HttpInterceptorFn} from '@angular/common/http';
 
 export const noCacheInterceptor: HttpInterceptorFn = (req, next) => {
   if (shouldDisableCache(req.url)) {

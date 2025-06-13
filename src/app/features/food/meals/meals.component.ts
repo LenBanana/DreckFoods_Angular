@@ -1,19 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { catchError, of } from 'rxjs';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {catchError, of} from 'rxjs';
 
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { MealCardComponent } from './meal-card/meal-card.component';
-import { MealFormModalComponent } from './meal-form-modal/meal-form-modal.component';
-import { MealPortionModalComponent } from './meal-portion-modal/meal-portion-modal.component';
-import {
-  MealResponseDTO,
-  CreateMealDTO,
-  AddMealPortionDTO,
-} from '../../../core/models/meal.models';
-import { MealService } from '../../../core/services/meal.service';
-import { AlertService } from '../../../core/services/alert.service';
-import { AlertType } from '../../../core/models/alert.models';
+import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
+import {MealCardComponent} from './meal-card/meal-card.component';
+import {MealFormModalComponent} from './meal-form-modal/meal-form-modal.component';
+import {MealPortionModalComponent} from './meal-portion-modal/meal-portion-modal.component';
+import {AddMealPortionDTO, CreateMealDTO, MealResponseDTO,} from '../../../core/models/meal.models';
+import {MealService} from '../../../core/services/meal.service';
+import {AlertService} from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-meals',
@@ -29,22 +24,19 @@ import { AlertType } from '../../../core/models/alert.models';
   styleUrls: ['./meals.component.scss'],
 })
 export class MealsComponent implements OnInit {
-  private mealService = inject(MealService);
-  private alertService = inject(AlertService);
-
   meals: MealResponseDTO[] = [];
   isLoading = true;
   errorMessage = '';
-
   showCreateModal = false;
   showEditModal = false;
   showPortionModal = false;
   selectedMeal: MealResponseDTO | null = null;
-
   isCreating = false;
   isUpdating = false;
   isLoggingPortion = false;
   deletingMealId: number | null = null;
+  private mealService = inject(MealService);
+  private alertService = inject(AlertService);
 
   ngOnInit() {
     this.loadMeals();

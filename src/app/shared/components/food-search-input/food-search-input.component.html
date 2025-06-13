@@ -3,34 +3,34 @@
   <div [formGroup]="searchForm">
     <div class="input-group input-group-lg">
       <input
-        type="text"
-        formControlName="query"
-        class="form-control rounded-start-pill ps-4"
-        [placeholder]="placeholder"
         (keyup.enter)="onSearch()"
+        [placeholder]="placeholder"
+        class="form-control rounded-start-pill ps-4"
+        formControlName="query"
+        type="text"
       />
 
       <div class="input-group-text p-0 rounded-end-pill">
         <!-- Barcode Scanner Button -->
         <button
-          *ngIf="showBarcodeScanner"
-          type="button"
-          class="btn h-100 border-0 px-3"
           (click)="openBarcodeScanner()"
+          *ngIf="showBarcodeScanner"
           [disabled]="isCurrentlyLoading || isScanningBarcode"
+          class="btn h-100 border-0 px-3"
           title="Scan Barcode"
+          type="button"
         >
           <i class="fas fa-barcode"></i>
         </button>
 
         <!-- Search Button -->
         <button
-          *ngIf="!hasQuery"
-          type="button"
-          class="btn h-100 border-0 px-3 rounded-end-pill"
           (click)="onSearch()"
+          *ngIf="!hasQuery"
           [disabled]="isCurrentlyLoading"
+          class="btn h-100 border-0 px-3 rounded-end-pill"
           title="Search"
+          type="button"
         >
           <span
             *ngIf="isCurrentlyLoading"
@@ -41,11 +41,11 @@
 
         <!-- Clear Button -->
         <button
-          *ngIf="hasQuery"
-          type="button"
-          class="btn h-100 border-0 px-3 rounded-end-pill"
           (click)="clearSearch()"
+          *ngIf="hasQuery"
+          class="btn h-100 border-0 px-3 rounded-end-pill"
           title="Clear search"
+          type="button"
         >
           <i class="fas fa-times"></i>
         </button>
@@ -57,8 +57,8 @@
   <div
     *ngIf="isBarcodeScannerOpen"
     class="modal d-block"
-    tabindex="-1"
     style="background-color: rgba(0, 0, 0, 0.8)"
+    tabindex="-1"
   >
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
@@ -67,9 +67,9 @@
             <i class="fas fa-barcode me-2"></i>Scan Barcode
           </h5>
           <button
-            type="button"
-            class="btn-close"
             (click)="closeBarcodeScanner()"
+            class="btn-close"
+            type="button"
           ></button>
         </div>
         <div class="modal-body p-0">
@@ -80,11 +80,11 @@
             <!-- Scanner Component -->
             <ngx-scanner-qrcode
               #scanner
+              (error)="onScanError($event)"
+              (event)="onScanResult($event)"
               *ngIf="scannerEnabled"
               [config]="config"
               [vibrate]="0"
-              (event)="onScanResult($event)"
-              (error)="onScanError($event)"
               style="width: 100%; height: 400px; display: block"
             >
             </ngx-scanner-qrcode>
@@ -179,7 +179,7 @@
                 "
               >
                 <small
-                  ><i class="fas fa-info-circle me-1"></i>Position the barcode
+                ><i class="fas fa-info-circle me-1"></i>Position the barcode
                   within the frame</small
                 >
               </div>
@@ -221,20 +221,20 @@
             *ngIf="availableDevices && availableDevices.length > 1"
             class="me-auto"
           >
-            <label for="cameraSelect" class="form-label">Select Camera</label>
+            <label class="form-label" for="cameraSelect">Select Camera</label>
             <select
-              id="cameraSelect"
-              class="form-select"
               (change)="onDeviceChange($event)"
+              class="form-select"
+              id="cameraSelect"
             >
               <option
                 *ngFor="let device of availableDevices"
-                [value]="device.deviceId"
                 [selected]="device.deviceId === currentDeviceId"
+                [value]="device.deviceId"
               >
                 {{
                   device.label ||
-                    "Camera " + (availableDevices.indexOf(device) + 1)
+                  "Camera " + (availableDevices.indexOf(device) + 1)
                 }}
               </option>
             </select>
@@ -247,9 +247,9 @@
             </small>
           </div>
           <button
-            type="button"
-            class="btn btn-secondary"
             (click)="closeBarcodeScanner()"
+            class="btn btn-secondary"
+            type="button"
           >
             <i class="fas fa-times me-2"></i>Close
           </button>

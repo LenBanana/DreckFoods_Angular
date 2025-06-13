@@ -41,12 +41,12 @@
 
   .scanner-line {
     background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(0, 255, 0, 0.8) 45%,
-      rgba(0, 255, 0, 1) 50%,
-      rgba(0, 255, 0, 0.8) 55%,
-      transparent 100%
+        90deg,
+        transparent 0%,
+        rgba(0, 255, 0, 0.8) 45%,
+        rgba(0, 255, 0, 1) 50%,
+        rgba(0, 255, 0, 0.8) 55%,
+        transparent 100%
     );
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
     animation: scan 2.5s linear infinite;

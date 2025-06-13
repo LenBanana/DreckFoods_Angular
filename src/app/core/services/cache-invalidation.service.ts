@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
+import {inject, Injectable} from '@angular/core';
+import {SwUpdate} from '@angular/service-worker';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,8 @@ import { SwUpdate } from '@angular/service-worker';
 export class CacheInvalidationService {
   private swUpdate = inject(SwUpdate);
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * Invalidate cache for specific API endpoints after mutations
@@ -30,6 +31,7 @@ export class CacheInvalidationService {
         console.error('Failed to invalidate cache:', err);
       });
   }
+
   /**
    * Clear cache after food entry updates
    */

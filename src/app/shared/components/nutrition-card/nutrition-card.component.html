@@ -1,6 +1,6 @@
-<div class="card text-center h-100" [class.shadow-sm]="showShadow">
-  <div class="card-body" [ngClass]="getCardBodyClass()">
-    <div class="mb-2" [ngClass]="getIconClass()">
+<div [class.shadow-sm]="showShadow" class="card text-center h-100">
+  <div [ngClass]="getCardBodyClass()" class="card-body">
+    <div [ngClass]="getIconClass()" class="mb-2">
       <i [class]="data.icon"></i>
     </div>
     <h4 class="card-text">

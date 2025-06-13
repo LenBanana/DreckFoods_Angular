@@ -1,33 +1,18 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { format, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
-import { catchError, of } from 'rxjs';
+import {Component, ElementRef, inject, OnInit, QueryList, ViewChildren,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
+import {format, parseISO, subDays} from 'date-fns';
+import {catchError, of} from 'rxjs';
 
-import { TimelineService } from '../../core/services/timeline.service';
-import { AlertService } from '../../core/services/alert.service';
-import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-import { NutritionProgressBarsComponent } from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
-import { DailyTimelineDto } from '../../core/models/timeline.models';
-import { FoodService } from '../../core/services/food.service';
+import {TimelineService} from '../../core/services/timeline.service';
+import {AlertService} from '../../core/services/alert.service';
+import {LoadingSpinnerComponent} from '../../shared/components/loading-spinner/loading-spinner.component';
 import {
-  FoodEntryDto,
-  EditFoodEntryRequest,
-  NutritionData,
-  NutritionTotals,
-} from '../../core/models/food.models';
+  NutritionProgressBarsComponent
+} from '../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
+import {DailyTimelineDto} from '../../core/models/timeline.models';
+import {FoodService} from '../../core/services/food.service';
+import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals} from '../../core/models/food.models';
 
 @Component({
   selector: 'app-timeline',
@@ -44,12 +29,6 @@ import {
 })
 export class TimelineComponent implements OnInit {
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
-  private fb = inject(FormBuilder);
-  private timelineService = inject(TimelineService);
-  private foodService = inject(FoodService);
-  private alertService = inject(AlertService);
-  private openAccordions = new Set<string>();
-
   filterForm: FormGroup;
   timelineData: DailyTimelineDto[] = [];
   isLoading = true;
@@ -67,6 +46,11 @@ export class TimelineComponent implements OnInit {
   };
   totalEntries = 0;
   weightEntries = 0;
+  private fb = inject(FormBuilder);
+  private timelineService = inject(TimelineService);
+  private foodService = inject(FoodService);
+  private alertService = inject(AlertService);
+  private openAccordions = new Set<string>();
 
   constructor() {
     const endDate = new Date();
@@ -77,6 +61,7 @@ export class TimelineComponent implements OnInit {
       endDate: [format(endDate, 'yyyy-MM-dd')],
     });
   }
+
   ngOnInit() {
     this.loadTimeline();
 
@@ -87,6 +72,7 @@ export class TimelineComponent implements OnInit {
       }
     }, 0);
   }
+
   storeAccordionState() {
     this.openAccordions.clear();
     this.timelineData.forEach((day, index) => {
@@ -96,6 +82,7 @@ export class TimelineComponent implements OnInit {
       }
     });
   }
+
   restoreAccordionState() {
     setTimeout(() => {
       this.timelineData.forEach((day, index) => {
@@ -114,6 +101,7 @@ export class TimelineComponent implements OnInit {
       });
     }, 0);
   }
+
   startEditing(entry: FoodEntryDto) {
     entry.editing = true;
     setTimeout(() => {
@@ -133,6 +121,7 @@ export class TimelineComponent implements OnInit {
   toggleNutritionDetails(entry: FoodEntryDto) {
     entry.showNutrition = !entry.showNutrition;
   }
+
   toggleAllNutritionDetails(day: DailyTimelineDto) {
     const anyExpanded = day.foodEntries.some((entry) => entry.showNutrition);
     day.foodEntries.forEach((entry) => {
@@ -186,7 +175,7 @@ export class TimelineComponent implements OnInit {
           if (!silent) {
             this.isLoading = false;
           }
-          return of({ days: [], totalDays: 0 });
+          return of({days: [], totalDays: 0});
         }),
       )
       .subscribe((response) => {
@@ -221,68 +210,6 @@ export class TimelineComponent implements OnInit {
     });
 
     this.loadTimeline();
-  }
-  private calculateAverages() {
-    const daysWithEntries = this.timelineData.filter(
-      (day) => day.foodEntries.length > 0,
-    );
-    const totalDays = daysWithEntries.length;
-
-    if (totalDays === 0) {
-      this.averages = {
-        calories: 0,
-        protein: 0,
-        carbohydrates: 0,
-        fat: 0,
-        fiber: 0,
-        sugar: 0,
-        caffeine: 0,
-        salt: 0,
-      };
-      this.totalEntries = 0;
-      this.weightEntries = 0;
-      return;
-    }
-
-    const totalCalories = daysWithEntries.reduce(
-      (sum, day) => sum + day.calories,
-      0,
-    );
-    const totalProtein = daysWithEntries.reduce(
-      (sum, day) => sum + day.protein,
-      0,
-    );
-    const totalCarbohydrates = daysWithEntries.reduce(
-      (sum, day) => sum + day.carbohydrates,
-      0,
-    );
-    const totalFat = daysWithEntries.reduce((sum, day) => sum + day.fat, 0);
-    const totalFiber = daysWithEntries.reduce((sum, day) => sum + day.fiber, 0);
-    const totalSugar = daysWithEntries.reduce((sum, day) => sum + day.sugar, 0);
-    const totalCaffeine = daysWithEntries.reduce(
-      (sum, day) => sum + day.caffeine,
-      0,
-    );
-    const totalSalt = daysWithEntries.reduce((sum, day) => sum + day.salt, 0);
-
-    this.averages = {
-      calories: totalCalories / totalDays,
-      protein: totalProtein / totalDays,
-      carbohydrates: totalCarbohydrates / totalDays,
-      fat: totalFat / totalDays,
-      fiber: totalFiber / totalDays,
-      sugar: totalSugar / totalDays,
-      caffeine: totalCaffeine / totalDays,
-      salt: totalSalt / totalDays,
-    };
-
-    this.totalEntries = this.timelineData.reduce(
-      (sum, day) => sum + day.foodEntries.length,
-      0,
-    );
-    this.weightEntries = this.timelineData.filter(
-      (day) => day.weightEntry,
-    ).length;
   }
 
   getMacroPercentage(macroCalories: number, totalCalories: number): number {
@@ -387,6 +314,7 @@ export class TimelineComponent implements OnInit {
       salt: day.salt,
     };
   }
+
   toggleAverages() {
     this.averagesCollapsed = !this.averagesCollapsed;
 
@@ -405,5 +333,68 @@ export class TimelineComponent implements OnInit {
         bsCollapse.show();
       }
     }
+  }
+
+  private calculateAverages() {
+    const daysWithEntries = this.timelineData.filter(
+      (day) => day.foodEntries.length > 0,
+    );
+    const totalDays = daysWithEntries.length;
+
+    if (totalDays === 0) {
+      this.averages = {
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fat: 0,
+        fiber: 0,
+        sugar: 0,
+        caffeine: 0,
+        salt: 0,
+      };
+      this.totalEntries = 0;
+      this.weightEntries = 0;
+      return;
+    }
+
+    const totalCalories = daysWithEntries.reduce(
+      (sum, day) => sum + day.calories,
+      0,
+    );
+    const totalProtein = daysWithEntries.reduce(
+      (sum, day) => sum + day.protein,
+      0,
+    );
+    const totalCarbohydrates = daysWithEntries.reduce(
+      (sum, day) => sum + day.carbohydrates,
+      0,
+    );
+    const totalFat = daysWithEntries.reduce((sum, day) => sum + day.fat, 0);
+    const totalFiber = daysWithEntries.reduce((sum, day) => sum + day.fiber, 0);
+    const totalSugar = daysWithEntries.reduce((sum, day) => sum + day.sugar, 0);
+    const totalCaffeine = daysWithEntries.reduce(
+      (sum, day) => sum + day.caffeine,
+      0,
+    );
+    const totalSalt = daysWithEntries.reduce((sum, day) => sum + day.salt, 0);
+
+    this.averages = {
+      calories: totalCalories / totalDays,
+      protein: totalProtein / totalDays,
+      carbohydrates: totalCarbohydrates / totalDays,
+      fat: totalFat / totalDays,
+      fiber: totalFiber / totalDays,
+      sugar: totalSugar / totalDays,
+      caffeine: totalCaffeine / totalDays,
+      salt: totalSalt / totalDays,
+    };
+
+    this.totalEntries = this.timelineData.reduce(
+      (sum, day) => sum + day.foodEntries.length,
+      0,
+    );
+    this.weightEntries = this.timelineData.filter(
+      (day) => day.weightEntry,
+    ).length;
   }
 }

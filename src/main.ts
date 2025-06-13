@@ -1,10 +1,10 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { importProvidersFrom, isDevMode } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {bootstrapApplication} from '@angular/platform-browser';
+import {importProvidersFrom, isDevMode} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
-import { provideServiceWorker } from '@angular/service-worker';
+import {AppComponent} from './app/app.component';
+import {appConfig} from './app/app.config';
+import {provideServiceWorker} from '@angular/service-worker';
 
 bootstrapApplication(AppComponent, {
   providers: [

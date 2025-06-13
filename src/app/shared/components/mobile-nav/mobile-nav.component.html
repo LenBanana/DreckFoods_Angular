@@ -1,19 +1,19 @@
 <!-- Mobile Bottom Navigation -->
-<nav class="mobile-nav" [class.food-submenu-open]="showFoodSubmenu">
+<nav [class.food-submenu-open]="showFoodSubmenu" class="mobile-nav">
   <!-- Food submenu overlay -->
-  <div class="food-submenu" [class.show]="showFoodSubmenu">
+  <div [class.show]="showFoodSubmenu" class="food-submenu">
     <div class="submenu-header">
       <span>Food Options</span>
-      <button class="close-btn" (click)="showFoodSubmenu = false">
+      <button (click)="showFoodSubmenu = false" class="close-btn">
         <i class="fas fa-times"></i>
       </button>
     </div>
     <div class="submenu-items">
       <button
-        *ngFor="let child of navItems[1].children"
-        class="submenu-item"
-        [class.active]="isActive(child.path)"
         (click)="navigateToFoodChild(child.path)"
+        *ngFor="let child of navItems[1].children"
+        [class.active]="isActive(child.path)"
+        class="submenu-item"
       >
         <i [class]="child.icon"></i>
         <span>{{ child.label }}</span>
@@ -26,16 +26,16 @@
     <ng-container *ngFor="let item of navItems; let i = index">
       <!-- Food item with special handling -->
       <button
-        *ngIf="item.path === '/food'"
-        class="nav-item"
-        [class.active]="isActive(item.path)"
         (click)="navigateToFood()"
+        *ngIf="item.path === '/food'"
+        [class.active]="isActive(item.path)"
+        class="nav-item"
       >
         <i [class]="item.icon"></i>
         <span class="nav-label">{{ item.label }}</span>
         <i
-          class="submenu-indicator fas fa-chevron-up"
           [class.rotated]="!showFoodSubmenu"
+          class="submenu-indicator fas fa-chevron-up"
         ></i>
       </button>
 
@@ -43,8 +43,8 @@
       <a
         *ngIf="item.path !== '/food'"
         [routerLink]="item.path"
-        routerLinkActive="active"
         class="nav-item"
+        routerLinkActive="active"
       >
         <i [class]="item.icon"></i>
         <span class="nav-label">{{ item.label }}</span>

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AlertService } from './core/services/alert.service';
-import { AlertSize } from './core/models/alert.models';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {AlertService} from './core/services/alert.service';
+import {AlertSize} from './core/models/alert.models';
 
 @Component({
   selector: 'app-test-alerts',
@@ -192,7 +192,8 @@ export class TestAlertsComponent {
   lastResult: boolean | null = null;
   lastInputResult: string | null = null;
 
-  constructor(private alertService: AlertService) {}
+  constructor(private alertService: AlertService) {
+  }
 
   // Regular alerts
   showSuccess() {
@@ -262,6 +263,7 @@ export class TestAlertsComponent {
       'This will permanently delete the selected item. This action cannot be undone.',
     );
   }
+
   async showActionConfirm() {
     this.lastResult = await this.alertService.confirmAction(
       'Do you want to save your changes before leaving?',
@@ -331,7 +333,7 @@ export class TestAlertsComponent {
     this.alertService.info(
       'This is a small alert for brief notifications.',
       'Small Alert',
-      { size: AlertSize.SMALL },
+      {size: AlertSize.SMALL},
     );
   }
 
@@ -339,7 +341,7 @@ export class TestAlertsComponent {
     this.alertService.info(
       'This is a medium alert which is the default size for most notifications.',
       'Medium Alert',
-      { size: AlertSize.MEDIUM },
+      {size: AlertSize.MEDIUM},
     );
   }
 
@@ -347,7 +349,7 @@ export class TestAlertsComponent {
     this.alertService.info(
       'This is a large alert that provides more space for longer messages and content.',
       'Large Alert',
-      { size: AlertSize.LARGE },
+      {size: AlertSize.LARGE},
     );
   }
 
@@ -355,13 +357,13 @@ export class TestAlertsComponent {
     this.alertService.info(
       'This is an extra large alert designed for displaying extensive content, detailed information, or when you need maximum visibility for important messages.',
       'Extra Large Alert',
-      { size: AlertSize.EXTRA_LARGE },
+      {size: AlertSize.EXTRA_LARGE},
     );
   }
 
   // Long content examples
   showLongTextLarge() {
-    const longMessage = `This is an example of a large alert displaying a longer piece of text. It demonstrates how the alert system can handle more extensive content while maintaining readability and proper formatting. 
+    const longMessage = `This is an example of a large alert displaying a longer piece of text. It demonstrates how the alert system can handle more extensive content while maintaining readability and proper formatting.
 
 The large size provides adequate space for detailed explanations, instructions, or comprehensive information that users need to read and understand before taking action.
 

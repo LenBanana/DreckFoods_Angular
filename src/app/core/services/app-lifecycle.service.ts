@@ -1,11 +1,11 @@
-import { Injectable, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, fromEvent, merge } from 'rxjs';
-import { filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {inject, Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {BehaviorSubject, fromEvent, merge} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 
-import { AuthService } from './auth.service';
-import { TokenService } from './token.service';
-import { NetworkService } from './network.service';
+import {AuthService} from './auth.service';
+import {TokenService} from './token.service';
+import {NetworkService} from './network.service';
 
 export enum AppState {
   ACTIVE = 'active',
@@ -33,6 +33,19 @@ export class AppLifecycleService {
   constructor() {
     this.initializeLifecycleListeners();
     this.restoreAppState();
+  }
+
+  public getCurrentState(): AppState {
+    return this.appStateSubject.value;
+  }
+
+  public getTimeSinceLastActive(): number {
+    return Date.now() - this.lastActiveTime;
+  }
+
+  public markAsActive(): void {
+    this.lastActiveTime = Date.now();
+    this.appStateSubject.next(AppState.ACTIVE);
   }
 
   private initializeLifecycleListeners(): void {
@@ -111,6 +124,7 @@ export class AppLifecycleService {
       }
     }
   }
+
   private validateAndRefreshAuth(): void {
     const timeSinceActive = Date.now() - this.lastActiveTime;
 
@@ -208,18 +222,5 @@ export class AppLifecycleService {
     } catch (error) {
       console.warn('Failed to clear stored state:', error);
     }
-  }
-
-  public getCurrentState(): AppState {
-    return this.appStateSubject.value;
-  }
-
-  public getTimeSinceLastActive(): number {
-    return Date.now() - this.lastActiveTime;
-  }
-
-  public markAsActive(): void {
-    this.lastActiveTime = Date.now();
-    this.appStateSubject.next(AppState.ACTIVE);
   }
 }

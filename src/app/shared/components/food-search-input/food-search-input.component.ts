@@ -1,44 +1,18 @@
+import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ViewChild,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
+import {catchError, debounceTime, distinctUntilChanged, of, switchMap,} from 'rxjs';
 import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-  inject,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  FormsModule,
-} from '@angular/forms';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  of,
-  catchError,
-} from 'rxjs';
-import {
+  LOAD_WASM,
   NgxScannerQrcodeComponent,
   ScannerQRCodeConfig,
-  ScannerQRCodeResult,
-  LOAD_WASM,
   ScannerQRCodeDevice,
+  ScannerQRCodeResult,
 } from 'ngx-scanner-qrcode';
 
-import { FoodService } from '../../../core/services/food.service';
-import {
-  FoodSearchDto,
-  FoodSearchResponse,
-} from '../../../core/models/food.models';
-import {
-  FoodSortBy,
-  SortDirection,
-} from '../../../core/models/enums/sorting.models';
+import {FoodService} from '../../../core/services/food.service';
+import {FoodSearchResponse,} from '../../../core/models/food.models';
+import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
 
 LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe();
 
@@ -69,15 +43,10 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
   @Output() searchError = new EventEmitter<string>();
   @Output() isSearching = new EventEmitter<boolean>();
   @Output() searchQuery = new EventEmitter<string>();
-
-  private fb = inject(FormBuilder);
-  private foodService = inject(FoodService);
-
   searchForm: FormGroup;
   isLoading = false;
   errorMessage = '';
   currentQuery = '';
-
   isBarcodeScannerOpen = false;
   isScanningBarcode = false;
   availableDevices: ScannerQRCodeDevice[] = [];
@@ -86,12 +55,11 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
   hasPermission = false;
   scannerEnabled = false;
   scannerStarting = false;
-
   config: ScannerQRCodeConfig = {
     constraints: {
       video: {
-        width: { min: 640, ideal: 1280, max: 1920 },
-        height: { min: 480, ideal: 720, max: 1080 },
+        width: {min: 640, ideal: 1280, max: 1920},
+        height: {min: 480, ideal: 720, max: 1080},
         facingMode: 'environment',
       },
     },
@@ -108,11 +76,21 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
       },
     ],
   };
+  private fb = inject(FormBuilder);
+  private foodService = inject(FoodService);
 
   constructor() {
     this.searchForm = this.fb.group({
       query: [''],
     });
+  }
+
+  get isCurrentlyLoading(): boolean {
+    return this.isLoading;
+  }
+
+  get hasQuery(): boolean {
+    return this.currentQuery.length > 0;
   }
 
   ngOnInit() {
@@ -130,82 +108,11 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
     this.closeBarcodeScanner();
   }
 
-  private setupAutoSearch() {
-    this.searchForm
-      .get('query')
-      ?.valueChanges.pipe(
-        debounceTime(this.debounceTime),
-        distinctUntilChanged(),
-        switchMap((query) => {
-          const trimmedQuery = query?.trim() || '';
-          this.searchQuery.emit(trimmedQuery);
-          if (trimmedQuery.length === 0) {
-            this.currentQuery = '';
-            this.searchResults.emit(null as any);
-            this.isSearching.emit(false);
-            return of(null);
-          } else if (trimmedQuery.length >= this.minSearchLength) {
-            this.currentQuery = trimmedQuery;
-            this.isLoading = true;
-            this.isSearching.emit(true);
-            return this.foodService.searchFoods(
-              trimmedQuery,
-              1,
-              this.pageSize,
-              this.sortBy,
-              this.sortDirection,
-            );
-          }
-          return of(null);
-        }),
-        catchError((error) => {
-          this.errorMessage = 'Search failed. Please try again.';
-          this.searchError.emit(this.errorMessage);
-          this.isLoading = false;
-          this.isSearching.emit(false);
-          return of(null);
-        }),
-      )
-      .subscribe((results) => {
-        if (results) {
-          this.searchResults.emit(results);
-        }
-        this.isLoading = false;
-        this.isSearching.emit(false);
-      });
-  }
-
   onSearch() {
     const query = this.searchForm.get('query')?.value?.trim();
     if (query && query.length >= this.minSearchLength) {
       this.performSearch(query);
     }
-  }
-
-  private performSearch(query: string) {
-    this.currentQuery = query;
-    this.isLoading = true;
-    this.isSearching.emit(true);
-    this.errorMessage = '';
-
-    this.foodService
-      .searchFoods(query, 1, this.pageSize, this.sortBy, this.sortDirection)
-      .pipe(
-        catchError((error) => {
-          this.errorMessage = 'Search failed. Please try again.';
-          this.searchError.emit(this.errorMessage);
-          this.isLoading = false;
-          this.isSearching.emit(false);
-          return of(null);
-        }),
-      )
-      .subscribe((results) => {
-        if (results) {
-          this.searchResults.emit(results);
-        }
-        this.isLoading = false;
-        this.isSearching.emit(false);
-      });
   }
 
   clearSearch() {
@@ -305,12 +212,6 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
     this.errorMessage = 'Error during scanning. Please try again.';
   }
 
-  private searchByBarcode(barcode: string) {
-    this.isScanningBarcode = true;
-    this.searchForm.get('query')?.setValue(barcode);
-    this.performSearch(barcode);
-  }
-
   onDeviceChange(event: any) {
     if (this.scanner && event.target.value) {
       this.currentDeviceId = event.target.value;
@@ -322,11 +223,80 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
     }
   }
 
-  get isCurrentlyLoading(): boolean {
-    return this.isLoading;
+  private setupAutoSearch() {
+    this.searchForm
+      .get('query')
+      ?.valueChanges.pipe(
+      debounceTime(this.debounceTime),
+      distinctUntilChanged(),
+      switchMap((query) => {
+        const trimmedQuery = query?.trim() || '';
+        this.searchQuery.emit(trimmedQuery);
+        if (trimmedQuery.length === 0) {
+          this.currentQuery = '';
+          this.searchResults.emit(null as any);
+          this.isSearching.emit(false);
+          return of(null);
+        } else if (trimmedQuery.length >= this.minSearchLength) {
+          this.currentQuery = trimmedQuery;
+          this.isLoading = true;
+          this.isSearching.emit(true);
+          return this.foodService.searchFoods(
+            trimmedQuery,
+            1,
+            this.pageSize,
+            this.sortBy,
+            this.sortDirection,
+          );
+        }
+        return of(null);
+      }),
+      catchError((error) => {
+        this.errorMessage = 'Search failed. Please try again.';
+        this.searchError.emit(this.errorMessage);
+        this.isLoading = false;
+        this.isSearching.emit(false);
+        return of(null);
+      }),
+    )
+      .subscribe((results) => {
+        if (results) {
+          this.searchResults.emit(results);
+        }
+        this.isLoading = false;
+        this.isSearching.emit(false);
+      });
   }
 
-  get hasQuery(): boolean {
-    return this.currentQuery.length > 0;
+  private performSearch(query: string) {
+    this.currentQuery = query;
+    this.isLoading = true;
+    this.isSearching.emit(true);
+    this.errorMessage = '';
+
+    this.foodService
+      .searchFoods(query, 1, this.pageSize, this.sortBy, this.sortDirection)
+      .pipe(
+        catchError((error) => {
+          this.errorMessage = 'Search failed. Please try again.';
+          this.searchError.emit(this.errorMessage);
+          this.isLoading = false;
+          this.isSearching.emit(false);
+          return of(null);
+        }),
+      )
+      .subscribe((results) => {
+        if (results) {
+          this.searchResults.emit(results);
+        }
+        this.isLoading = false;
+        this.isSearching.emit(false);
+      });
+  }
+
+  private searchByBarcode(barcode: string) {
+    this.isScanningBarcode = true;
+    this.searchForm.get('query')?.setValue(barcode);
+    this.performSearch(barcode);
   }
 }

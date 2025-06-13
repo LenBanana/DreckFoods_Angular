@@ -1,14 +1,9 @@
-import { Component, inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {CommonModule} from '@angular/common';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ChangePasswordRequest } from '../../../core/models/auth.models';
+import {AuthService} from '../../../core/services/auth.service';
+import {ChangePasswordRequest} from '../../../core/models/auth.models';
 
 @Component({
   selector: 'app-change-password',
@@ -18,13 +13,12 @@ import { ChangePasswordRequest } from '../../../core/models/auth.models';
   styleUrl: './change-password.component.scss',
 })
 export class ChangePasswordComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-
   changePasswordForm: FormGroup;
   isLoading = false;
   message = '';
   isSuccess = false;
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   constructor() {
     this.changePasswordForm = this.fb.group(
@@ -34,13 +28,29 @@ export class ChangePasswordComponent {
         newPassword: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
-      { validators: this.passwordMatchValidator },
+      {validators: this.passwordMatchValidator},
     );
 
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
-      this.changePasswordForm.patchValue({ email: currentUser.email });
+      this.changePasswordForm.patchValue({email: currentUser.email});
     }
+  }
+
+  get email() {
+    return this.changePasswordForm.get('email');
+  }
+
+  get oldPassword() {
+    return this.changePasswordForm.get('oldPassword');
+  }
+
+  get newPassword() {
+    return this.changePasswordForm.get('newPassword');
+  }
+
+  get confirmPassword() {
+    return this.changePasswordForm.get('confirmPassword');
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -52,8 +62,8 @@ export class ChangePasswordComponent {
       confirmPassword &&
       newPassword.value !== confirmPassword.value
     ) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
+      confirmPassword.setErrors({passwordMismatch: true});
+      return {passwordMismatch: true};
     }
 
     if (confirmPassword?.hasError('passwordMismatch')) {
@@ -86,7 +96,7 @@ export class ChangePasswordComponent {
 
           const currentUser = this.authService.getCurrentUser();
           if (currentUser) {
-            this.changePasswordForm.patchValue({ email: currentUser.email });
+            this.changePasswordForm.patchValue({email: currentUser.email});
           }
         },
         error: (error) => {
@@ -97,21 +107,5 @@ export class ChangePasswordComponent {
         },
       });
     }
-  }
-
-  get email() {
-    return this.changePasswordForm.get('email');
-  }
-
-  get oldPassword() {
-    return this.changePasswordForm.get('oldPassword');
-  }
-
-  get newPassword() {
-    return this.changePasswordForm.get('newPassword');
-  }
-
-  get confirmPassword() {
-    return this.changePasswordForm.get('confirmPassword');
   }
 }

@@ -1,29 +1,13 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { catchError, of } from 'rxjs';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {catchError, of} from 'rxjs';
 
-import { FoodService } from '../../../core/services/food.service';
-import {
-  FoodSearchDto,
-  FoodSearchResponse,
-} from '../../../core/models/food.models';
-import {
-  FoodSortBy,
-  SortDirection,
-} from '../../../core/models/enums/sorting.models';
-import { FoodSearchInputComponent } from '../food-search-input/food-search-input.component';
-import {
-  FoodSearchResultsComponent,
-  FoodResultsLayout,
-} from '../food-search-results/food-search-results.component';
-import { SearchOptionsComponent } from '../search-options/search-options.component';
+import {FoodService} from '../../../core/services/food.service';
+import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
+import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodSearchInputComponent} from '../food-search-input/food-search-input.component';
+import {FoodResultsLayout, FoodSearchResultsComponent,} from '../food-search-results/food-search-results.component';
+import {SearchOptionsComponent} from '../search-options/search-options.component';
 
 export interface FoodSearchConfig {
   placeholder?: string;
@@ -78,9 +62,6 @@ export class FoodSearchContainerComponent implements OnInit {
     hasResults: boolean;
     currentQuery: string;
   }>();
-
-  private foodService = inject(FoodService);
-
   searchResponse: FoodSearchResponse | null = null;
   recentFoodsResponse: FoodSearchResponse | null = null;
   isSearching = false;
@@ -88,78 +69,140 @@ export class FoodSearchContainerComponent implements OnInit {
   errorMessage = '';
   currentQuery = '';
   isSearchMode = false;
-
   sortBy: FoodSortBy = FoodSortBy.Name;
   sortDirection: SortDirection = SortDirection.Ascending;
+  private foodService = inject(FoodService);
 
   get placeholder(): string {
     return this.config.placeholder || 'Search for food or scan barcode...';
   }
+
   get showBarcodeScanner(): boolean {
     return this.config.showBarcodeScanner ?? true;
   }
+
   get layout(): FoodResultsLayout {
     return this.config.layout || 'list';
   }
+
   get pageSize(): number {
     return this.config.pageSize || 6;
   }
+
   get possiblePageSizes(): number[] {
     return this.config.possiblePageSizes || [6, 12, 18, 24, 30];
   }
+
   get showSearchOptions(): boolean {
     return this.config.showSearchOptions ?? true;
   }
+
   get showLayoutOptions(): boolean {
     return this.config.showLayoutOptions ?? true;
   }
+
   get showRecentFoods(): boolean {
     return this.config.showRecentFoods ?? true;
   }
+
   get showResultsHeader(): boolean {
     return this.config.showResultsHeader ?? true;
   }
+
   get showPagination(): boolean {
     return this.config.showPagination ?? true;
   }
+
   get showImages(): boolean {
     return this.config.showImages ?? true;
   }
+
   get showNutrition(): boolean {
     return this.config.showNutrition ?? true;
   }
+
   get showBrand(): boolean {
     return this.config.showBrand ?? true;
   }
+
   get showTags(): boolean {
     return this.config.showTags ?? true;
   }
+
   get actionButtonText(): string {
     return this.config.actionButtonText || 'Add';
   }
+
   get actionButtonIcon(): string {
     return this.config.actionButtonIcon || 'fas fa-plus';
   }
+
   get emptySearchMessage(): string {
     return this.config.emptySearchMessage || 'No foods found for your search';
   }
+
   get emptyRecentMessage(): string {
     return this.config.emptyRecentMessage || 'No recently added foods';
   }
+
   get emptySearchIcon(): string {
     return this.config.emptySearchIcon || 'fas fa-search';
   }
+
   get emptyRecentIcon(): string {
     return this.config.emptyRecentIcon || 'fas fa-history';
   }
+
   get initialStateMessage(): string {
     return (
       this.config.initialStateMessage ||
       'Enter a food name above or scan a barcode to find foods.'
     );
   }
+
   get initialStateIcon(): string {
     return this.config.initialStateIcon || 'fas fa-search';
+  }
+
+  get hasResults(): boolean {
+    return !!this.getCurrentResults()?.foods?.length;
+  }
+
+  get showResults(): boolean {
+    return (
+      (this.isSearchMode && !!this.searchResponse) ||
+      (!this.isSearchMode && this.showRecentFoods && !!this.recentFoodsResponse)
+    );
+  }
+
+  get hasQuery(): boolean {
+    return this.currentQuery.length > 0;
+  }
+
+  get showRecentSection(): boolean {
+    return (
+      this.showRecentFoods &&
+      !this.hasQuery &&
+      !!this.recentFoodsResponse?.foods?.length
+    );
+  }
+
+  get showInitialState(): boolean {
+    return (
+      !this.hasQuery &&
+      (!this.showRecentFoods || !this.recentFoodsResponse?.foods?.length) &&
+      !this.isLoadingRecent
+    );
+  }
+
+  get currentEmptyMessage(): string {
+    return this.isSearchMode
+      ? this.emptySearchMessage
+      : this.emptyRecentMessage;
+  }
+
+  get currentEmptyIcon(): string {
+    return this.isSearchMode ? this.emptySearchIcon : this.emptyRecentIcon;
   }
 
   ngOnInit() {
@@ -231,6 +274,18 @@ export class FoodSearchContainerComponent implements OnInit {
     target.style.display = 'none';
   }
 
+  clearError() {
+    this.errorMessage = '';
+  }
+
+  getCurrentResults(): FoodSearchResponse | null {
+    return this.isSearchMode ? this.searchResponse : this.recentFoodsResponse;
+  }
+
+  isCurrentlyLoading(): boolean {
+    return this.isSearchMode ? this.isSearching : this.isLoadingRecent;
+  }
+
   private loadRecentFoods(page: number = 1) {
     this.isLoadingRecent = true;
     this.errorMessage = '';
@@ -290,58 +345,5 @@ export class FoodSearchContainerComponent implements OnInit {
       hasResults: this.hasResults,
       currentQuery: this.currentQuery,
     });
-  }
-
-  clearError() {
-    this.errorMessage = '';
-  }
-
-  getCurrentResults(): FoodSearchResponse | null {
-    return this.isSearchMode ? this.searchResponse : this.recentFoodsResponse;
-  }
-
-  isCurrentlyLoading(): boolean {
-    return this.isSearchMode ? this.isSearching : this.isLoadingRecent;
-  }
-
-  get hasResults(): boolean {
-    return !!this.getCurrentResults()?.foods?.length;
-  }
-
-  get showResults(): boolean {
-    return (
-      (this.isSearchMode && !!this.searchResponse) ||
-      (!this.isSearchMode && this.showRecentFoods && !!this.recentFoodsResponse)
-    );
-  }
-
-  get hasQuery(): boolean {
-    return this.currentQuery.length > 0;
-  }
-
-  get showRecentSection(): boolean {
-    return (
-      this.showRecentFoods &&
-      !this.hasQuery &&
-      !!this.recentFoodsResponse?.foods?.length
-    );
-  }
-
-  get showInitialState(): boolean {
-    return (
-      !this.hasQuery &&
-      (!this.showRecentFoods || !this.recentFoodsResponse?.foods?.length) &&
-      !this.isLoadingRecent
-    );
-  }
-
-  get currentEmptyMessage(): string {
-    return this.isSearchMode
-      ? this.emptySearchMessage
-      : this.emptyRecentMessage;
-  }
-
-  get currentEmptyIcon(): string {
-    return this.isSearchMode ? this.emptySearchIcon : this.emptyRecentIcon;
   }
 }

@@ -13,44 +13,44 @@
     <div class="card-body">
       <form [formGroup]="filterForm" class="row gy-3 align-items-end">
         <div class="col-6">
-          <label for="startDate" class="form-label">From</label>
+          <label class="form-label" for="startDate">From</label>
           <input
-            id="startDate"
-            type="date"
+            (change)="onDateRangeChange()"
             class="form-control"
             formControlName="startDate"
-            (change)="onDateRangeChange()"
+            id="startDate"
+            type="date"
           />
         </div>
         <div class="col-6">
-          <label for="endDate" class="form-label">To</label>
+          <label class="form-label" for="endDate">To</label>
           <input
-            id="endDate"
-            type="date"
+            (change)="onDateRangeChange()"
             class="form-control"
             formControlName="endDate"
-            (change)="onDateRangeChange()"
+            id="endDate"
+            type="date"
           />
         </div>
         <div class="col-12 justify-content-center d-flex">
           <button
-            type="button"
-            class="btn btn-outline-primary me-2 px-4"
             (click)="setRange(7)"
+            class="btn btn-outline-primary me-2 px-4"
+            type="button"
           >
             7d
           </button>
           <button
-            type="button"
-            class="btn btn-outline-primary me-2 px-4"
             (click)="setRange(30)"
+            class="btn btn-outline-primary me-2 px-4"
+            type="button"
           >
             30d
           </button>
           <button
-            type="button"
-            class="btn btn-outline-primary px-4"
             (click)="setRange(90)"
+            class="btn btn-outline-primary px-4"
+            type="button"
           >
             3m
           </button>
@@ -67,13 +67,13 @@
           Daily Averages
         </h5>
         <button
+          (click)="toggleAverages()"
           class="btn btn-outline-secondary btn-sm"
           type="button"
-          (click)="toggleAverages()"
         >
           <i
-            class="fas fa-chevron-down"
             [class.fa-rotate-180]="averagesCollapsed"
+            class="fas fa-chevron-down"
           ></i>
           <span class="ms-1">{{ averagesCollapsed ? "Show" : "Hide" }}</span>
         </button>
@@ -84,7 +84,6 @@
           class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-3 mb-4 text-center"
         >
           <div
-            class="col"
             *ngFor="
               let s of [
                 {
@@ -129,12 +128,13 @@
                 },
               ]
             "
+            class="col"
           >
-            <div class="card h-100" [class]="'border-' + s.color">
+            <div [class]="'border-' + s.color" class="card h-100">
               <div class="card-body">
                 <h3
-                  class="card-title fw-bold text-outline"
                   [class]="'text-' + s.color"
+                  class="card-title fw-bold text-outline"
                 >
                   {{ s.v }}
                 </h3>
@@ -148,19 +148,19 @@
       <!-- accordion for each day -->
       <div class="accordion" id="timelineAcc">
         <div
-          class="accordion-item"
           *ngFor="let day of timelineData; let i = index"
+          class="accordion-item"
           style="border-radius: 0"
         >
           <h2 class="accordion-header" id="h{{ i }}">
             <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              style="background-color: transparent"
+              [attr.aria-controls]="'c' + i"
               [attr.data-bs-target]="'#c' + i"
               aria-expanded="false"
-              [attr.aria-controls]="'c' + i"
+              class="accordion-button collapsed"
+              data-bs-toggle="collapse"
+              style="background-color: transparent"
+              type="button"
             >
               <span class="me-auto badge bg-primary">
                 {{ day.calories | number: "1.0-0" }} Cal
@@ -169,9 +169,9 @@
             </button>
           </h2>
           <div
+            [attr.aria-labelledby]="'h' + i"
             [id]="'c' + i"
             class="accordion-collapse collapse"
-            [attr.aria-labelledby]="'h' + i"
             data-bs-parent="#timelineAcc"
           >
             <div class="accordion-body">
@@ -179,33 +179,33 @@
               <h6>Macros</h6>
               <div class="d-flex flex-wrap gap-3 small text-muted">
                 <span
-                  ><span class="badge bg-success me-1">&nbsp;</span
-                  >{{ day.protein | number: "1.1-1" }}g Protein</span
+                ><span class="badge bg-success me-1">&nbsp;</span
+                >{{ day.protein | number: "1.1-1" }}g Protein</span
                 >
                 <span
-                  ><span class="badge bg-info me-1">&nbsp;</span
-                  >{{ day.carbohydrates - day.sugar | number: "1.1-1" }}g
+                ><span class="badge bg-info me-1">&nbsp;</span
+                >{{ day.carbohydrates - day.sugar | number: "1.1-1" }}g
                   Carbs</span
                 >
                 <span
-                  ><span class="badge bg-primary me-1">&nbsp;</span
-                  >{{ day.sugar | number: "1.1-1" }}g Sugar</span
+                ><span class="badge bg-primary me-1">&nbsp;</span
+                >{{ day.sugar | number: "1.1-1" }}g Sugar</span
                 >
                 <span
-                  ><span class="badge bg-warning me-1">&nbsp;</span
-                  >{{ day.fat | number: "1.1-1" }}g Fat</span
+                ><span class="badge bg-warning me-1">&nbsp;</span
+                >{{ day.fat | number: "1.1-1" }}g Fat</span
                 >
                 <span
-                  ><span class="badge bg-secondary me-1">&nbsp;</span
-                  >{{ day.fiber | number: "1.1-1" }}g Fiber</span
+                ><span class="badge bg-secondary me-1">&nbsp;</span
+                >{{ day.fiber | number: "1.1-1" }}g Fiber</span
                 >
                 <span *ngIf="day.caffeine > 0"
-                  ><span class="badge bg-dark me-1">&nbsp;</span
-                  >{{ day.caffeine | number: "1.1-1" }}mg Caffeine</span
+                ><span class="badge bg-dark me-1">&nbsp;</span
+                >{{ day.caffeine | number: "1.1-1" }}mg Caffeine</span
                 >
                 <span *ngIf="day.salt > 0"
-                  ><span class="badge text-dark me-1">&nbsp;</span
-                  >{{ day.salt | number: "1.1-1" }}g Salt</span
+                ><span class="badge text-dark me-1">&nbsp;</span
+                >{{ day.salt | number: "1.1-1" }}g Salt</span
                 >
               </div>
 
@@ -214,94 +214,94 @@
               <div class="progress mb-3" style="height: 24px">
                 <!-- Protein -->
                 <div
-                  class="progress-bar bg-success"
                   [style.width.%]="
                     getMacroPercentage(day.protein * 4, day.calories)
                   "
-                  data-bs-toggle="tooltip"
                   [title]="(day.protein | number: '1.1-1') + 'g Protein'"
+                  class="progress-bar bg-success"
+                  data-bs-toggle="tooltip"
                 ></div>
 
                 <!-- Complex Carbs -->
                 <div
-                  class="progress-bar bg-info"
                   [style.width.%]="
                     getMacroPercentage(
                       (day.carbohydrates - day.sugar) * 4,
                       day.calories
                     )
                   "
-                  data-bs-toggle="tooltip"
                   [title]="
                     (day.carbohydrates - day.sugar | number: '1.1-1') +
                     'g Complex Carbs'
                   "
+                  class="progress-bar bg-info"
+                  data-bs-toggle="tooltip"
                 ></div>
 
                 <!-- Sugar -->
                 <div
-                  class="progress-bar bg-primary"
                   [style.width.%]="
                     getMacroPercentage(day.sugar * 4, day.calories)
                   "
-                  data-bs-toggle="tooltip"
                   [title]="(day.sugar | number: '1.1-1') + 'g Sugar'"
+                  class="progress-bar bg-primary"
+                  data-bs-toggle="tooltip"
                 ></div>
 
                 <!-- Fat -->
                 <div
-                  class="progress-bar bg-warning"
                   [style.width.%]="
                     getMacroPercentage(day.fat * 9, day.calories)
                   "
-                  data-bs-toggle="tooltip"
                   [title]="(day.fat | number: '1.1-1') + 'g Fat'"
+                  class="progress-bar bg-warning"
+                  data-bs-toggle="tooltip"
                 ></div>
 
                 <!-- Unaccounted/Other calories -->
                 <div
-                  class="progress-bar progress-bar-striped"
-                  style="background-color: #ccc"
                   [style.width.%]="getUnaccountedPercentage(day)"
+                  class="progress-bar progress-bar-striped"
                   data-bs-toggle="tooltip"
+                  style="background-color: #ccc"
                   title="Other/Unaccounted calories"
                 ></div>
               </div>
 
               <!-- entries list -->
               <div
-                class="d-flex justify-content-between align-items-center mb-2"
                 *ngIf="day.foodEntries.length > 0"
+                class="d-flex justify-content-between align-items-center mb-2"
               >
                 <h6 class="mb-0">Food Entries</h6>
                 <button
-                  class="btn btn-sm btn-outline-secondary"
                   (click)="toggleAllNutritionDetails(day)"
                   [title]="
                     areAnyNutritionDetailsExpanded(day)
                       ? 'Collapse all nutrition details'
                       : 'Expand all nutrition details'
                   "
+                  class="btn btn-sm btn-outline-secondary"
                 >
                   <i
-                    class="fas fa-chevron-down me-1"
                     [class.fa-rotate-180]="areAnyNutritionDetailsExpanded(day)"
+                    class="fas fa-chevron-down me-1"
                   ></i>
                   Nutritions
                 </button>
               </div>
               <ul class="list-group">
                 <li
-                  class="list-group-item d-flex align-items-center"
                   *ngFor="let entry of day.foodEntries"
+                  class="list-group-item d-flex align-items-center"
                 >
                   <img
                     *ngIf="entry.imageUrl"
                     [src]="entry.imageUrl"
-                    class="rounded me-3 object-fit-cover"
-                    width="40"
-                    height="40"
                     alt="{{ entry.foodName }}"
+                    class="rounded me-3 object-fit-cover"
+                    height="40"
+                    width="40"
                   />
                   <span
                     *ngIf="!entry.imageUrl"
@@ -320,58 +320,58 @@
                       <span>
                         <span
                           (click)="startEditing(entry)"
-                          class="pointer"
                           *ngIf="!entry.editing"
-                          >{{ entry.gramsConsumed | number: "1.0-1" }}g</span
+                          class="pointer"
+                        >{{ entry.gramsConsumed | number: "1.0-1" }}g</span
                         >
                         <span *ngIf="entry.editing">
                           <input
                             #editInput
-                            type="number"
-                            class="form-control form-control-sm d-inline-block w-auto"
-                            [(ngModel)]="entry.gramsConsumed"
-                            (keyup.enter)="finishEditing(entry, day)"
                             (blur)="finishEditing(entry, day)"
+                            (keyup.enter)="finishEditing(entry, day)"
+                            [(ngModel)]="entry.gramsConsumed"
+                            class="form-control form-control-sm d-inline-block w-auto"
+                            type="number"
                           />
                         </span>
                       </span>
                       <span class="d-flex align-items-center">
                         <span
-                          class="me-2"
                           *ngIf="
                             !entry.showNutrition && getNutrientCount(entry) > 0
                           "
+                          class="me-2"
                         >
                           {{ getNutrientCount(entry) }} nutrients
                         </span>
                         <button
-                          class="btn btn-sm btn-link text-muted p-0"
                           (click)="toggleNutritionDetails(entry)"
                           [title]="
                             entry.showNutrition
                               ? 'Hide nutrition details'
                               : 'Show nutrition details'
                           "
+                          class="btn btn-sm btn-link text-muted p-0"
                         >
                           <i
-                            class="fas fa-chevron-down nutrition-toggle"
                             [class.fa-rotate-180]="entry.showNutrition"
+                            class="fas fa-chevron-down nutrition-toggle"
                           ></i>
                         </button>
                       </span>
                     </small>
                     <!-- Nutrition Info Progress Bars (Collapsible) -->
                     <div
-                      class="mt-2 nutrition-details"
                       [class.collapsed]="!entry.showNutrition"
                       [class.expanded]="entry.showNutrition"
+                      class="mt-2 nutrition-details"
                     >
                       <app-nutrition-progress-bars
-                        [nutritionData]="getEntryAsNutritionData(entry)"
-                        [totals]="getDayAsNutritionTotals(day)"
                         [height]="'6px'"
-                        [showValues]="true"
+                        [nutritionData]="getEntryAsNutritionData(entry)"
                         [showLabels]="true"
+                        [showValues]="true"
+                        [totals]="getDayAsNutritionTotals(day)"
                       >
                       </app-nutrition-progress-bars>
                     </div>

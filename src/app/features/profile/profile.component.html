@@ -30,15 +30,15 @@
           </div>
 
           <h5>Update Profile Information</h5>
-          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
             <div class="row g-3 mb-3">
               <div class="col-md-6">
                 <label class="form-label">First Name</label>
-                <input class="form-control" formControlName="firstName" />
+                <input class="form-control" formControlName="firstName"/>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Last Name</label>
-                <input class="form-control" formControlName="lastName" />
+                <input class="form-control" formControlName="lastName"/>
               </div>
             </div>
             <div class="mb-3">
@@ -47,10 +47,10 @@
                 <small class="text-muted">(Optional)</small>
               </label>
               <input
-                type="number"
                 class="form-control"
                 formControlName="currentWeight"
                 step="0.1"
+                type="number"
               />
               <div class="form-text">
                 Displayed on dashboard & used for tracking
@@ -65,9 +65,9 @@
             </div>
 
             <button
-              type="submit"
-              class="btn btn-primary me-2"
               [disabled]="profileForm.invalid || isSubmitting || !hasChanges()"
+              class="btn btn-primary me-2"
+              type="submit"
             >
               <app-loading-spinner
                 *ngIf="isSubmitting"
@@ -76,10 +76,10 @@
               <span *ngIf="!isSubmitting">Save Changes</span>
             </button>
             <button
-              type="button"
-              class="btn btn-secondary"
               (click)="resetForm()"
               [disabled]="isSubmitting || !hasChanges()"
+              class="btn btn-secondary"
+              type="button"
             >
               Reset
             </button>
@@ -113,8 +113,8 @@
                 <small class="text-muted">Change your password</small>
               </div>
               <button
-                class="btn btn-outline-secondary"
                 (click)="toggleChangePassword()"
+                class="btn btn-outline-secondary"
               >
                 {{ showChangePassword ? "Hide" : "Change Password" }}
               </button>
@@ -129,7 +129,7 @@
                   Permanently delete your account & data
                 </small>
               </div>
-              <button class="btn btn-danger" (click)="toggleDeleteAccount()">
+              <button (click)="toggleDeleteAccount()" class="btn btn-danger">
                 {{ showDeleteAccount ? "Cancel" : "Delete" }}
               </button>
             </div>
@@ -140,7 +140,7 @@
   </div>
 
   <!-- Change Password Section -->
-  <div class="row" *ngIf="showChangePassword">
+  <div *ngIf="showChangePassword" class="row">
     <div class="col-12">
       <div class="card shadow-sm">
         <div class="card-body">
@@ -151,7 +151,7 @@
   </div>
 
   <!-- Delete Account Section -->
-  <div class="row" *ngIf="showDeleteAccount">
+  <div *ngIf="showDeleteAccount" class="row">
     <div class="col-12">
       <div class="card shadow-sm border-danger">
         <div class="card-body">

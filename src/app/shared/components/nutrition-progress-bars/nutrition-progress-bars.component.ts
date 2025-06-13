@@ -1,13 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, Input} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {
   NutritionProgressBarComponent,
   NutritionProgressConfig,
 } from '../nutrition-progress-bar/nutrition-progress-bar.component';
-import {
-  NutritionData,
-  NutritionTotals,
-} from '../../../core/models/food.models';
+import {NutritionData, NutritionTotals,} from '../../../core/models/food.models';
 
 @Component({
   selector: 'app-nutrition-progress-bars',

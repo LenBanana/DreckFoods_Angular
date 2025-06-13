@@ -5,15 +5,15 @@
   <!-- Search Input -->
   <div class="mb-3">
     <app-food-search-input
+      (isSearching)="onIsSearching($event)"
+      (searchError)="onSearchError($event)"
+      (searchQuery)="onSearchQuery($event)"
+      (searchResults)="onSearchResults($event)"
+      [pageSize]="pageSize"
       [placeholder]="placeholder"
       [showBarcodeScanner]="showBarcodeScanner"
-      [pageSize]="pageSize"
       [sortBy]="sortBy"
       [sortDirection]="sortDirection"
-      (searchResults)="onSearchResults($event)"
-      (searchError)="onSearchError($event)"
-      (isSearching)="onIsSearching($event)"
-      (searchQuery)="onSearchQuery($event)"
     >
     </app-food-search-input>
   </div>
@@ -21,12 +21,12 @@
   <!-- Sort Options (only show when searching and enabled) -->
   <div *ngIf="showSortOptions && hasQuery" class="row mb-3">
     <div class="col-md-6">
-      <label for="sortBy" class="form-label small">Sort by</label>
+      <label class="form-label small" for="sortBy">Sort by</label>
       <select
-        id="sortBy"
-        class="form-select form-select-sm"
-        [(ngModel)]="sortBy"
         (ngModelChange)="onSortChange()"
+        [(ngModel)]="sortBy"
+        class="form-select form-select-sm"
+        id="sortBy"
       >
         <option *ngFor="let option of sortByOptions" [value]="option.value">
           {{ option.label }}
@@ -34,12 +34,12 @@
       </select>
     </div>
     <div class="col-md-6">
-      <label for="sortDirection" class="form-label small">Direction</label>
+      <label class="form-label small" for="sortDirection">Direction</label>
       <select
-        id="sortDirection"
-        class="form-select form-select-sm"
-        [(ngModel)]="sortDirection"
         (ngModelChange)="onSortChange()"
+        [(ngModel)]="sortDirection"
+        class="form-select form-select-sm"
+        id="sortDirection"
       >
         <option
           *ngFor="let option of sortDirectionOptions"
@@ -57,9 +57,9 @@
       <i class="fas fa-exclamation-triangle me-2"></i>
       <span class="flex-grow-1">{{ errorMessage }}</span>
       <button
-        type="button"
-        class="btn-close btn-close-sm"
         (click)="clearError()"
+        class="btn-close btn-close-sm"
+        type="button"
       ></button>
     </div>
   </div>
@@ -68,22 +68,22 @@
   <div *ngIf="hasQuery">
     <div class="d-flex align-items-center justify-content-between mb-2">
       <h6 class="mb-0">Search Results</h6>
-      <small class="text-muted" *ngIf="!isSearching && hasSearchResults"
-        >{{ searchResponse?.totalCount }} foods found</small
+      <small *ngIf="!isSearching && hasSearchResults" class="text-muted"
+      >{{ searchResponse?.totalCount }} foods found</small
       >
     </div>
 
     <app-food-search-results
-      [searchResponse]="searchResponse"
-      [layout]="layout"
-      [isLoading]="isSearching"
-      [actionButtonText]="actionButtonText"
-      [actionButtonIcon]="actionButtonIcon"
-      [emptyMessage]="'No foods found for your search'"
-      [emptyIcon]="'fas fa-search'"
-      [showPagination]="true"
       (foodSelected)="onFoodSelected($event)"
       (pageChange)="onPageChange($event)"
+      [actionButtonIcon]="actionButtonIcon"
+      [actionButtonText]="actionButtonText"
+      [emptyIcon]="'fas fa-search'"
+      [emptyMessage]="'No foods found for your search'"
+      [isLoading]="isSearching"
+      [layout]="layout"
+      [searchResponse]="searchResponse"
+      [showPagination]="true"
     >
     </app-food-search-results>
   </div>
@@ -91,21 +91,21 @@
   <div *ngIf="showRecentSection">
     <div class="d-flex align-items-center justify-content-between mb-2">
       <h6 class="mb-0">Recently Added Foods</h6>
-      <small class="text-muted" *ngIf="recentFoodsResponse"
-        >{{ recentFoodsResponse.totalCount }} foods total</small
+      <small *ngIf="recentFoodsResponse" class="text-muted"
+      >{{ recentFoodsResponse.totalCount }} foods total</small
       >
     </div>
     <app-food-search-results
-      [searchResponse]="recentFoodsResponse"
-      [layout]="layout"
-      [isLoading]="isLoadingRecent"
-      [actionButtonText]="actionButtonText"
-      [actionButtonIcon]="actionButtonIcon"
-      [showPagination]="true"
-      [emptyMessage]="'No recently added foods'"
-      [emptyIcon]="'fas fa-history'"
       (foodSelected)="onFoodSelected($event)"
       (pageChange)="onPageChange($event)"
+      [actionButtonIcon]="actionButtonIcon"
+      [actionButtonText]="actionButtonText"
+      [emptyIcon]="'fas fa-history'"
+      [emptyMessage]="'No recently added foods'"
+      [isLoading]="isLoadingRecent"
+      [layout]="layout"
+      [searchResponse]="recentFoodsResponse"
+      [showPagination]="true"
     >
     </app-food-search-results>
   </div>

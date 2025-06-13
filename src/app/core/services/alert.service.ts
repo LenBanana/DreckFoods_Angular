@@ -1,22 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  Alert,
-  AlertConfig,
-  AlertType,
-  AlertSize,
-  ConfirmationConfig,
-  InputPromptConfig,
-} from '../models/alert.models';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Alert, AlertConfig, AlertSize, AlertType, ConfirmationConfig, InputPromptConfig,} from '../models/alert.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
   private alertsSubject = new BehaviorSubject<Alert[]>([]);
-  private alertIdCounter = 0;
-
   alerts$: Observable<Alert[]> = this.alertsSubject.asObservable();
+  private alertIdCounter = 0;
+  private inputCallbacks = new Map<string, (value: string) => void>();
 
   /**
    * Add a new alert
@@ -46,6 +39,7 @@ export class AlertService {
 
     return id;
   }
+
   /**
    * Remove an alert by ID
    */
@@ -165,6 +159,7 @@ export class AlertService {
       ...options,
     });
   }
+
   infoCentered(
     message: string,
     title?: string,
@@ -345,6 +340,7 @@ export class AlertService {
       confirmButtonType: 'danger',
     });
   }
+
   /**
    * Show an input prompt dialog (centered by default)
    * Returns a Promise that resolves to the input value if confirmed, null if cancelled
@@ -378,7 +374,7 @@ export class AlertService {
         const currentAlerts = this.alertsSubject.value;
         const alertIndex = currentAlerts.findIndex((a) => a.id === alertId);
         if (alertIndex >= 0) {
-          const alert = { ...currentAlerts[alertIndex] };
+          const alert = {...currentAlerts[alertIndex]};
           alert.actions = [
             {
               label: cancelLabel,
@@ -512,7 +508,12 @@ export class AlertService {
     });
   }
 
-  private inputCallbacks = new Map<string, (value: string) => void>();
+  onInputChange(alertId: string, value: string): void {
+    const callback = this.inputCallbacks.get(alertId);
+    if (callback) {
+      callback(value);
+    }
+  }
 
   private setupInputTracking(
     alertId: string,
@@ -525,20 +526,14 @@ export class AlertService {
     const currentAlerts = this.alertsSubject.value;
     const alertIndex = currentAlerts.findIndex((a) => a.id === alertId);
     if (alertIndex >= 0) {
-      const alert = { ...currentAlerts[alertIndex] };
+      const alert = {...currentAlerts[alertIndex]};
       if (alert.inputConfig) {
-        alert.inputConfig = { ...alert.inputConfig };
+        alert.inputConfig = {...alert.inputConfig};
       }
 
       const updatedAlerts = [...currentAlerts];
       updatedAlerts[alertIndex] = alert;
       this.alertsSubject.next(updatedAlerts);
-    }
-  }
-  onInputChange(alertId: string, value: string): void {
-    const callback = this.inputCallbacks.get(alertId);
-    if (callback) {
-      callback(value);
     }
   }
 

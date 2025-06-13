@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { map, startWith, distinctUntilChanged } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, fromEvent, merge} from 'rxjs';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
 export interface NetworkStatus {
   online: boolean;
@@ -23,6 +23,23 @@ export class NetworkService {
     this.initializeNetworkMonitoring();
   }
 
+  public getCurrentStatus(): NetworkStatus {
+    return this.networkStatusSubject.value;
+  }
+
+  public isOnline(): boolean {
+    return this.networkStatusSubject.value.online;
+  }
+
+  public isSlowConnection(): boolean {
+    const status = this.networkStatusSubject.value;
+    return (
+      status.effectiveType === 'slow-2g' ||
+      status.effectiveType === '2g' ||
+      (status.rtt !== undefined && status.rtt > 1000)
+    );
+  }
+
   private initializeNetworkMonitoring(): void {
     if (typeof window === 'undefined') return;
 
@@ -32,7 +49,7 @@ export class NetworkService {
     merge(online$, offline$)
       .pipe(startWith(navigator.onLine), distinctUntilChanged())
       .subscribe((online) => {
-        this.updateNetworkStatus({ online });
+        this.updateNetworkStatus({online});
       });
 
     if ('connection' in navigator) {
@@ -60,22 +77,5 @@ export class NetworkService {
 
   private updateNetworkStatus(status: NetworkStatus): void {
     this.networkStatusSubject.next(status);
-  }
-
-  public getCurrentStatus(): NetworkStatus {
-    return this.networkStatusSubject.value;
-  }
-
-  public isOnline(): boolean {
-    return this.networkStatusSubject.value.online;
-  }
-
-  public isSlowConnection(): boolean {
-    const status = this.networkStatusSubject.value;
-    return (
-      status.effectiveType === 'slow-2g' ||
-      status.effectiveType === '2g' ||
-      (status.rtt !== undefined && status.rtt > 1000)
-    );
   }
 }

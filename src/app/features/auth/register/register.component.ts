@@ -1,16 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {catchError, of} from 'rxjs';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import {AuthService} from '../../../core/services/auth.service';
+import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-register',
@@ -25,15 +20,14 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
   registerForm: FormGroup;
   isLoading = false;
   errorMessage = '';
   registrationSuccess = false;
   registeredEmail = '';
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor() {
     this.registerForm = this.fb.group({

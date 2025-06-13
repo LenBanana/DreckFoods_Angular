@@ -87,6 +87,7 @@ export interface FoodEntryDto {
   editing?: boolean;
   showNutrition?: boolean;
 }
+
 export interface NutritionData {
   calories: number;
   protein: number;

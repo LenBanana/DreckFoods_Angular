@@ -1,15 +1,8 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Alert, AlertType, AlertSize } from '../../../core/models/alert.models';
-import { AlertService } from '../../../core/services/alert.service';
+import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {Alert, AlertSize, AlertType} from '../../../core/models/alert.models';
+import {AlertService} from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -166,16 +159,16 @@ import { AlertService } from '../../../core/services/alert.service';
 export class AlertComponent implements OnInit {
   @Input() alert!: Alert;
   @Output() dismiss = new EventEmitter<string>();
-
-  private alertService = inject(AlertService);
   inputValue: string = '';
   inputError: string = '';
+  private alertService = inject(AlertService);
 
   ngOnInit() {
     if (this.alert.type === AlertType.INPUT && this.alert.inputConfig) {
       this.inputValue = this.alert.inputConfig.initialValue || '';
     }
   }
+
   getAlertClasses(): string {
     const classes = [`alert`, `alert-${this.alert.type}`];
 
@@ -206,6 +199,7 @@ export class AlertComponent implements OnInit {
   onClose(): void {
     this.dismiss.emit(this.alert.id);
   }
+
   onActionClick(action: any): void {
     action.action();
 

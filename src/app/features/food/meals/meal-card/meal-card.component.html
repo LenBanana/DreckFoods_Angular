@@ -12,18 +12,18 @@
         </p>
         <div class="meal-meta">
           <span class="badge bg-info text-dark me-2"
-            >{{ meal.totalWeight }}g total</span
+          >{{ meal.totalWeight }}g total</span
           >
           <span class="badge bg-info text-dark"
-            >{{ meal.items.length }} items</span
+          >{{ meal.items.length }} items</span
           >
         </div>
       </div>
       <div class="dropdown">
         <button
+          [disabled]="isDeleting"
           class="btn btn-link text-muted p-0"
           data-bs-toggle="dropdown"
-          [disabled]="isDeleting"
           title="Meal options"
         >
           <i class="fas fa-ellipsis-v"></i>
@@ -31,27 +31,27 @@
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
             <button
-              class="dropdown-item"
               (click)="onEdit()"
               [disabled]="isDeleting"
+              class="dropdown-item"
             >
               <i class="fas fa-edit me-2"></i>Edit
             </button>
           </li>
           <li>
             <button
-              class="dropdown-item"
               (click)="onShare()"
               [disabled]="isDeleting"
+              class="dropdown-item"
             >
               <i class="fas fa-share-alt me-2"></i>Share
             </button>
           </li>
           <li>
             <button
-              class="dropdown-item text-danger"
               (click)="onDelete()"
               [disabled]="isDeleting"
+              class="dropdown-item text-danger"
             >
               <i class="fas fa-trash me-2"></i>
               <span *ngIf="isDeleting">Deleting...</span>
@@ -119,9 +119,9 @@
 
     <!-- Action Button -->
     <button
-      class="btn btn-primary w-100"
       (click)="onLogPortion()"
       [disabled]="isDeleting"
+      class="btn btn-primary w-100"
     >
       <i class="fas fa-utensils me-2"></i>Log Portion
     </button>

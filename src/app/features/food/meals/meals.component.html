@@ -10,10 +10,10 @@
       </p>
     </div>
     <div class="col-12 col-md-4 d-flex justify-content-end">
-      <button class="btn btn-primary me-2" (click)="addMealByShareId()">
+      <button (click)="addMealByShareId()" class="btn btn-primary me-2">
         <i class="fas fa-link me-2"></i>Add Meal by Share ID
       </button>
-      <button class="btn btn-primary" (click)="openCreateModal()">
+      <button (click)="openCreateModal()" class="btn btn-primary">
         <i class="fas fa-plus me-2"></i>Create Meal
       </button>
     </div>
@@ -32,7 +32,7 @@
     </div>
     <h4 class="mb-3">Failed to Load Meals</h4>
     <p class="text-muted mb-4">{{ errorMessage }}</p>
-    <button class="btn btn-primary" (click)="loadMeals()">
+    <button (click)="loadMeals()" class="btn btn-primary">
       <i class="fas fa-redo me-2"></i>Try Again
     </button>
   </div>
@@ -46,16 +46,16 @@
 
       <div class="row">
         <div
-          class="col-12 col-md-6 col-xl-4 mb-4"
           *ngFor="let meal of meals; trackBy: trackByMealId"
+          class="col-12 col-md-6 col-xl-4 mb-4"
         >
           <app-meal-card
-            [meal]="meal"
-            [isDeleting]="deletingMealId === meal.id"
-            (edit)="openEditModal($event)"
-            (share)="shareMeal($event)"
             (delete)="deleteMeal($event)"
+            (edit)="openEditModal($event)"
             (logPortion)="openPortionModal($event)"
+            (share)="shareMeal($event)"
+            [isDeleting]="deletingMealId === meal.id"
+            [meal]="meal"
           >
           </app-meal-card>
         </div>
@@ -73,7 +73,7 @@
           Create your first meal by combining multiple foods into one convenient
           entry.
         </p>
-        <button class="btn btn-primary btn-lg" (click)="openCreateModal()">
+        <button (click)="openCreateModal()" class="btn btn-primary btn-lg">
           <i class="fas fa-plus me-2"></i>Create Your First Meal
         </button>
       </div>
@@ -83,29 +83,29 @@
 
 <!-- Create Meal Modal -->
 <app-meal-form-modal
-  *ngIf="showCreateModal"
-  [isSubmitting]="isCreating"
   (close)="closeCreateModal()"
   (submit)="createMeal($event)"
+  *ngIf="showCreateModal"
+  [isSubmitting]="isCreating"
 >
 </app-meal-form-modal>
 
 <!-- Edit Meal Modal -->
 <app-meal-form-modal
-  *ngIf="showEditModal && selectedMeal"
-  [meal]="selectedMeal"
-  [isSubmitting]="isUpdating"
   (close)="closeEditModal()"
   (submit)="updateMeal($event)"
+  *ngIf="showEditModal && selectedMeal"
+  [isSubmitting]="isUpdating"
+  [meal]="selectedMeal"
 >
 </app-meal-form-modal>
 
 <!-- Meal Portion Modal -->
 <app-meal-portion-modal
-  *ngIf="showPortionModal && selectedMeal"
-  [meal]="selectedMeal"
-  [isSubmitting]="isLoggingPortion"
   (close)="closePortionModal()"
   (submit)="addMealPortion($event)"
+  *ngIf="showPortionModal && selectedMeal"
+  [isSubmitting]="isLoggingPortion"
+  [meal]="selectedMeal"
 >
 </app-meal-portion-modal>

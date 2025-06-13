@@ -1,20 +1,12 @@
+import {Component, EventEmitter, inject, Input, OnChanges, Output,} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {FoodSearchDto} from '../../../../core/models/food.models';
 import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  OnChanges,
-  inject,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FoodSearchDto } from '../../../../core/models/food.models';
-import {
-  FoodSearchContainerComponent,
   FoodSearchConfig,
+  FoodSearchContainerComponent,
 } from '../../../../shared/components/food-search-container/food-search-container.component';
-import { AlertService } from '../../../../core/services/alert.service';
+import {AlertService} from '../../../../core/services/alert.service';
 
 export interface MealItem {
   food: FoodSearchDto | null;
@@ -63,30 +55,6 @@ export class MealItemManagerComponent implements OnChanges {
     initialStateIcon: 'fas fa-search',
   };
 
-  ngOnChanges() {
-    this.onItemChange();
-  }
-
-  onFoodSelected(food: FoodSearchDto) {
-    this.items.push({ food, weight: 100 });
-    this.onItemChange();
-  }
-
-  removeItem(index: number) {
-    this.items.splice(index, 1);
-    this.onItemChange();
-  }
-
-  onItemChange() {
-    this.itemsChange.emit(this.items);
-    this.validationChange.emit(this.isValid);
-  }
-
-  getPercentage(weight: number): string {
-    if (this.totalWeight === 0) return '0';
-    return ((weight / this.totalWeight) * 100).toFixed(1);
-  }
-
   get totalWeight(): number {
     return this.items.reduce((sum, item) => sum + (item.weight || 0), 0);
   }
@@ -113,6 +81,30 @@ export class MealItemManagerComponent implements OnChanges {
 
   get isValid(): boolean {
     return this.validationErrors.length === 0;
+  }
+
+  ngOnChanges() {
+    this.onItemChange();
+  }
+
+  onFoodSelected(food: FoodSearchDto) {
+    this.items.push({food, weight: 100});
+    this.onItemChange();
+  }
+
+  removeItem(index: number) {
+    this.items.splice(index, 1);
+    this.onItemChange();
+  }
+
+  onItemChange() {
+    this.itemsChange.emit(this.items);
+    this.validationChange.emit(this.isValid);
+  }
+
+  getPercentage(weight: number): string {
+    if (this.totalWeight === 0) return '0';
+    return ((weight / this.totalWeight) * 100).toFixed(1);
   }
 
   onSearchError(error: string) {

@@ -1,7 +1,7 @@
-import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { tap } from 'rxjs/operators';
-import { CacheInvalidationService } from '../services/cache-invalidation.service';
+import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {tap} from 'rxjs/operators';
+import {CacheInvalidationService} from '../services/cache-invalidation.service';
 
 export const cacheInvalidationInterceptor: HttpInterceptorFn = (req, next) => {
   const cacheInvalidationService = inject(CacheInvalidationService);

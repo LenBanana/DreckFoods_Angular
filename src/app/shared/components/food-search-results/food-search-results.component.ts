@@ -1,13 +1,10 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import {
-  FoodSearchDto,
-  FoodSearchResponse,
-} from '../../../core/models/food.models';
-import { PaginationComponent } from '../pagination/pagination.component';
-import { AuthService } from '../../../core/services/auth.service';
-import { AppRole } from '../../../core/models/auth.models';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router} from '@angular/router';
+import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
+import {PaginationComponent} from '../pagination/pagination.component';
+import {AuthService} from '../../../core/services/auth.service';
+import {AppRole} from '../../../core/models/auth.models';
 
 export type FoodResultsLayout = 'grid' | 'list' | 'compact';
 
@@ -19,9 +16,6 @@ export type FoodResultsLayout = 'grid' | 'list' | 'compact';
   styleUrls: ['./food-search-results.component.scss'],
 })
 export class FoodSearchResultsComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
   @Input() foods: FoodSearchDto[] = [];
   @Input() searchResponse: FoodSearchResponse | null = null;
   @Input() layout: FoodResultsLayout = 'list';
@@ -35,14 +29,16 @@ export class FoodSearchResultsComponent {
   @Input() isLoading = false;
   @Input() emptyMessage = 'No foods found';
   @Input() emptyIcon = 'fas fa-search';
-
   @Output() foodSelected = new EventEmitter<FoodSearchDto>();
   @Output() imageError = new EventEmitter<Event>();
   @Output() pageChange = new EventEmitter<number>();
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   get displayFoods(): FoodSearchDto[] {
     return this.searchResponse?.foods || this.foods;
   }
+
   get hasPagination(): boolean {
     return (
       this.showPagination &&

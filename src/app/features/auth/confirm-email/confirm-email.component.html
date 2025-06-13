@@ -16,7 +16,7 @@
           Your account has been verified. You can now sign in and start tracking
           your food.
         </p>
-        <a routerLink="/auth/login" class="btn btn-primary mt-3">
+        <a class="btn btn-primary mt-3" routerLink="/auth/login">
           Sign In Now
         </a>
       </div>
@@ -28,10 +28,10 @@
           <h4 class="mt-2">Confirmation Failed</h4>
           <p>{{ errorMessage }}</p>
           <div class="d-flex justify-content-center gap-2 mt-3">
-            <a routerLink="/auth/login" class="btn btn-outline-secondary">
+            <a class="btn btn-outline-secondary" routerLink="/auth/login">
               Go to Login
             </a>
-            <a routerLink="/auth/register" class="btn btn-primary">
+            <a class="btn btn-primary" routerLink="/auth/register">
               Register Again
             </a>
           </div>

@@ -1,19 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-  FormsModule,
-} from '@angular/forms';
-import { format, parseISO, subMonths } from 'date-fns';
-import { catchError, of } from 'rxjs';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {format, parseISO, subMonths} from 'date-fns';
+import {catchError, of} from 'rxjs';
 
-import { WeightService } from '../../../core/services/weight.service';
-import { AlertService } from '../../../core/services/alert.service';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
-import { WeightEntryDto } from '../../../core/models/weight.models';
+import {WeightService} from '../../../core/services/weight.service';
+import {AlertService} from '../../../core/services/alert.service';
+import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
+import {WeightEntryDto} from '../../../core/models/weight.models';
 
 @Component({
   selector: 'app-weight-tracker',
@@ -28,10 +22,6 @@ import { WeightEntryDto } from '../../../core/models/weight.models';
   styleUrls: ['./weight-tracker.component.scss'],
 })
 export class WeightTrackerComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private weightService = inject(WeightService);
-  private alertService = inject(AlertService);
-
   weightForm: FormGroup;
   weightEntries: WeightEntryDto[] = [];
   displayedEntries: WeightEntryDto[] = [];
@@ -40,6 +30,9 @@ export class WeightTrackerComponent implements OnInit {
   errorMessage = '';
   deletingEntryId: number | null = null;
   selectedPeriod = '3';
+  private fb = inject(FormBuilder);
+  private weightService = inject(WeightService);
+  private alertService = inject(AlertService);
 
   constructor() {
     this.weightForm = this.fb.group({

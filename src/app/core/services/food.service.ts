@@ -1,16 +1,16 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 import {
-  FoodSearchResponse,
-  FoodSearchDto,
   CreateFoodEntryRequest,
-  FoodEntryDto,
   EditFoodEntryRequest,
+  FoodEntryDto,
+  FoodSearchDto,
+  FoodSearchResponse,
 } from '../models/food.models';
-import { environment } from '../../../environments/environment';
-import { FoodSortBy, SortDirection } from '../models/enums/sorting.models';
+import {environment} from '../../../environments/environment';
+import {FoodSortBy, SortDirection} from '../models/enums/sorting.models';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class FoodService {
 
     return this.http.get<FoodSearchResponse>(
       `${environment.apiUrl}/food/search`,
-      { params },
+      {params},
     );
   }
 
@@ -48,7 +48,7 @@ export class FoodService {
 
     return this.http.get<FoodSearchResponse>(
       `${environment.apiUrl}/food/past-eaten`,
-      { params },
+      {params},
     );
   }
 

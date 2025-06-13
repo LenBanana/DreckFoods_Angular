@@ -1,20 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { catchError, of } from 'rxjs';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {catchError, of} from 'rxjs';
 
-import { UserService } from '../../core/services/user.service';
-import { AuthService } from '../../core/services/auth.service';
-import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
-import { DeleteAccountComponent } from './delete-account/delete-account.component';
-import { User } from '../../core/models/auth.models';
-import { format, parseISO } from 'date-fns';
+import {UserService} from '../../core/services/user.service';
+import {AuthService} from '../../core/services/auth.service';
+import {LoadingSpinnerComponent} from '../../shared/components/loading-spinner/loading-spinner.component';
+import {ChangePasswordComponent} from './change-password/change-password.component';
+import {DeleteAccountComponent} from './delete-account/delete-account.component';
+import {User} from '../../core/models/auth.models';
+import {format, parseISO} from 'date-fns';
 
 @Component({
   selector: 'app-profile',
@@ -30,10 +25,6 @@ import { format, parseISO } from 'date-fns';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private userService = inject(UserService);
-  private authService = inject(AuthService);
-
   profileForm: FormGroup;
   currentUser: User | null = null;
   isSubmitting = false;
@@ -42,6 +33,9 @@ export class ProfileComponent implements OnInit {
   originalFormValues: any = {};
   showChangePassword = false;
   showDeleteAccount = false;
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private authService = inject(AuthService);
 
   constructor() {
     this.profileForm = this.fb.group({
@@ -87,7 +81,7 @@ export class ProfileComponent implements OnInit {
             this.successMessage = 'Profile updated successfully!';
             this.originalFormValues = this.profileForm.value;
 
-            const updatedUser = { ...this.currentUser!, ...response };
+            const updatedUser = {...this.currentUser!, ...response};
             this.authService.pushUserToSubject(updatedUser);
 
             setTimeout(() => {

@@ -1,11 +1,11 @@
-import { Component, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, inject, OnDestroy} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
-import { AlertComponent } from '../alert/alert.component';
-import { AlertService } from '../../../core/services/alert.service';
-import { Alert } from '../../../core/models/alert.models';
+import {AlertComponent} from '../alert/alert.component';
+import {AlertService} from '../../../core/services/alert.service';
+import {Alert} from '../../../core/models/alert.models';
 
 @Component({
   selector: 'app-alert-container',
@@ -75,18 +75,9 @@ import { Alert } from '../../../core/models/alert.models';
   ],
 })
 export class AlertContainerComponent implements OnDestroy {
+  alerts: Alert[] = [];
   private alertService = inject(AlertService);
   private destroy$ = new Subject<void>();
-
-  alerts: Alert[] = [];
-
-  get topRightAlerts(): Alert[] {
-    return this.alerts.filter((alert) => !alert.centered);
-  }
-
-  get centeredAlerts(): Alert[] {
-    return this.alerts.filter((alert) => alert.centered);
-  }
 
   constructor() {
     this.alertService.alerts$
@@ -94,6 +85,14 @@ export class AlertContainerComponent implements OnDestroy {
       .subscribe((alerts) => {
         this.alerts = alerts;
       });
+  }
+
+  get topRightAlerts(): Alert[] {
+    return this.alerts.filter((alert) => !alert.centered);
+  }
+
+  get centeredAlerts(): Alert[] {
+    return this.alerts.filter((alert) => alert.centered);
   }
 
   ngOnDestroy(): void {

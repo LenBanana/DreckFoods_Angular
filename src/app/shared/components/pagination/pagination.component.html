@@ -24,26 +24,26 @@
     "
   >
     <!-- First page -->
-    <li class="page-item" [class.disabled]="currentPage <= 1">
+    <li [class.disabled]="currentPage <= 1" class="page-item">
       <button
-        type="button"
-        class="page-link"
         (click)="firstPage()"
         [disabled]="currentPage <= 1"
+        class="page-link"
         title="First page"
+        type="button"
       >
         <i class="fas fa-angle-double-left"></i>
       </button>
     </li>
 
     <!-- Previous page -->
-    <li class="page-item" [class.disabled]="currentPage <= 1">
+    <li [class.disabled]="currentPage <= 1" class="page-item">
       <button
-        type="button"
-        class="page-link"
         (click)="previousPage()"
         [disabled]="currentPage <= 1"
+        class="page-link"
         title="Previous page"
+        type="button"
       >
         <i class="fas fa-angle-left"></i>
       </button>
@@ -51,41 +51,41 @@
 
     <!-- Page numbers -->
     <li
-      class="page-item"
       *ngFor="let page of visiblePages"
       [class.active]="page === currentPage"
+      class="page-item"
     >
       <button
-        type="button"
-        class="page-link"
         (click)="goToPage(page)"
         [class.fw-bold]="page === currentPage"
+        class="page-link"
+        type="button"
       >
         {{ page }}
       </button>
     </li>
 
     <!-- Next page -->
-    <li class="page-item" [class.disabled]="currentPage >= totalPages">
+    <li [class.disabled]="currentPage >= totalPages" class="page-item">
       <button
-        type="button"
-        class="page-link"
         (click)="nextPage()"
         [disabled]="currentPage >= totalPages"
+        class="page-link"
         title="Next page"
+        type="button"
       >
         <i class="fas fa-angle-right"></i>
       </button>
     </li>
 
     <!-- Last page -->
-    <li class="page-item" [class.disabled]="currentPage >= totalPages">
+    <li [class.disabled]="currentPage >= totalPages" class="page-item">
       <button
-        type="button"
-        class="page-link"
         (click)="lastPage()"
         [disabled]="currentPage >= totalPages"
+        class="page-link"
         title="Last page"
+        type="button"
       >
         <i class="fas fa-angle-double-right"></i>
       </button>

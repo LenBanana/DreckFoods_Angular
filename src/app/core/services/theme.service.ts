@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 export type Theme = 'light' | 'dark';
 
@@ -16,22 +16,6 @@ export class ThemeService {
     this.applyTheme(this.themeSubject.value);
   }
 
-  private getInitialTheme(): Theme {
-    const savedTheme = localStorage.getItem(this.THEME_KEY) as Theme;
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      return savedTheme;
-    }
-
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      return 'dark';
-    }
-
-    return 'light';
-  }
-
   public getCurrentTheme(): Theme {
     return this.themeSubject.value;
   }
@@ -46,6 +30,22 @@ export class ThemeService {
     this.themeSubject.next(theme);
     this.applyTheme(theme);
     this.saveTheme(theme);
+  }
+
+  private getInitialTheme(): Theme {
+    const savedTheme = localStorage.getItem(this.THEME_KEY) as Theme;
+    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+      return savedTheme;
+    }
+
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      return 'dark';
+    }
+
+    return 'light';
   }
 
   private applyTheme(theme: Theme): void {

@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { FoodSearchDto } from '../../../core/models/food.models';
-import { AddFoodModalComponent } from '../add-food-modal/add-food-modal.component';
+import {FoodSearchDto} from '../../../core/models/food.models';
+import {AddFoodModalComponent} from '../add-food-modal/add-food-modal.component';
 import {
-  FoodSearchContainerComponent,
   FoodSearchConfig,
+  FoodSearchContainerComponent,
 } from '../../../shared/components/food-search-container/food-search-container.component';
-import { AlertService } from '../../../core/services/alert.service';
+import {AlertService} from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-food-search',

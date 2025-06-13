@@ -1,16 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NavigationEnd, Router, RouterLink, RouterLinkActive,} from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ThemeService, Theme } from '../../../core/services/theme.service';
-import { AppRole, User } from '../../../core/models/auth.models';
-import { filter } from 'rxjs';
+import {AuthService} from '../../../core/services/auth.service';
+import {Theme, ThemeService} from '../../../core/services/theme.service';
+import {AppRole, User} from '../../../core/models/auth.models';
+import {filter} from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -20,26 +15,25 @@ import { filter } from 'rxjs';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  private authService = inject(AuthService);
-  private themeService = inject(ThemeService);
   navLinks = [
-    { path: '/dashboard', label: 'Dashboard' },
+    {path: '/dashboard', label: 'Dashboard'},
     {
       label: 'Food',
       children: [
-        { path: '/food/entries', label: 'Food Entries' },
-        { path: '/food/meals', label: 'Meals' },
-        { path: '/food/search', label: 'Food Search' },
+        {path: '/food/entries', label: 'Food Entries'},
+        {path: '/food/meals', label: 'Meals'},
+        {path: '/food/search', label: 'Food Search'},
       ],
     },
-    { path: '/weight', label: 'Weight' },
-    { path: '/timeline', label: 'Timeline' },
+    {path: '/weight', label: 'Weight'},
+    {path: '/timeline', label: 'Timeline'},
   ];
-
   AppRole = AppRole;
   currentUser: User | null = null;
   currentTheme: Theme = 'light';
   isUserMenuOpen = false;
+  private authService = inject(AuthService);
+  private themeService = inject(ThemeService);
 
   constructor(private router: Router) {
     this.authService.currentUser$.subscribe((user) => {
@@ -58,31 +52,16 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  get isDarkTheme(): boolean {
+    return this.currentTheme === 'dark';
+  }
+
   ngOnInit() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.collapseNavbar();
       });
-  }
-
-  private collapseNavbar() {
-    const navbarCollapse = document.getElementById('mainNav');
-    const navbarToggler = document.querySelector(
-      '.navbar-toggler',
-    ) as HTMLElement;
-
-    if (navbarCollapse?.classList.contains('show')) {
-      const bsCollapse = new (window as any).bootstrap.Collapse(
-        navbarCollapse,
-        {
-          toggle: false,
-        },
-      );
-      bsCollapse.hide();
-
-      navbarToggler?.setAttribute('aria-expanded', 'false');
-    }
   }
 
   toggleUserMenu() {
@@ -107,11 +86,27 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     this.closeUserMenu();
   }
+
   toggleTheme() {
     this.themeService.toggleTheme();
   }
 
-  get isDarkTheme(): boolean {
-    return this.currentTheme === 'dark';
+  private collapseNavbar() {
+    const navbarCollapse = document.getElementById('mainNav');
+    const navbarToggler = document.querySelector(
+      '.navbar-toggler',
+    ) as HTMLElement;
+
+    if (navbarCollapse?.classList.contains('show')) {
+      const bsCollapse = new (window as any).bootstrap.Collapse(
+        navbarCollapse,
+        {
+          toggle: false,
+        },
+      );
+      bsCollapse.hide();
+
+      navbarToggler?.setAttribute('aria-expanded', 'false');
+    }
   }
 }

@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { ThemeService } from '../../../core/services/theme.service';
-import { User } from '../../../core/models/auth.models';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
+import {AuthService} from '../../../core/services/auth.service';
+import {ThemeService} from '../../../core/services/theme.service';
+import {User} from '../../../core/models/auth.models';
 
 @Component({
   selector: 'app-mobile-header',
@@ -13,11 +13,10 @@ import { User } from '../../../core/models/auth.models';
   styleUrls: ['./mobile-header.component.scss'],
 })
 export class MobileHeaderComponent {
-  private authService = inject(AuthService);
-  private themeService = inject(ThemeService);
-
   currentUser: User | null = null;
   currentTheme = 'light';
+  private authService = inject(AuthService);
+  private themeService = inject(ThemeService);
 
   constructor() {
     this.authService.currentUser$.subscribe((user) => {
@@ -27,6 +26,10 @@ export class MobileHeaderComponent {
     this.themeService.theme$.subscribe((theme) => {
       this.currentTheme = theme;
     });
+  }
+
+  get isDarkTheme(): boolean {
+    return this.currentTheme === 'dark';
   }
 
   getUserInitials(): string {
@@ -41,10 +44,6 @@ export class MobileHeaderComponent {
 
   toggleTheme() {
     this.themeService.toggleTheme();
-  }
-
-  get isDarkTheme(): boolean {
-    return this.currentTheme === 'dark';
   }
 
   logout() {
