@@ -58,6 +58,7 @@ export class FoodEntriesComponent implements OnInit {
     fiber: 0,
     sugar: 0,
     caffeine: 0,
+    salt: 0,
   };
 
   constructor() {
@@ -217,11 +218,15 @@ export class FoodEntriesComponent implements OnInit {
         0
       ),
       sugar: entriesToSum.reduce(
-        (sum, entry) => sum + (entry.sugar || 0),
+        (sum, entry) => sum + (entry.sugar),
         0
       ),
       caffeine: entriesToSum.reduce(
-        (sum, entry) => sum + (entry.caffeine || 0),
+        (sum, entry) => sum + (entry.caffeine),
+        0
+      ),
+      salt: entriesToSum.reduce(
+        (sum, entry) => sum + (entry.salt),
         0
       ),
     };
@@ -305,8 +310,9 @@ export class FoodEntriesComponent implements OnInit {
       carbohydrates: this.dailyTotals.carbs,
       fat: this.dailyTotals.fat,
       fiber: this.dailyTotals.fiber,
-      sugar: this.dailyTotals.sugar || 0,
-      caffeine: this.dailyTotals.caffeine || 0
+      sugar: this.dailyTotals.sugar,
+      caffeine: this.dailyTotals.caffeine,
+      salt: this.dailyTotals.salt
     };
   }
 
@@ -317,15 +323,9 @@ export class FoodEntriesComponent implements OnInit {
       carbohydrates: this.dailyTotals.carbs,
       fat: this.dailyTotals.fat,
       fiber: this.dailyTotals.fiber,
-      caffeine: this.dailyTotals.caffeine || 0,
-      sugar: this.dailyTotals.sugar || 0,
-      totalCalories: this.dailyTotals.calories,
-      totalProtein: this.dailyTotals.protein,
-      totalCarbohydrates: this.dailyTotals.carbs,
-      totalFat: this.dailyTotals.fat,
-      totalFiber: this.dailyTotals.fiber,
-      totalCaffeine: this.dailyTotals.caffeine || 0,
-      totalSugar: this.dailyTotals.sugar || 0
+      caffeine: this.dailyTotals.caffeine,
+      sugar: this.dailyTotals.sugar,
+      salt: this.dailyTotals.salt
     };
   }
 
@@ -337,7 +337,8 @@ export class FoodEntriesComponent implements OnInit {
       fat: entry.fat,
       fiber: entry.fiber,
       sugar: entry.sugar,
-      caffeine: entry.caffeine
+      caffeine: entry.caffeine,
+      salt: entry.salt
     };
   }
 

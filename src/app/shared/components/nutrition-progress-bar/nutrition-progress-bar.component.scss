@@ -11,4 +11,16 @@
   small {
     font-size: 0.75rem;
   }
+
+  .progress-bar {
+    border-radius: 0.25rem;
+  }
+
+  .bg-light {
+    background-color: pink !important;
+  }
+  
+  .bg-dark {
+    border: 1px solid #9a9a9a !important;
+  }
 }

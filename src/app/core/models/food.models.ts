@@ -81,6 +81,7 @@ export interface FoodEntryDto {
   fiber: number;
   sugar: number;
   caffeine: number;
+  salt: number;
   consumedAt: string;
   createdAt: string;
   editing?: boolean;
@@ -94,14 +95,16 @@ export interface NutritionData {
   fiber: number;
   sugar: number;
   caffeine: number;
+  salt: number;
 }
 
 export interface NutritionTotals extends NutritionData {
-  totalCalories: number;
-  totalProtein: number;
-  totalCarbohydrates: number;
-  totalFat: number;
-  totalFiber: number;
-  totalSugar: number;
-  totalCaffeine: number;
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+  fiber: number;
+  sugar: number;
+  caffeine: number;
+  salt: number;
 }

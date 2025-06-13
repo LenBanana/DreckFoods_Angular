@@ -31,10 +31,16 @@ export class TimelineComponent implements OnInit {
   timelineData: DailyTimelineDto[] = [];
   isLoading = true;
   errorMessage = '';
-
+  averagesCollapsed = true;
   averages = {
     calories: 0,
-    protein: 0
+    protein: 0,
+    carbohydrates: 0,
+    fat: 0,
+    fiber: 0,
+    sugar: 0,
+    caffeine: 0,
+    salt: 0,
   };
   totalEntries = 0;
   weightEntries = 0;
@@ -48,9 +54,17 @@ export class TimelineComponent implements OnInit {
       endDate: [format(endDate, 'yyyy-MM-dd')]
     });
   }
-
   ngOnInit() {
     this.loadTimeline();
+    
+    // Initialize the collapse state
+    setTimeout(() => {
+      const averagesElement = document.getElementById('averagesCollapse');
+      if (averagesElement && this.averagesCollapsed) {
+        // Initialize as collapsed
+        averagesElement.classList.remove('show');
+      }
+    }, 0);
   }
 
   storeAccordionState() {
@@ -121,7 +135,7 @@ export class TimelineComponent implements OnInit {
       fddbFoodId: entry.id,
       gramsConsumed: entry.gramsConsumed,
     };
-    
+
     this.foodService
       .editFoodEntry(entry.id, updateRequest)
       .pipe(
@@ -161,7 +175,7 @@ export class TimelineComponent implements OnInit {
           }
           return of({ days: [], totalDays: 0 });
         })
-      )      .subscribe(response => {
+      ).subscribe(response => {
         this.timelineData = response.days;
         // Initialize showNutrition property for all entries
         this.timelineData.forEach(day => {
@@ -196,24 +210,35 @@ export class TimelineComponent implements OnInit {
 
     this.loadTimeline();
   }
-
   private calculateAverages() {
     const daysWithEntries = this.timelineData.filter(day => day.foodEntries.length > 0);
     const totalDays = daysWithEntries.length;
 
     if (totalDays === 0) {
-      this.averages = { calories: 0, protein: 0 };
+      this.averages = { calories: 0, protein: 0, carbohydrates: 0, fat: 0, fiber: 0, sugar: 0, caffeine: 0, salt: 0 };
       this.totalEntries = 0;
       this.weightEntries = 0;
       return;
     }
 
-    const totalCalories = daysWithEntries.reduce((sum, day) => sum + day.totalCalories, 0);
-    const totalProtein = daysWithEntries.reduce((sum, day) => sum + day.totalProtein, 0);
+    const totalCalories = daysWithEntries.reduce((sum, day) => sum + day.calories, 0);
+    const totalProtein = daysWithEntries.reduce((sum, day) => sum + day.protein, 0);
+    const totalCarbohydrates = daysWithEntries.reduce((sum, day) => sum + day.carbohydrates, 0);
+    const totalFat = daysWithEntries.reduce((sum, day) => sum + day.fat, 0);
+    const totalFiber = daysWithEntries.reduce((sum, day) => sum + day.fiber, 0);
+    const totalSugar = daysWithEntries.reduce((sum, day) => sum + day.sugar, 0);
+    const totalCaffeine = daysWithEntries.reduce((sum, day) => sum + day.caffeine, 0);
+    const totalSalt = daysWithEntries.reduce((sum, day) => sum + (day.salt || 0), 0);
 
     this.averages = {
       calories: totalCalories / totalDays,
-      protein: totalProtein / totalDays
+      protein: totalProtein / totalDays,
+      carbohydrates: totalCarbohydrates / totalDays,
+      fat: totalFat / totalDays,
+      fiber: totalFiber / totalDays,
+      sugar: totalSugar / totalDays,
+      caffeine: totalCaffeine / totalDays,
+      salt: totalSalt / totalDays
     };
 
     this.totalEntries = this.timelineData.reduce((sum, day) => sum + day.foodEntries.length, 0);
@@ -226,15 +251,15 @@ export class TimelineComponent implements OnInit {
   }
 
   getUnaccountedPercentage(day: DailyTimelineDto): number {
-    if (day.totalCalories === 0) return 0;
+    if (day.calories === 0) return 0;
 
     const calculatedCalories =
-      (day.totalProtein * 4) +
-      (day.totalCarbohydrates * 4) +
-      (day.totalFat * 9);
+      (day.protein * 4) +
+      (day.carbohydrates * 4) +
+      (day.fat * 9);
 
-    const unaccountedCalories = day.totalCalories - calculatedCalories;
-    const percentage = Math.max((unaccountedCalories / day.totalCalories) * 100, 0);
+    const unaccountedCalories = day.calories - calculatedCalories;
+    const percentage = Math.max((unaccountedCalories / day.calories) * 100, 0);
 
     return Math.min(percentage, 100);
   }
@@ -246,27 +271,27 @@ export class TimelineComponent implements OnInit {
   }
 
   getEntryCaloriePercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.calories, day.totalCalories);
+    return this.getEntryNutrientPercentage(entry.calories, day.calories);
   }
 
   getEntryProteinPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.protein, day.totalProtein);
+    return this.getEntryNutrientPercentage(entry.protein, day.protein);
   }
 
   getEntryCarbPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.carbohydrates, day.totalCarbohydrates);
+    return this.getEntryNutrientPercentage(entry.carbohydrates, day.carbohydrates);
   }
 
   getEntryFatPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.fat, day.totalFat);
+    return this.getEntryNutrientPercentage(entry.fat, day.fat);
   }
 
   getEntryFiberPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.fiber, day.totalFiber);
+    return this.getEntryNutrientPercentage(entry.fiber, day.fiber);
   }
 
   getEntrySugarPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
-    return this.getEntryNutrientPercentage(entry.sugar, day.totalSugar);
+    return this.getEntryNutrientPercentage(entry.sugar, day.sugar);
   }
 
   getNutrientCount(entry: FoodEntryDto): number {
@@ -301,26 +326,38 @@ export class TimelineComponent implements OnInit {
       fat: entry.fat,
       fiber: entry.fiber,
       sugar: entry.sugar,
-      caffeine: entry.caffeine
+      caffeine: entry.caffeine,
+      salt: entry.salt
     };
   }
 
   getDayAsNutritionTotals(day: DailyTimelineDto): NutritionTotals {
     return {
-      calories: day.totalCalories,
-      protein: day.totalProtein,
-      carbohydrates: day.totalCarbohydrates,
-      fat: day.totalFat,
-      fiber: day.totalFiber,
-      sugar: day.totalSugar,
-      caffeine: day.totalCaffeine,
-      totalCalories: day.totalCalories,
-      totalProtein: day.totalProtein,
-      totalCarbohydrates: day.totalCarbohydrates,
-      totalFat: day.totalFat,
-      totalFiber: day.totalFiber,
-      totalSugar: day.totalSugar,
-      totalCaffeine: day.totalCaffeine
+      calories: day.calories,
+      protein: day.protein,
+      carbohydrates: day.carbohydrates,
+      fat: day.fat,
+      fiber: day.fiber,
+      sugar: day.sugar,
+      caffeine: day.caffeine,
+      salt: day.salt
     };
+  }
+  toggleAverages() {
+    this.averagesCollapsed = !this.averagesCollapsed;
+    
+    // Use Bootstrap's collapse method for smooth animation
+    const averagesElement = document.getElementById('averagesCollapse');
+    if (averagesElement) {
+      const bsCollapse = new (window as any).bootstrap.Collapse(averagesElement, {
+        toggle: false
+      });
+      
+      if (this.averagesCollapsed) {
+        bsCollapse.hide();
+      } else {
+        bsCollapse.show();
+      }
+    }
   }
 }

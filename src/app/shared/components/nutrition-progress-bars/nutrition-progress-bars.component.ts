@@ -14,7 +14,6 @@ import { NutritionData, NutritionTotals } from '../../../core/models/food.models
 export class NutritionProgressBarsComponent {
   @Input() nutritionData!: NutritionData;
   @Input() totals!: NutritionTotals;
-  @Input() showSugar: boolean = false;
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';
   @Input() height: string = '6px';
   @Input() showValues: boolean = true;
@@ -25,7 +24,7 @@ export class NutritionProgressBarsComponent {
       {
         label: 'Calories',
         value: this.nutritionData.calories,
-        total: this.totals.totalCalories,
+        total: this.totals.calories,
         unit: '',
         color: 'danger',
         show: this.nutritionData.calories > 0
@@ -33,7 +32,7 @@ export class NutritionProgressBarsComponent {
       {
         label: 'Protein',
         value: this.nutritionData.protein,
-        total: this.totals.totalProtein,
+        total: this.totals.protein,
         unit: 'g',
         color: 'success',
         show: this.nutritionData.protein > 0
@@ -41,7 +40,7 @@ export class NutritionProgressBarsComponent {
       {
         label: 'Carbs',
         value: this.nutritionData.carbohydrates,
-        total: this.totals.totalCarbohydrates,
+        total: this.totals.carbohydrates,
         unit: 'g',
         color: 'info',
         show: this.nutritionData.carbohydrates > 0
@@ -49,7 +48,7 @@ export class NutritionProgressBarsComponent {
       {
         label: 'Fat',
         value: this.nutritionData.fat,
-        total: this.totals.totalFat,
+        total: this.totals.fat,
         unit: 'g',
         color: 'warning',
         show: this.nutritionData.fat > 0
@@ -57,30 +56,27 @@ export class NutritionProgressBarsComponent {
       {
         label: 'Fiber',
         value: this.nutritionData.fiber,
-        total: this.totals.totalFiber,
+        total: this.totals.fiber,
         unit: 'g',
         color: 'secondary',
         show: this.nutritionData.fiber > 0
       }, {
         label: 'Caffeine',
         value: this.nutritionData.caffeine,
-        total: this.totals.totalCaffeine,
+        total: this.totals.caffeine,
         unit: 'mg',
         color: 'dark',
         show: this.nutritionData.caffeine > 0
+      },
+      {
+        label: 'Salt',
+        value: this.nutritionData.salt,
+        total: this.totals.salt,
+        unit: 'g',
+        color: 'light',
+        show: this.nutritionData.salt > 0
       }
     ];
-
-    if (this.showSugar && this.nutritionData.sugar !== undefined && this.totals.totalSugar !== undefined) {
-      configs.push({
-        label: 'Sugar',
-        value: this.nutritionData.sugar,
-        total: this.totals.totalSugar,
-        unit: 'g',
-        color: 'primary',
-        show: this.nutritionData.sugar > 0
-      });
-    }
 
     return configs;
   }

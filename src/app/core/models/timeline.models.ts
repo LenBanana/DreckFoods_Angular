@@ -1,15 +1,8 @@
-import { FoodEntryDto } from './food.models';
+import { FoodEntryDto, NutritionTotals } from './food.models';
 import { WeightEntryDto } from './weight.models';
 
-export interface DailyTimelineDto {
+export interface DailyTimelineDto extends NutritionTotals {
   date: string;
-  totalCalories: number;
-  totalProtein: number;
-  totalFat: number;
-  totalCarbohydrates: number;
-  totalSugar: number;
-  totalFiber: number;
-  totalCaffeine: number;
   foodEntries: FoodEntryDto[];
   weightEntry?: WeightEntryDto;
 }
