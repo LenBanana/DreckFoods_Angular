@@ -186,27 +186,6 @@
     }
   }
 
-  .food-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-
-      .add-btn {
-        transform: scale(1.1);
-        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-      }
-    }
-
-    .add-btn {
-      transition: all 0.3s ease;
-      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-      border: none;
-    }
-  }
-
   .scanning-overlay {
     position: fixed;
     top: 0;

@@ -28,7 +28,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.calories,
         total: this.totals.calories,
         unit: '',
-        color: 'danger',
+        color: 'calories',
         show: this.nutritionData.calories > 0,
       },
       {
@@ -36,7 +36,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.protein,
         total: this.totals.protein,
         unit: 'g',
-        color: 'success',
+        color: 'protein',
         show: this.nutritionData.protein > 0,
       },
       {
@@ -44,7 +44,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.carbohydrates,
         total: this.totals.carbohydrates,
         unit: 'g',
-        color: 'info',
+        color: 'carbs',
         show: this.nutritionData.carbohydrates > 0,
       },
       {
@@ -52,7 +52,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.fat,
         total: this.totals.fat,
         unit: 'g',
-        color: 'warning',
+        color: 'fat',
         show: this.nutritionData.fat > 0,
       },
       {
@@ -60,7 +60,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.fiber,
         total: this.totals.fiber,
         unit: 'g',
-        color: 'secondary',
+        color: 'fiber',
         show: this.nutritionData.fiber > 0,
       },
       {
@@ -68,7 +68,7 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.caffeine,
         total: this.totals.caffeine,
         unit: 'mg',
-        color: 'dark',
+        color: 'caffeine',
         show: this.nutritionData.caffeine > 0,
       },
       {
@@ -76,11 +76,10 @@ export class NutritionProgressBarsComponent {
         value: this.nutritionData.salt,
         total: this.totals.salt,
         unit: 'g',
-        color: 'light',
+        color: 'salt',
         show: this.nutritionData.salt > 0,
       },
     ];
-
     return configs;
   }
 

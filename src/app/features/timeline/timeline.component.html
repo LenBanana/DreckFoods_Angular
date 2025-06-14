@@ -89,48 +89,51 @@
                 {
                   v: averages.calories | number: '1.0-0',
                   label: 'Avg Calories/Day',
-                  color: 'primary',
+                  color: 'calories',
                 },
                 {
                   v: averages.protein | number: '1.1-1',
                   label: 'Avg Protein/Day (g)',
-                  color: 'success',
+                  color: 'protein',
                 },
                 {
                   v: averages.carbohydrates | number: '1.1-1',
                   label: 'Avg Carbs/Day (g)',
-                  color: 'warning',
+                  color: 'carbs',
                 },
                 {
                   v: averages.fat | number: '1.1-1',
                   label: 'Avg Fat/Day (g)',
-                  color: 'danger',
+                  color: 'fat',
                 },
                 {
                   v: averages.fiber | number: '1.1-1',
                   label: 'Avg Fiber/Day (g)',
-                  color: 'secondary',
+                  color: 'fiber',
                 },
                 {
                   v: averages.caffeine | number: '1.1-1',
                   label: 'Avg Caffeine/Day (mg)',
-                  color: 'dark',
+                  color: 'caffeine',
                 },
                 {
                   v: averages.sugar | number: '1.1-1',
                   label: 'Avg Sugar/Day (g)',
-                  color: 'info',
+                  color: 'sugar',
                 },
                 {
                   v: averages.salt | number: '1.1-1',
                   label: 'Avg Salt/Day (g)',
-                  color: 'light',
+                  color: 'salt',
                 },
               ]
             "
             class="col"
           >
-            <div [class]="'border-' + s.color" class="card h-100">
+            <div
+              [class]="'border-' + s.color"
+              class="card h-100 border-0 border-start"
+            >
               <div class="card-body">
                 <h3
                   [class]="'text-' + s.color"
@@ -163,7 +166,7 @@
               type="button"
             >
               <span class="me-auto badge bg-primary">
-                {{ day.calories | number: "1.0-0" }} Cal
+                {{ day.calories | number : "1.0-0" }} Cal
               </span>
               {{ formatDayHeader(day.date) }}
             </button>
@@ -175,54 +178,48 @@
             data-bs-parent="#timelineAcc"
           >
             <div class="accordion-body">
-              <!-- Macro Summary -->
               <h6>Macros</h6>
               <div class="d-flex flex-wrap gap-3 small text-muted">
                 <span
-                ><span class="badge bg-success me-1">&nbsp;</span
-                >{{ day.protein | number: "1.1-1" }}g Protein</span
+                  ><span class="badge bg-protein me-1">&nbsp;</span
+                  >{{ day.protein | number : "1.1-1" }}g Protein</span
                 >
                 <span
-                ><span class="badge bg-info me-1">&nbsp;</span
-                >{{ day.carbohydrates - day.sugar | number: "1.1-1" }}g
+                  ><span class="badge bg-carbs me-1">&nbsp;</span
+                  >{{ day.carbohydrates - day.sugar | number : "1.1-1" }}g
                   Carbs</span
                 >
                 <span
-                ><span class="badge bg-primary me-1">&nbsp;</span
-                >{{ day.sugar | number: "1.1-1" }}g Sugar</span
+                  ><span class="badge bg-sugar me-1">&nbsp;</span
+                  >{{ day.sugar | number : "1.1-1" }}g Sugar</span
                 >
                 <span
-                ><span class="badge bg-warning me-1">&nbsp;</span
-                >{{ day.fat | number: "1.1-1" }}g Fat</span
+                  ><span class="badge bg-fat me-1">&nbsp;</span
+                  >{{ day.fat | number : "1.1-1" }}g Fat</span
                 >
                 <span
-                ><span class="badge bg-secondary me-1">&nbsp;</span
-                >{{ day.fiber | number: "1.1-1" }}g Fiber</span
+                  ><span class="badge bg-fiber me-1">&nbsp;</span
+                  >{{ day.fiber | number : "1.1-1" }}g Fiber</span
                 >
                 <span *ngIf="day.caffeine > 0"
-                ><span class="badge bg-dark me-1">&nbsp;</span
-                >{{ day.caffeine | number: "1.1-1" }}mg Caffeine</span
+                  ><span class="badge bg-caffeine me-1">&nbsp;</span
+                  >{{ day.caffeine | number : "1.1-1" }}mg Caffeine</span
                 >
                 <span *ngIf="day.salt > 0"
-                ><span class="badge text-dark me-1">&nbsp;</span
-                >{{ day.salt | number: "1.1-1" }}g Salt</span
+                  ><span class="badge bg-salt me-1">&nbsp;</span
+                  >{{ day.salt | number : "1.1-1" }}g Salt</span
                 >
               </div>
-
-              <!-- Combined Macros Progress Bar -->
               <h6 class="mt-3">Calorie Breakdown</h6>
               <div class="progress mb-3" style="height: 24px">
-                <!-- Protein -->
                 <div
                   [style.width.%]="
                     getMacroPercentage(day.protein * 4, day.calories)
                   "
-                  [title]="(day.protein | number: '1.1-1') + 'g Protein'"
-                  class="progress-bar bg-success"
+                  [title]="(day.protein | number : '1.1-1') + 'g Protein'"
+                  class="progress-bar bg-protein"
                   data-bs-toggle="tooltip"
                 ></div>
-
-                <!-- Complex Carbs -->
                 <div
                   [style.width.%]="
                     getMacroPercentage(
@@ -231,34 +228,28 @@
                     )
                   "
                   [title]="
-                    (day.carbohydrates - day.sugar | number: '1.1-1') +
+                    (day.carbohydrates - day.sugar | number : '1.1-1') +
                     'g Complex Carbs'
                   "
-                  class="progress-bar bg-info"
+                  class="progress-bar bg-carbs"
                   data-bs-toggle="tooltip"
                 ></div>
-
-                <!-- Sugar -->
                 <div
                   [style.width.%]="
                     getMacroPercentage(day.sugar * 4, day.calories)
                   "
-                  [title]="(day.sugar | number: '1.1-1') + 'g Sugar'"
-                  class="progress-bar bg-primary"
+                  [title]="(day.sugar | number : '1.1-1') + 'g Sugar'"
+                  class="progress-bar bg-sugar"
                   data-bs-toggle="tooltip"
                 ></div>
-
-                <!-- Fat -->
                 <div
                   [style.width.%]="
                     getMacroPercentage(day.fat * 9, day.calories)
                   "
-                  [title]="(day.fat | number: '1.1-1') + 'g Fat'"
-                  class="progress-bar bg-warning"
+                  [title]="(day.fat | number : '1.1-1') + 'g Fat'"
+                  class="progress-bar bg-fat"
                   data-bs-toggle="tooltip"
                 ></div>
-
-                <!-- Unaccounted/Other calories -->
                 <div
                   [style.width.%]="getUnaccountedPercentage(day)"
                   class="progress-bar progress-bar-striped"
@@ -322,7 +313,7 @@
                           (click)="startEditing(entry)"
                           *ngIf="!entry.editing"
                           class="pointer"
-                        >{{ entry.gramsConsumed | number: "1.0-1" }}g</span
+                          >{{ entry.gramsConsumed | number : "1.0-1" }}g</span
                         >
                         <span *ngIf="entry.editing">
                           <input

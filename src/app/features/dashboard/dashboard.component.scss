@@ -8,4 +8,67 @@
     background-color: var(--card-bg);
     transition: all 0.3s ease;
   }
+
+  .charts-section {
+    margin-bottom: 2rem;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+  }
+
+  .time-range-group {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .time-range-group .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.5rem;
+  }
+
+  .time-range-group .btn.active {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+  }
+
+  .charts-section .row {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+  }
+
+  .charts-section .col-12,
+  .charts-section .col-lg-6 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  @media (max-width: 991.98px) {
+    .charts-section .col-lg-6 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .chart-header {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .time-range-group {
+      justify-content: center;
+    }
+
+    .time-range-group .btn {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
+    }
+  }
 }

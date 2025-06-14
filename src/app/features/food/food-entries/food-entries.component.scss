@@ -1,6 +1,7 @@
 :host {
   .filter-card {
     border-radius: 16px !important;
+    background-color: var(--bs-body-bg);
 
     .form-control {
       border-radius: 12px;
@@ -42,6 +43,7 @@
 
   .summary-card {
     border-radius: 16px !important;
+    background-color: var(--bs-body-bg);
 
     .summary-item {
       padding: 1rem;
@@ -123,7 +125,7 @@
   .entries-container {
     .entry-card {
       border-radius: 16px !important;
-
+      background-color: var(--bs-body-bg);
       transition: all 0.3s ease;
 
       &:hover {

@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {NutritionCardData} from '../components/nutrition-card/nutrition-card.component';
+import { Injectable } from '@angular/core';
+import { NutritionCardData } from '../components/nutrition-card/nutrition-card.component';
 
 @Injectable({
   providedIn: 'root',
@@ -12,43 +12,43 @@ export class NutritionConfigService {
       calories: {
         label: 'Calories',
         icon: 'fas fa-fire',
-        iconColor: 'text-danger',
+        iconColor: 'text-calories',
         unit: '',
       },
       protein: {
         label: 'Protein',
         icon: 'fas fa-egg',
-        iconColor: 'text-success',
+        iconColor: 'text-protein',
         unit: 'g',
       },
       fat: {
         label: 'Fat',
         icon: 'fas fa-bacon',
-        iconColor: 'text-danger',
+        iconColor: 'text-fat',
         unit: 'g',
       },
       carbohydrates: {
         label: 'Carbohydrates',
         icon: 'fas fa-bread-slice',
-        iconColor: 'text-warning',
+        iconColor: 'text-carbs',
         unit: 'g',
       },
       carbs: {
         label: 'Carbs',
         icon: 'fas fa-bread-slice',
-        iconColor: 'text-warning',
+        iconColor: 'text-carbs',
         unit: 'g',
       },
       fiber: {
         label: 'Fiber',
         icon: 'fas fa-leaf',
-        iconColor: 'text-secondary',
+        iconColor: 'text-fiber',
         unit: 'g',
       },
       caffeine: {
         label: 'Caffeine',
         icon: 'fas fa-coffee',
-        iconColor: 'text-dark',
+        iconColor: 'text-caffeine',
         unit: 'mg',
       },
     };

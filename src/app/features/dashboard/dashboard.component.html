@@ -9,28 +9,15 @@
     <p class="text-muted">Here's your nutrition overview for today</p>
   </div>
 
-  <!-- Quick Stats -->
-  <div class="row g-4">
-    <div *ngFor="let card of getNutritionCards()" class="col-lg-2 col-md-6">
-      <app-nutrition-card
-        [data]="card"
-        [decimals]="card.label === 'Calories' ? '1.0-0' : '1.1-1'"
-        [showShadow]="true"
-        [size]="'medium'"
-      >
-      </app-nutrition-card>
-    </div>
-  </div>
+
 
   <!-- Quick Actions -->
   <div class="text-center my-3 mt-4">
     <h2 class="mb-4 h2">Quick Actions</h2>
     <div class="row gx-4 gy-3 justify-content-center">
       <div *ngFor="let a of navs" class="col-sm-6 col-md-3">
-        <a
-          [routerLink]="a.path"
-          class="card h-100 text-decoration-none shadow-sm"
-        >
+        <a [routerLink]="a.path" style="background: var(--bs-body-bg);"
+          class="card h-100 text-decoration-none shadow-sm">
           <div class="card-body text-center">
             <i class="fas fa-{{ a.icon }} fa-2x mb-3 text-primary"></i>
             <h5>{{ a.title }}</h5>
@@ -40,10 +27,28 @@
       </div>
     </div>
   </div>
+  
+  <div class="chart-header mb-3">
+    <h3 class="m-0">Nutrition Overview</h3>
+    <div class="btn-group time-range-group">
+      <button *ngFor="let range of timeRanges" [class.active]="selectedTimeRange === range.value"
+        class="btn btn-outline-secondary" (click)="selectTimeRange(range.value)">
+        {{ range.label }}
+      </button>
+    </div>
+  </div>
 
-  <!-- Nutrition Chart -->
-  <div class="mt-4 mb-4">
-    <app-nutrition-chart></app-nutrition-chart>
+  <!-- Dashboard Summary -->
+  <app-dashboard-summary [summaryCards]="summaryCards"></app-dashboard-summary>
+
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <div class="row g-4">
+      <div class="col-12">
+        <app-nutrition-chart [timelineData]="timelineData" [selectedTimeRange]="selectedTimeRange">
+        </app-nutrition-chart>
+      </div>
+    </div>
   </div>
 
   <!-- Loading -->

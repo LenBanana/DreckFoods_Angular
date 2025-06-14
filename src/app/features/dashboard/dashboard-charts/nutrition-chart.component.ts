@@ -1,19 +1,16 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {format, subDays} from 'date-fns';
+import {format} from 'date-fns';
 import {ChartConfiguration, ChartType} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
-import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 
-import {TimelineService} from '../../../core/services/timeline.service';
-import {DailyTimelineDto, TimelineResponse} from '../../../core/models/timeline.models';
+import {DailyTimelineDto} from '../../../core/models/timeline.models';
 import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-nutrition-chart',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, BaseChartDirective, NgbCollapseModule],
-  template: `
+  imports: [CommonModule, LoadingSpinnerComponent, BaseChartDirective],  template: `
     <div class="chart-container">
       <div *ngIf="isLoading" class="text-center py-5">
         <app-loading-spinner size="large"></app-loading-spinner>
@@ -30,17 +27,7 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
           </button>
         </div>
 
-        <div [ngbCollapse]="isControlsCollapsed" class="chart-controls">
-          <div class="btn-group time-range-group">
-            <button
-              *ngFor="let range of timeRanges"
-              [class.active]="selectedTimeRange === range.value"
-              class="btn btn-outline-secondary"
-              (click)="selectTimeRange(range.value)">
-              {{ range.label }}
-            </button>
-          </div>
-
+        <div [hidden]="isControlsCollapsed" class="chart-controls">
           <div class="btn-group">
             <button
               *ngFor="let metric of availableMetrics"
@@ -69,6 +56,7 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
       padding: 15px;
       border-radius: 0.25rem;
       border: 1px solid var(--bs-border-color);
+      background: var(--bs-body-bg);
     }
 
     .chart-header {
@@ -85,17 +73,9 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
       margin-bottom: 15px;
       overflow: hidden;
       transition: height 0.35s ease;
-    }
-
-    /* Ensures collapse works properly */
-    .chart-controls.collapse:not(.show) {
-      display: none;
-    }
-
-    .chart-controls.collapsing {
-      height: 0;
-      overflow: hidden;
-      transition: height 0.35s ease;
+    }    /* Ensures collapse works properly */
+    .chart-controls[hidden] {
+      display: none !important;
     }
 
     .btn-group {
@@ -130,11 +110,12 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
     }
   `]
 })
-export class NutritionChartComponent implements OnInit {
+export class NutritionChartComponent implements OnChanges {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  @Input() timelineData: DailyTimelineDto[] = [];
+  @Input() selectedTimeRange: string = 'last_7_days';
 
-  isLoading = true;
-  timelineData: DailyTimelineDto[] = [];
+  isLoading = false;
   isControlsCollapsed = true;
 
   lineChartData: ChartConfiguration['data'] = {
@@ -219,7 +200,6 @@ export class NutritionChartComponent implements OnInit {
       backgroundColor: 'rgba(201, 203, 207, 0.2)'
     }
   ];
-
   activeMetrics: string[] = ['protein', 'fat', 'carbohydrates', 'fiber', 'sugar', 'caffeine'];
 
   timeRanges = [
@@ -227,91 +207,26 @@ export class NutritionChartComponent implements OnInit {
     {value: 'last_30_days', label: '30 Days'},
     {value: 'last_90_days', label: '90 Days'}
   ];
-  selectedTimeRange: string = 'last_7_days';
 
-  private timelineService = inject(TimelineService);
-
-  ngOnInit(): void {
-    this.loadTimelineData();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['timelineData'] || changes['selectedTimeRange']) {
+      this.initializeChartData();
+    }
   }
 
   toggleMetric(metric: string): void {
     const index = this.activeMetrics.indexOf(metric);
     if (index === -1) {
-
       this.activeMetrics.push(metric);
     } else if (this.activeMetrics.length > 1) {
-
       this.activeMetrics.splice(index, 1);
     }
 
     this.updateChartData();
   }
 
-  selectTimeRange(range: string): void {
-    this.selectedTimeRange = range;
-
-    const today = new Date();
-    let startDate: string;
-    let endDate: string = today.toISOString();
-
-    switch (range) {
-      case 'last_7_days':
-        startDate = subDays(today, 7).toISOString();
-        break;
-      case 'last_30_days':
-        startDate = subDays(today, 30).toISOString();
-        break;
-      case 'last_90_days':
-        startDate = subDays(today, 90).toISOString();
-        break;
-      default:
-        startDate = subDays(today, 30).toISOString();
-    }
-
-    console.log('Fetching timeline data from:', startDate, 'to', endDate);
-
-    this.timelineService.getTimeline(startDate, endDate).subscribe({
-      next: (response: TimelineResponse) => {
-        this.timelineData = response.days.sort((a, b) =>
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
-        this.initializeChartData();
-      },
-      error: (error) => {
-        console.error('Error loading timeline data:', error);
-      }
-    });
-  }
-
   toggleControls(): void {
     this.isControlsCollapsed = !this.isControlsCollapsed;
-  }
-
-  private loadTimelineData(): void {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const thirtyDaysAgo = subDays(today, 7);
-    const endDate = today.toISOString();
-    const startDate = thirtyDaysAgo.toISOString();
-    console.log('Fetching timeline data from:', startDate, 'to', endDate);
-
-    this.timelineService.getTimeline(startDate, endDate).subscribe({
-      next: (response: TimelineResponse) => {
-        console.log('Timeline data loaded:', response);
-
-        this.timelineData = response.days.sort((a, b) =>
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
-
-        this.initializeChartData();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading timeline data:', error);
-        this.isLoading = false;
-      }
-    });
   }
 
   private initializeChartData(): void {
