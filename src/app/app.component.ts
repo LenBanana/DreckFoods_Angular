@@ -38,7 +38,7 @@ import {SwUpdateService} from './core/services/sw-update.service';
       :host {
         .app {
           min-height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: transparent;
         }
 
         .main-content {
@@ -63,14 +63,6 @@ import {SwUpdateService} from './core/services/sw-update.service';
             min-height: calc(100vh - 80px - env(safe-area-inset-bottom));
             padding-top: 0;
             padding-bottom: calc(80px + env(safe-area-inset-bottom));
-          }
-        }
-      }
-
-      [data-theme='dark'] {
-        :host {
-          .app {
-            background: linear-gradient(135deg, #1e1e2f 0%, #2c2c3f 100%);
           }
         }
       }

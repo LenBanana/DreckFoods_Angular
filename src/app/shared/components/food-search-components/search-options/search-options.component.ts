@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodSortBy, SortDirection,} from '../../../../core/models/enums/sorting.models';
 import {FoodResultsLayout} from '../food-search-results/food-search-results.component';
+import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-search-options',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbCollapseModule],
   templateUrl: './search-options.component.html',
   styleUrls: ['./search-options.component.scss'],
 })
@@ -21,6 +22,7 @@ export class SearchOptionsComponent {
   @Input() totalPages = 1;
   @Input() totalCount = 0;
   @Input() possiblePageSizes = [6, 12, 18, 24, 30];
+  @Input() isCollapsed = true; // Default expanded state
 
   @Output() sortByChange = new EventEmitter<FoodSortBy>();
   @Output() sortDirectionChange = new EventEmitter<SortDirection>();
@@ -40,6 +42,10 @@ export class SearchOptionsComponent {
     {value: SortDirection.Ascending, label: 'Ascending'},
     {value: SortDirection.Descending, label: 'Descending'},
   ];
+
+  toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
 
   onSortByChange(event: Event) {
     const target = event.target as HTMLSelectElement;
@@ -61,3 +67,4 @@ export class SearchOptionsComponent {
     this.layoutChange.emit(target.value as FoodResultsLayout);
   }
 }
+

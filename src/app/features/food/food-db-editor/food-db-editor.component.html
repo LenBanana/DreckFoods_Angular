@@ -32,11 +32,7 @@
           <div class="card-body">
             <div class="row">
               <div *ngIf="currentFood.imageUrl" class="col-md-2">
-                <img
-                  [alt]="currentFood.name"
-                  [src]="currentFood.imageUrl"
-                  class="img-fluid rounded food-image"
-                />
+                <img [alt]="currentFood.name" [src]="currentFood.imageUrl" class="img-fluid rounded food-image" />
               </div>
               <div class="col-md-10">
                 <h4 class="card-title">{{ currentFood.name }}</h4>
@@ -47,10 +43,7 @@
                   {{ currentFood.description }}
                 </p>
                 <div *ngIf="currentFood.tags && currentFood.tags.length > 0">
-                  <span
-                    *ngFor="let tag of currentFood.tags"
-                    class="badge bg-secondary me-1"
-                  >
+                  <span *ngFor="let tag of currentFood.tags" class="badge bg-secondary me-1">
                     {{ tag }}
                   </span>
                 </div>
@@ -66,23 +59,14 @@
       <div class="col-12">
         <ul class="nav nav-tabs nav-fill" role="tablist">
           <li class="nav-item" role="presentation">
-            <button
-              (click)="setActiveTab('info')"
-              [class.active]="activeTab === 'info'"
-              class="nav-link"
-              type="button"
-            >
+            <button (click)="setActiveTab('info')" [class.active]="activeTab === 'info'" class="nav-link" type="button">
               <i class="fas fa-info-circle me-2"></i>
               Food Information
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button
-              (click)="setActiveTab('nutrition')"
-              [class.active]="activeTab === 'nutrition'"
-              class="nav-link"
-              type="button"
-            >
+            <button (click)="setActiveTab('nutrition')" [class.active]="activeTab === 'nutrition'" class="nav-link"
+              type="button">
               <i class="fas fa-chart-pie me-2"></i>
               Nutrition Data
             </button>
@@ -92,11 +76,7 @@
         <!-- Tab Content -->
         <div class="tab-content mt-4">
           <!-- Food Information Tab -->
-          <div
-            [class.active]="activeTab === 'info'"
-            [class.show]="activeTab === 'info'"
-            class="tab-pane"
-          >
+          <div [class.active]="activeTab === 'info'" [class.show]="activeTab === 'info'" class="tab-pane">
             <div class="card">
               <div class="card-header">
                 <h5 class="mb-0">
@@ -105,118 +85,64 @@
                 </h5>
               </div>
               <div class="card-body">
-                <form
-                  (ngSubmit)="onSubmitFoodInfo()"
-                  [formGroup]="foodInfoForm"
-                >
+                <form [formGroup]="foodInfoForm">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="mb-3">
                         <label class="form-label" for="name">Name *</label>
-                        <input
-                          [class.is-invalid]="
+                        <input [class.is-invalid]="
                             foodInfoForm.get('name')?.invalid &&
                             foodInfoForm.get('name')?.touched
-                          "
-                          class="form-control"
-                          formControlName="name"
-                          id="name"
-                          type="text"
-                        />
-                        <div
-                          *ngIf="
+                          " class="form-control" formControlName="name" id="name" type="text" />
+                        <div *ngIf="
                             foodInfoForm.get('name')?.invalid &&
                             foodInfoForm.get('name')?.touched
-                          "
-                          class="invalid-feedback"
-                        >
+                          " class="invalid-feedback">
                           Name is required and must be less than 200 characters.
                         </div>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label" for="brand">Brand</label>
-                        <input
-                          class="form-control"
-                          formControlName="brand"
-                          id="brand"
-                          type="text"
-                        />
+                        <input class="form-control" formControlName="brand" id="brand" type="text" />
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label" for="ean">EAN</label>
-                        <input
-                          class="form-control"
-                          formControlName="ean"
-                          id="ean"
-                          type="text"
-                        />
+                        <input class="form-control" formControlName="ean" id="ean" type="text" />
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <div class="mb-3">
                         <label class="form-label" for="url">URL</label>
-                        <input
-                          class="form-control"
-                          formControlName="url"
-                          id="url"
-                          type="url"
-                        />
+                        <input class="form-control" formControlName="url" id="url" type="url" />
                       </div>
 
                       <div class="mb-3">
-                        <label class="form-label" for="imageUrl"
-                        >Image URL</label
-                        >
-                        <input
-                          class="form-control"
-                          formControlName="imageUrl"
-                          id="imageUrl"
-                          type="url"
-                        />
+                        <label class="form-label" for="imageUrl">Image URL</label>
+                        <input class="form-control" formControlName="imageUrl" id="imageUrl" type="url" />
                       </div>
 
                       <div class="mb-3">
-                        <label class="form-label" for="tags"
-                        >Tags (comma separated)</label
-                        >
-                        <input
-                          class="form-control"
-                          formControlName="tags"
-                          id="tags"
-                          placeholder="tag1, tag2, tag3"
-                          type="text"
-                        />
+                        <label class="form-label" for="tags">Tags (comma separated)</label>
+                        <input class="form-control" formControlName="tags" id="tags" placeholder="tag1, tag2, tag3"
+                          type="text" />
                       </div>
                     </div>
 
                     <div class="col-12">
                       <div class="mb-3">
-                        <label class="form-label" for="description"
-                        >Description</label
-                        >
-                        <textarea
-                          class="form-control"
-                          formControlName="description"
-                          id="description"
-                          rows="3"
-                        ></textarea>
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" formControlName="description" id="description"
+                          rows="3"></textarea>
                       </div>
                     </div>
                   </div>
 
                   <div class="d-flex gap-2">
-                    <button
-                      [disabled]="foodInfoForm.invalid || isSaving"
-                      class="btn btn-primary"
-                      type="submit"
-                    >
-                      <span
-                        *ngIf="isSaving"
-                        class="spinner-border spinner-border-sm me-2"
-                      ></span>
+                    <button [disabled]="foodInfoForm.invalid || isSaving" class="btn btn-primary" type="button" (click)="onSubmitFoodInfo()">
+                      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
                       <i *ngIf="!isSaving" class="fas fa-save me-2"></i>
                       {{ isSaving ? "Saving..." : "Save Information" }}
                     </button>
@@ -227,11 +153,7 @@
           </div>
 
           <!-- Nutrition Data Tab -->
-          <div
-            [class.active]="activeTab === 'nutrition'"
-            [class.show]="activeTab === 'nutrition'"
-            class="tab-pane"
-          >
+          <div [class.active]="activeTab === 'nutrition'" [class.show]="activeTab === 'nutrition'" class="tab-pane">
             <div class="card">
               <div class="card-header">
                 <h5 class="mb-0">
@@ -240,10 +162,7 @@
                 </h5>
               </div>
               <div class="card-body">
-                <form
-                  (ngSubmit)="onSubmitNutrition()"
-                  [formGroup]="nutritionForm"
-                >
+                <form [formGroup]="nutritionForm">
                   <!-- Energy -->
                   <div class="nutrition-section">
                     <h6 class="section-title text-primary">Energy</h6>
@@ -252,25 +171,13 @@
                         <div class="mb-3">
                           <label class="form-label">
                             Kilojoules
-                            <small class="text-muted"
-                            >(auto-calculated from calories)</small
-                            >
+                            <small class="text-muted">(auto-calculated from calories)</small>
                           </label>
                           <div class="input-group">
-                            <input
-                              (input)="onKilojoulesChange()"
-                              class="form-control"
-                              formControlName="kilojoulesValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="kilojoulesUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input (input)="onKilojoulesChange()" class="form-control" formControlName="kilojoulesValue"
+                              min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="kilojoulesUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -278,25 +185,13 @@
                         <div class="mb-3">
                           <label class="form-label">
                             Calories
-                            <small class="text-muted"
-                            >(auto-calculated from kilojoules)</small
-                            >
+                            <small class="text-muted">(auto-calculated from kilojoules)</small>
                           </label>
                           <div class="input-group">
-                            <input
-                              (input)="onCaloriesChange()"
-                              class="form-control"
-                              formControlName="caloriesValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="caloriesUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input (input)="onCaloriesChange()" class="form-control" formControlName="caloriesValue"
+                              min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="caloriesUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -311,19 +206,10 @@
                         <div class="mb-3">
                           <label class="form-label">Protein</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="proteinValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="proteinUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="proteinValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="proteinUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -331,19 +217,8 @@
                         <div class="mb-3">
                           <label class="form-label">Fat</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="fatValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="fatUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="fatValue" min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="fatUnit" style="max-width: 60px" type="text" />
                           </div>
                         </div>
                       </div>
@@ -351,19 +226,9 @@
                         <div class="mb-3">
                           <label class="form-label">Fiber</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="fiberValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="fiberUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="fiberValue" min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="fiberUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -378,19 +243,10 @@
                         <div class="mb-3">
                           <label class="form-label">Total</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesTotalValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesTotalUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="carbohydratesTotalValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="carbohydratesTotalUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -398,19 +254,10 @@
                         <div class="mb-3">
                           <label class="form-label">Sugar</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesSugarValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesSugarUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="carbohydratesSugarValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="carbohydratesSugarUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -418,19 +265,10 @@
                         <div class="mb-3">
                           <label class="form-label">Polyols</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesPolyolsValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="carbohydratesPolyolsUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="carbohydratesPolyolsValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="carbohydratesPolyolsUnit"
+                              style="max-width: 60px" type="text" />
                           </div>
                         </div>
                       </div>
@@ -445,19 +283,10 @@
                         <div class="mb-3">
                           <label class="form-label">Salt</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="saltValue"
-                              min="0"
-                              step="0.001"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="saltUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="saltValue" min="0" step="0.001"
+                              type="number" />
+                            <input class="form-control" formControlName="saltUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -465,19 +294,9 @@
                         <div class="mb-3">
                           <label class="form-label">Iron</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="ironValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="ironUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="ironValue" min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="ironUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -485,19 +304,9 @@
                         <div class="mb-3">
                           <label class="form-label">Zinc</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="zincValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="zincUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="zincValue" min="0" step="0.1" type="number" />
+                            <input class="form-control" formControlName="zincUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -505,19 +314,10 @@
                         <div class="mb-3">
                           <label class="form-label">Magnesium</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="magnesiumValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="magnesiumUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="magnesiumValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="magnesiumUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -528,19 +328,10 @@
                         <div class="mb-3">
                           <label class="form-label">Chloride</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="chlorideValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="chlorideUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="chlorideValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="chlorideUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -548,19 +339,10 @@
                         <div class="mb-3">
                           <label class="form-label">Manganese</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="manganeseValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="manganeseUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="manganeseValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="manganeseUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -568,19 +350,10 @@
                         <div class="mb-3">
                           <label class="form-label">Sulfur</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="sulfurValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="sulfurUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="sulfurValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="sulfurUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -588,19 +361,10 @@
                         <div class="mb-3">
                           <label class="form-label">Potassium</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="potassiumValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="potassiumUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="potassiumValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="potassiumUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -611,19 +375,10 @@
                         <div class="mb-3">
                           <label class="form-label">Calcium</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="calciumValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="calciumUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="calciumValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="calciumUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -631,19 +386,10 @@
                         <div class="mb-3">
                           <label class="form-label">Phosphorus</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="phosphorusValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="phosphorusUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="phosphorusValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="phosphorusUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -651,19 +397,10 @@
                         <div class="mb-3">
                           <label class="form-label">Copper</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="copperValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="copperUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="copperValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="copperUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -671,19 +408,10 @@
                         <div class="mb-3">
                           <label class="form-label">Fluoride</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="fluorideValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="fluorideUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="fluorideValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="fluorideUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -693,19 +421,10 @@
                         <div class="mb-3">
                           <label class="form-label">Iodine</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="iodineValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="iodineUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="iodineValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="iodineUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -713,19 +432,10 @@
                         <div class="mb-3">
                           <label class="form-label">Caffeine</label>
                           <div class="input-group">
-                            <input
-                              class="form-control"
-                              formControlName="caffeineValue"
-                              min="0"
-                              step="0.1"
-                              type="number"
-                            />
-                            <input
-                              class="form-control"
-                              formControlName="caffeineUnit"
-                              style="max-width: 60px"
-                              type="text"
-                            />
+                            <input class="form-control" formControlName="caffeineValue" min="0" step="0.1"
+                              type="number" />
+                            <input class="form-control" formControlName="caffeineUnit" style="max-width: 60px"
+                              type="text" />
                           </div>
                         </div>
                       </div>
@@ -733,15 +443,8 @@
                   </div>
 
                   <div class="d-flex gap-2">
-                    <button
-                      [disabled]="nutritionForm.invalid || isSaving"
-                      class="btn btn-primary"
-                      type="submit"
-                    >
-                      <span
-                        *ngIf="isSaving"
-                        class="spinner-border spinner-border-sm me-2"
-                      ></span>
+                    <button [disabled]="nutritionForm.invalid || isSaving" class="btn btn-primary" type="button" (click)="onSubmitNutrition()">
+                      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
                       <i *ngIf="!isSaving" class="fas fa-save me-2"></i>
                       {{ isSaving ? "Saving..." : "Save Nutrition Data" }}
                     </button>
@@ -754,17 +457,10 @@
 
         <!-- Save All Button -->
         <div class="mt-4 text-center">
-          <button
-            (click)="onSubmitComplete()"
-            [disabled]="
+          <button (click)="onSubmitComplete()" [disabled]="
               (foodInfoForm.invalid && nutritionForm.invalid) || isSaving
-            "
-            class="btn btn-success btn-lg"
-          >
-            <span
-              *ngIf="isSaving"
-              class="spinner-border spinner-border-sm me-2"
-            ></span>
+            " class="btn btn-success btn-lg">
+            <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
             <i *ngIf="!isSaving" class="fas fa-save me-2"></i>
             {{ isSaving ? "Saving All Changes..." : "Save All Changes" }}
           </button>

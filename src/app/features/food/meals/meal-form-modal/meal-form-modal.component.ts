@@ -1,9 +1,10 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
-import {MealItem, MealItemManagerComponent,} from '../meal-item-manager/meal-item-manager.component';
-import {FoodSearchDto} from '../../../../core/models/food.models';
-import {CreateMealDTO, MealItemDTO, MealResponseDTO,} from '../../../../core/models/meal.models';
+import { Component, EventEmitter, inject, Input, OnInit, Output, } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
+import { MealItem, MealItemManagerComponent, } from '../meal-item-manager/meal-item-manager.component';
+import { CreateMealDTO, MealItemDTO, MealResponseDTO, } from '../../../../core/models/meal.models';
+import { FoodService } from '../../../../core/services/food.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-meal-form-modal',
@@ -15,7 +16,6 @@ import {CreateMealDTO, MealItemDTO, MealResponseDTO,} from '../../../../core/mod
 export class MealFormModalComponent implements OnInit {
   @Input() meal: MealResponseDTO | null = null;
   @Input() isSubmitting = false;
-
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<CreateMealDTO>();
   mealForm: FormGroup;
@@ -23,6 +23,7 @@ export class MealFormModalComponent implements OnInit {
   isItemsValid = false;
   showValidation = false;
   private fb = inject(FormBuilder);
+  private foodService = inject(FoodService);
 
   constructor() {
     this.mealForm = this.fb.group({
@@ -105,7 +106,6 @@ export class MealFormModalComponent implements OnInit {
 
     return totalNutrition;
   }
-
   ngOnInit() {
     if (this.meal) {
       this.mealForm.patchValue({
@@ -113,10 +113,21 @@ export class MealFormModalComponent implements OnInit {
         description: this.meal.description || '',
       });
 
-      this.mealItems = this.meal.items.map((item) => ({
-        food: this.createFoodFromMealItem(item),
-        weight: item.weight,
-      }));
+      // Fetch nutritional data for all meal items
+      const foodRequests = this.meal.items.map(item =>
+        this.foodService.getFoodById(item.fddbFoodId)
+      );
+
+      if (foodRequests.length > 0) {
+        forkJoin(foodRequests).subscribe(foods => {
+          this.mealItems = this.meal!.items.map((item, index) => ({
+            food: foods[index],
+            weight: item.weight,
+          }));
+        });
+      } else {
+        this.mealItems = [];
+      }
     } else {
       this.mealItems = [];
     }
@@ -154,48 +165,7 @@ export class MealFormModalComponent implements OnInit {
 
     this.submit.emit(mealData);
   }
-
   onClose() {
     this.close.emit();
-  }
-
-  private createFoodFromMealItem(item: any): FoodSearchDto {
-    return {
-      id: item.fddbFoodId,
-      name: item.foodName,
-      url: '',
-      description: '',
-      imageUrl: '',
-      brand: '',
-      tags: [],
-      nutrition: {
-        calories: {value: 0, unit: 'kcal'},
-        protein: {value: 0, unit: 'g'},
-        fat: {value: 0, unit: 'g'},
-        carbohydrates: {
-          total: {value: 0, unit: 'g'},
-          sugar: {value: 0, unit: 'g'},
-          polyols: {value: 0, unit: 'g'},
-        },
-        minerals: {
-          salt: {value: 0, unit: 'g'},
-          iron: {value: 0, unit: 'mg'},
-          zinc: {value: 0, unit: 'mg'},
-          magnesium: {value: 0, unit: 'mg'},
-          chloride: {value: 0, unit: 'mg'},
-          manganese: {value: 0, unit: 'mg'},
-          sulfur: {value: 0, unit: 'mg'},
-          potassium: {value: 0, unit: 'mg'},
-          calcium: {value: 0, unit: 'mg'},
-          phosphorus: {value: 0, unit: 'mg'},
-          copper: {value: 0, unit: 'mg'},
-          fluoride: {value: 0, unit: 'mg'},
-          iodine: {value: 0, unit: 'mg'},
-        },
-        fiber: {value: 0, unit: 'g'},
-        kilojoules: {value: 0, unit: 'kJ'},
-        caffeine: {value: 0, unit: 'mg'},
-      },
-    } as FoodSearchDto;
   }
 }

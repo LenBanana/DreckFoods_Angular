@@ -13,6 +13,7 @@ import {NutritionConfigService} from '../../shared/services/nutrition-config.ser
 import {FoodEntryDto} from '../../core/models/food.models';
 import {User} from '../../core/models/auth.models';
 import {AuthService} from '../../core/services/auth.service';
+import {NutritionChartComponent} from './dashboard-charts/nutrition-chart.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,7 @@ import {AuthService} from '../../core/services/auth.service';
     RouterLink,
     LoadingSpinnerComponent,
     NutritionCardComponent,
+    NutritionChartComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],

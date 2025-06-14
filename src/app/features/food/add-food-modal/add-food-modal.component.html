@@ -41,7 +41,7 @@
         </div>
 
         <!-- Form -->
-        <form (ngSubmit)="onSubmit()" [formGroup]="addFoodForm">
+        <form [formGroup]="addFoodForm">
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label" for="gramsConsumed">Amount (g)</label>
@@ -160,6 +160,7 @@
               [disabled]="addFoodForm.invalid || isLoading"
               class="btn btn-primary"
               type="submit"
+              (click)="onSubmit()"
             >
               <span *ngIf="!isLoading">Add to Log</span>
               <app-loading-spinner

@@ -4,55 +4,33 @@
     <div class="d-flex justify-content-between align-items-start mb-3">
       <div class="meal-info flex-grow-1">
         <h5 class="meal-name mb-1">{{ meal.name }}</h5>
-        <p
-          *ngIf="meal.description"
-          class="meal-description text-muted mb-2 small"
-        >
-          {{ meal.description }}
+        <p class="meal-description text-muted mb-2 small">
+          <span *ngIf="meal.description">{{ meal.description }}</span>
+          <span *ngIf="!meal.description">No description provided</span>
         </p>
         <div class="meal-meta">
-          <span class="badge bg-info text-dark me-2"
-          >{{ meal.totalWeight }}g total</span
-          >
-          <span class="badge bg-info text-dark"
-          >{{ meal.items.length }} items</span
-          >
+          <span class="badge bg-info text-dark me-2">{{ meal.totalWeight }}g total</span>
+          <span class="badge bg-info text-dark">{{ meal.items.length }} items</span>
         </div>
       </div>
       <div class="dropdown">
-        <button
-          [disabled]="isDeleting"
-          class="btn btn-link text-muted p-0"
-          data-bs-toggle="dropdown"
-          title="Meal options"
-        >
+        <button [disabled]="isDeleting" class="btn btn-link text-muted p-0" data-bs-toggle="dropdown"
+          title="Meal options">
           <i class="fas fa-ellipsis-v"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <button
-              (click)="onEdit()"
-              [disabled]="isDeleting"
-              class="dropdown-item"
-            >
+            <button (click)="onEdit()" [disabled]="isDeleting" class="dropdown-item">
               <i class="fas fa-edit me-2"></i>Edit
             </button>
           </li>
           <li>
-            <button
-              (click)="onShare()"
-              [disabled]="isDeleting"
-              class="dropdown-item"
-            >
+            <button (click)="onShare()" [disabled]="isDeleting" class="dropdown-item">
               <i class="fas fa-share-alt me-2"></i>Share
             </button>
           </li>
           <li>
-            <button
-              (click)="onDelete()"
-              [disabled]="isDeleting"
-              class="dropdown-item text-danger"
-            >
+            <button (click)="onDelete()" [disabled]="isDeleting" class="dropdown-item text-danger">
               <i class="fas fa-trash me-2"></i>
               <span *ngIf="isDeleting">Deleting...</span>
               <span *ngIf="!isDeleting">Delete</span>
@@ -105,10 +83,8 @@
     <div class="meal-items mb-3">
       <h6 class="text-muted mb-2">Ingredients</h6>
       <div class="ingredients-list">
-        <div
-          *ngFor="let item of meal.items"
-          class="ingredient-item d-flex justify-content-between align-items-center mb-1"
-        >
+        <div *ngFor="let item of meal.items"
+          class="ingredient-item d-flex justify-content-between align-items-center mb-1">
           <span class="ingredient-name small badge">{{ item.foodName }}</span>
           <span class="ingredient-weight small text-muted badge">
             {{ item.weight }}g ({{ item.percentage | number: "1.0-0" }}%)
@@ -118,11 +94,7 @@
     </div>
 
     <!-- Action Button -->
-    <button
-      (click)="onLogPortion()"
-      [disabled]="isDeleting"
-      class="btn btn-primary w-100"
-    >
+    <button (click)="onLogPortion()" [disabled]="isDeleting" class="btn btn-primary w-100">
       <i class="fas fa-utensils me-2"></i>Log Portion
     </button>
   </div>

@@ -13,9 +13,7 @@
         <button (click)="onClose()" class="btn-close" type="button"></button>
       </div>
 
-      <form
-        (ngSubmit)="onSubmit()"
-        [formGroup]="mealForm"
+      <form [formGroup]="mealForm"
         class="overflow-auto"
       >
         <div class="modal-body">
@@ -122,7 +120,8 @@
           <button
             [disabled]="isFormInvalid || isSubmitting"
             class="btn btn-primary"
-            type="submit"
+            type="button"
+            (click)="onSubmit()"
           >
             <span
               *ngIf="isSubmitting"

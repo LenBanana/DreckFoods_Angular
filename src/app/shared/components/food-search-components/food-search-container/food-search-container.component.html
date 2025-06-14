@@ -6,6 +6,7 @@
       (searchError)="onSearchErrorEvent($event)"
       (searchQuery)="onSearchQuery($event)"
       (searchResults)="onSearchResults($event)"
+      (collapseFilter)="collapseFilter=$event"
       [pageSize]="pageSize"
       [placeholder]="placeholder"
       [showBarcodeScanner]="showBarcodeScanner"
@@ -24,6 +25,7 @@
       (sortDirectionChange)="onSortDirectionChange($event)"
       [currentPage]="getCurrentResults()?.page || 1"
       [layout]="layout"
+      [isCollapsed]="collapseFilter"
       [pageSize]="pageSize"
       [possiblePageSizes]="possiblePageSizes"
       [showLayoutOptions]="showLayoutOptions"
@@ -120,3 +122,4 @@
     <p class="text-muted small mb-0">{{ initialStateMessage }}</p>
   </div>
 </div>
+

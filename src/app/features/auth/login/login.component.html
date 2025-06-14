@@ -4,7 +4,7 @@
       <h3>Welcome Back</h3>
       <p class="mb-0 text-muted">Sign in to your DreckFoods account</p>
     </div>
-    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+    <form [formGroup]="loginForm">
       <div class="mb-3">
         <label class="form-label">Email Address</label>
         <input class="form-control" formControlName="email" type="email"/>
@@ -46,6 +46,7 @@
         [disabled]="loginForm.invalid || isLoading"
         class="btn btn-primary w-100"
         type="submit"
+        (click)="onSubmit()"
       >
         <app-loading-spinner
           *ngIf="isLoading"

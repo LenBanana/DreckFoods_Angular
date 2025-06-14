@@ -30,7 +30,7 @@
           </div>
 
           <h5>Update Profile Information</h5>
-          <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+          <form [formGroup]="profileForm">
             <div class="row g-3 mb-3">
               <div class="col-md-6">
                 <label class="form-label">First Name</label>
@@ -68,6 +68,7 @@
               [disabled]="profileForm.invalid || isSubmitting || !hasChanges()"
               class="btn btn-primary me-2"
               type="submit"
+              (click)="onSubmit()"
             >
               <app-loading-spinner
                 *ngIf="isSubmitting"
@@ -121,7 +122,7 @@
             </div>
             <!-- Delete -->
             <div
-              class="list-group-item d-flex justify-content-between align-items-center border-danger bg-danger bg-opacity-10"
+              class="list-group-item d-flex justify-content-between align-items-center delete-container"
             >
               <div>
                 <h6 class="text-danger">Delete Account</h6>

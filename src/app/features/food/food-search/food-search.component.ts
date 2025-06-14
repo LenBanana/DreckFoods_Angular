@@ -6,7 +6,7 @@ import {AddFoodModalComponent} from '../add-food-modal/add-food-modal.component'
 import {
   FoodSearchConfig,
   FoodSearchContainerComponent,
-} from '../../../shared/components/food-search-container/food-search-container.component';
+} from '../../../shared/components/food-search-components/food-search-container/food-search-container.component';
 import {AlertService} from '../../../core/services/alert.service';
 
 @Component({

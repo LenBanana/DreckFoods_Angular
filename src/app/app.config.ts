@@ -6,6 +6,7 @@ import {routes} from './app.routes';
 import {authInterceptor} from './core/interceptors/auth.interceptor';
 import {cacheInvalidationInterceptor} from './core/interceptors/cache-invalidation.interceptor';
 import {noCacheInterceptor} from './core/interceptors/no-cache.interceptor';
+import {timeoutInterceptor} from './core/interceptors/timeout.interceptor';
 import {GlobalErrorHandler} from './core/services/global-error-handler.service';
 
 export const appConfig: ApplicationConfig = {
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
         noCacheInterceptor,
         authInterceptor,
         cacheInvalidationInterceptor,
+        timeoutInterceptor,
       ]),
     ),
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

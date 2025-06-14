@@ -17,7 +17,7 @@
 
     <!-- Form -->
     <ng-template #formTpl>
-      <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+      <form [formGroup]="registerForm">
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <label class="form-label">First Name</label>
@@ -90,6 +90,7 @@
           [disabled]="registerForm.invalid || isLoading"
           class="btn btn-primary w-100"
           type="submit"
+          (click)="onSubmit()"
         >
           <app-loading-spinner
             *ngIf="isLoading"

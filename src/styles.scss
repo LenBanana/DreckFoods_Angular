@@ -126,17 +126,19 @@ button,
   --progress-bg: #495057;
 }
 
-html[data-theme="light"] {
+html {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   overflow-x: hidden;
 }
 
 html[data-theme="dark"] {
   background: linear-gradient(135deg, #1e1e2f 0%, #2c2c3f 100%);
+  overflow-x: hidden;
 }
 
 body {
   color: var(--bs-body-color);
+  background: transparent;
 }
 
 .pointer {

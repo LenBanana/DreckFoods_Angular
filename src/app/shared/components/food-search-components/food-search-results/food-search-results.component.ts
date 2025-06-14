@@ -1,10 +1,10 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
-import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
-import {PaginationComponent} from '../pagination/pagination.component';
-import {AuthService} from '../../../core/services/auth.service';
-import {AppRole} from '../../../core/models/auth.models';
+import {FoodSearchDto, FoodSearchResponse,} from '../../../../core/models/food.models';
+import {PaginationComponent} from '../../pagination/pagination.component';
+import {AuthService} from '../../../../core/services/auth.service';
+import {AppRole} from '../../../../core/models/auth.models';
 
 export type FoodResultsLayout = 'grid' | 'list' | 'compact';
 

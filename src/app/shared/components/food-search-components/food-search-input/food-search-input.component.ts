@@ -10,9 +10,9 @@ import {
   ScannerQRCodeResult,
 } from 'ngx-scanner-qrcode';
 
-import {FoodService} from '../../../core/services/food.service';
-import {FoodSearchResponse,} from '../../../core/models/food.models';
-import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodService} from '../../../../core/services/food.service';
+import {FoodSearchResponse,} from '../../../../core/models/food.models';
+import {FoodSortBy, SortDirection,} from '../../../../core/models/enums/sorting.models';
 
 LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe();
 
@@ -43,7 +43,9 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
   @Output() searchError = new EventEmitter<string>();
   @Output() isSearching = new EventEmitter<boolean>();
   @Output() searchQuery = new EventEmitter<string>();
+  @Output() collapseFilter = new EventEmitter<boolean>();
   searchForm: FormGroup;
+  isCollapsed = true;
   isLoading = false;
   errorMessage = '';
   currentQuery = '';
@@ -113,6 +115,11 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
     if (query && query.length >= this.minSearchLength) {
       this.performSearch(query);
     }
+  }
+
+  toggleIsCollapsed() {
+    this.isCollapsed = !this.isCollapsed;
+    this.collapseFilter.emit(this.isCollapsed);
   }
 
   clearSearch() {
@@ -300,3 +307,9 @@ export class FoodSearchInputComponent implements OnInit, OnDestroy {
     this.performSearch(barcode);
   }
 }
+
+
+
+
+
+

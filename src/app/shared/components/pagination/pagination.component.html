@@ -16,79 +16,38 @@
     </small>
   </div>
 
-  <!-- Pagination -->
-  <ul
-    [class]="
-      'pagination justify-content-center mb-0' +
-      (size === 'sm' ? ' pagination-sm' : size === 'lg' ? ' pagination-lg' : '')
-    "
+  <!-- NgBootstrap Pagination -->
+  <ngb-pagination
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="totalCount"
+    [maxSize]="maxVisible"
+    [rotate]="true"
+    [boundaryLinks]="true"
+    [directionLinks]="true"
+    [size]="size"
+    class="d-flex justify-content-center"
+    (pageChange)="onPageChange($event)"
   >
-    <!-- First page -->
-    <li [class.disabled]="currentPage <= 1" class="page-item">
-      <button
-        (click)="firstPage()"
-        [disabled]="currentPage <= 1"
-        class="page-link"
-        title="First page"
-        type="button"
-      >
-        <i class="fas fa-angle-double-left"></i>
-      </button>
-    </li>
+    <!-- Custom templates for boundary links -->
+    <ng-template ngbPaginationFirst>
+      <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+      <span class="sr-only">First</span>
+    </ng-template>
 
-    <!-- Previous page -->
-    <li [class.disabled]="currentPage <= 1" class="page-item">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage <= 1"
-        class="page-link"
-        title="Previous page"
-        type="button"
-      >
-        <i class="fas fa-angle-left"></i>
-      </button>
-    </li>
+    <ng-template ngbPaginationPrevious>
+      <i class="fas fa-angle-left" aria-hidden="true"></i>
+      <span class="sr-only">Previous</span>
+    </ng-template>
 
-    <!-- Page numbers -->
-    <li
-      *ngFor="let page of visiblePages"
-      [class.active]="page === currentPage"
-      class="page-item"
-    >
-      <button
-        (click)="goToPage(page)"
-        [class.fw-bold]="page === currentPage"
-        class="page-link"
-        type="button"
-      >
-        {{ page }}
-      </button>
-    </li>
+    <ng-template ngbPaginationNext>
+      <i class="fas fa-angle-right" aria-hidden="true"></i>
+      <span class="sr-only">Next</span>
+    </ng-template>
 
-    <!-- Next page -->
-    <li [class.disabled]="currentPage >= totalPages" class="page-item">
-      <button
-        (click)="nextPage()"
-        [disabled]="currentPage >= totalPages"
-        class="page-link"
-        title="Next page"
-        type="button"
-      >
-        <i class="fas fa-angle-right"></i>
-      </button>
-    </li>
-
-    <!-- Last page -->
-    <li [class.disabled]="currentPage >= totalPages" class="page-item">
-      <button
-        (click)="lastPage()"
-        [disabled]="currentPage >= totalPages"
-        class="page-link"
-        title="Last page"
-        type="button"
-      >
-        <i class="fas fa-angle-double-right"></i>
-      </button>
-    </li>
-  </ul>
+    <ng-template ngbPaginationLast>
+      <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+      <span class="sr-only">Last</span>
+    </ng-template>
+  </ngb-pagination>
 </nav>

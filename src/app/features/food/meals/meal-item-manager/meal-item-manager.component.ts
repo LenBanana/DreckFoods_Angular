@@ -2,11 +2,8 @@ import {Component, EventEmitter, inject, Input, OnChanges, Output,} from '@angul
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {FoodSearchDto} from '../../../../core/models/food.models';
-import {
-  FoodSearchConfig,
-  FoodSearchContainerComponent,
-} from '../../../../shared/components/food-search-container/food-search-container.component';
 import {AlertService} from '../../../../core/services/alert.service';
+import { FoodSearchContainerComponent, FoodSearchConfig } from '../../../../shared/components/food-search-components/food-search-container/food-search-container.component';
 
 export interface MealItem {
   food: FoodSearchDto | null;

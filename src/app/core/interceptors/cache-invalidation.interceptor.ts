@@ -6,7 +6,7 @@ import {CacheInvalidationService} from '../services/cache-invalidation.service';
 export const cacheInvalidationInterceptor: HttpInterceptorFn = (req, next) => {
   const cacheInvalidationService = inject(CacheInvalidationService);
 
-  const isMutationRequest = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(
+  const isMutationRequest = ['POST', 'PUT', 'PATCH', 'DELETE', 'GET'].includes(
     req.method,
   );
 

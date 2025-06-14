@@ -2,9 +2,9 @@ import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/
 import {CommonModule} from '@angular/common';
 import {catchError, of} from 'rxjs';
 
-import {FoodService} from '../../../core/services/food.service';
-import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
-import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
+import {FoodService} from '../../../../core/services/food.service';
+import {FoodSearchDto, FoodSearchResponse,} from '../../../../core/models/food.models';
+import {FoodSortBy, SortDirection,} from '../../../../core/models/enums/sorting.models';
 import {FoodSearchInputComponent} from '../food-search-input/food-search-input.component';
 import {FoodResultsLayout, FoodSearchResultsComponent,} from '../food-search-results/food-search-results.component';
 import {SearchOptionsComponent} from '../search-options/search-options.component';
@@ -12,25 +12,20 @@ import {SearchOptionsComponent} from '../search-options/search-options.component
 export interface FoodSearchConfig {
   placeholder?: string;
   showBarcodeScanner?: boolean;
-
   layout?: FoodResultsLayout;
   pageSize?: number;
   possiblePageSizes?: number[];
-
   showSearchOptions?: boolean;
   showLayoutOptions?: boolean;
   showRecentFoods?: boolean;
   showResultsHeader?: boolean;
   showPagination?: boolean;
-
   showImages?: boolean;
   showNutrition?: boolean;
   showBrand?: boolean;
   showTags?: boolean;
-
   actionButtonText?: string;
   actionButtonIcon?: string;
-
   emptySearchMessage?: string;
   emptyRecentMessage?: string;
   emptySearchIcon?: string;
@@ -69,6 +64,7 @@ export class FoodSearchContainerComponent implements OnInit {
   errorMessage = '';
   currentQuery = '';
   isSearchMode = false;
+  collapseFilter = true;
   sortBy: FoodSortBy = FoodSortBy.Name;
   sortDirection: SortDirection = SortDirection.Ascending;
   private foodService = inject(FoodService);
@@ -347,3 +343,4 @@ export class FoodSearchContainerComponent implements OnInit {
     });
   }
 }
+
