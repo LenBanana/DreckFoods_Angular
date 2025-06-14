@@ -6,8 +6,8 @@ import {catchError, of} from 'rxjs';
 import {FoodSortBy, SortDirection,} from '../../../core/models/enums/sorting.models';
 import {FoodSearchDto, FoodSearchResponse,} from '../../../core/models/food.models';
 import {FoodService} from '../../../core/services/food.service';
-import {FoodSearchInputComponent} from '../food-search-input/food-search-input.component';
-import {FoodResultsLayout, FoodSearchResultsComponent,} from '../food-search-results/food-search-results.component';
+import {FoodSearchInputComponent} from '../food-search-components/food-search-input/food-search-input.component';
+import {FoodResultsLayout, FoodSearchResultsComponent,} from '../food-search-components/food-search-results/food-search-results.component';
 
 @Component({
   selector: 'app-food-selector',
