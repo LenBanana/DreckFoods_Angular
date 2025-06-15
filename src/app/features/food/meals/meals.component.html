@@ -54,6 +54,7 @@
             (edit)="openEditModal($event)"
             (logPortion)="openPortionModal($event)"
             (share)="shareMeal($event)"
+            (duplicate)="duplicateMeal($event)"
             [isDeleting]="deletingMealId === meal.id"
             [meal]="meal"
           >

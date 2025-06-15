@@ -8,6 +8,7 @@ import {WeightService} from '../../../core/services/weight.service';
 import {AlertService} from '../../../core/services/alert.service';
 import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
 import {WeightEntryDto} from '../../../core/models/weight.models';
+import { formatLocalISO } from '../../../core/extensions/date.extensions';
 
 @Component({
   selector: 'app-weight-tracker',
@@ -41,7 +42,7 @@ export class WeightTrackerComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(1000)],
       ],
       recordedAt: [
-        format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+        formatLocalISO(new Date()),
         Validators.required,
       ],
     });
@@ -57,7 +58,7 @@ export class WeightTrackerComponent implements OnInit {
     let startDate: string | undefined;
     if (this.selectedPeriod !== 'all') {
       const months = parseInt(this.selectedPeriod);
-      startDate = format(subMonths(new Date(), months), 'yyyy-MM-dd');
+      startDate = formatLocalISO(subMonths(new Date(), months));
     }
 
     this.weightService
@@ -95,7 +96,7 @@ export class WeightTrackerComponent implements OnInit {
           if (response) {
             this.weightForm.reset({
               weight: '',
-              recordedAt: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+              recordedAt: formatLocalISO(new Date()),
             });
             this.loadWeightHistory();
           }

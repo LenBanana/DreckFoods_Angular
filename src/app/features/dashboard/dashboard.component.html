@@ -42,7 +42,7 @@
   <app-dashboard-summary [summaryCards]="summaryCards"></app-dashboard-summary>
 
   <!-- Charts Section -->
-  <div class="charts-section">
+  <div class="charts-section" *ngIf="timelineData && timelineData.length > 0">
     <div class="row g-4">
       <div class="col-12">
         <app-nutrition-chart [timelineData]="timelineData" [selectedTimeRange]="selectedTimeRange">

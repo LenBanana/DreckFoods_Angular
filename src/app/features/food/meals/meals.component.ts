@@ -159,6 +159,23 @@ export class MealsComponent implements OnInit {
       });
   }
 
+  duplicateMeal(meal: MealResponseDTO) {
+    this.mealService
+      .duplicateMeal(meal.id)
+      .pipe(
+        catchError((error) => {
+          this.alertService.error('Failed to duplicate meal. Please try again.');
+          return of(null);
+        }),
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.loadMeals();
+          this.alertService.success(`Successfully duplicated meal "${meal.name}"!`);
+        }
+      });
+  }
+
   async addMealByShareId() {
     const shareId = await this.alertService.prompt({
       title: 'Add Meal by Share ID',

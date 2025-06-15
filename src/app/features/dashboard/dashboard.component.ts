@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { format, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
 
 import { FoodService } from '../../core/services/food.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
@@ -12,6 +12,7 @@ import { TimelineService } from '../../core/services/timeline.service';
 import { DailyTimelineDto } from '../../core/models/timeline.models';
 import { NutritionChartComponent } from './dashboard-charts/nutrition-chart.component';
 import { DashboardSummaryComponent, SummaryCardData } from './dashboard-charts/dashboard-summary.component';
+import { formatLocalISO } from '../../core/extensions/date.extensions';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,8 +38,10 @@ export class DashboardComponent implements OnInit {
   todaysSugar = 0;
   todaysFiber = 0;
   todaysCaffeine = 0;
+  todaysSalt = 0;
   summaryCards: SummaryCardData[] = [];
   timelineData: DailyTimelineDto[] = [];
+  trendData: DailyTimelineDto[] = [];
 
   timeRanges = [
     { value: 'last_7_days', label: '7 Days' },
@@ -104,7 +107,7 @@ export class DashboardComponent implements OnInit {
 
   private loadDashboardData() {
     var today = new Date();
-    this.foodService.getFoodEntries(today.toISOString()).subscribe({
+    this.foodService.getFoodEntries(formatLocalISO(today)).subscribe({
       next: (entries) => {
         this.todaysFoodEntries = entries;
         this.calculateTodaysNutrition();
@@ -121,25 +124,26 @@ export class DashboardComponent implements OnInit {
 
   private loadAllTimelineData(): void {
     const today = new Date();
-    const yesterday = subDays(today, 1);
+    today.setUTCHours(0, 0, 0, 0);
+    var isoString = today.toISOString();
     let chartStartDate: string;
 
     switch (this.selectedTimeRange) {
       case 'last_7_days':
-        chartStartDate = subDays(yesterday, 6).toISOString();
+        chartStartDate = formatLocalISO(subDays(today, 7));
         break;
       case 'last_30_days':
-        chartStartDate = subDays(yesterday, 29).toISOString();
+        chartStartDate = formatLocalISO(subDays(today, 30));
         break;
       case 'last_90_days':
-        chartStartDate = subDays(yesterday, 89).toISOString();
+        chartStartDate = formatLocalISO(subDays(today, 90));
         break;
       default:
-        chartStartDate = subDays(yesterday, 6).toISOString();
+        chartStartDate = formatLocalISO(subDays(today, 7));
     }
 
-    yesterday.setHours(23, 59, 59, 999);
-    let chartEndDate: string = yesterday.toISOString();
+    today.setUTCHours(23, 59, 59, 999);
+    let chartEndDate: string = formatLocalISO(today);
 
     this.timelineService.getTimeline(chartStartDate, chartEndDate).subscribe({
       next: (response) => {
@@ -147,11 +151,8 @@ export class DashboardComponent implements OnInit {
           new Date(a.date).getTime() - new Date(b.date).getTime()
         );
         // Remove all entries that are only 0 values
-        this.timelineData = this.timelineData.filter(day => {
-          return Object.values(day).some(value => {
-            return typeof value === 'number' && value !== 0;
-          });
-        });
+        this.timelineData = this.timelineData.filter(day => day.foodEntries.length > 0);        
+        this.populateTrendData();
         this.generateSummaryCards();
         this.isLoading = false;
       },
@@ -160,6 +161,61 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private populateTrendData() {
+    // Remove current day's entries from trend data
+    const today = new Date();
+    this.trendData = this.timelineData.filter(day => {
+      const entryDate = new Date(day.date);
+      return entryDate.getDate() !== today.getDate() ||
+             entryDate.getMonth() !== today.getMonth() ||
+             entryDate.getFullYear() !== today.getFullYear();
+    });
+
+    this.trendData = this.trendData.map(day => {
+      const today = new Date();
+      const currentHour = today.getHours();
+      const currentMinute = today.getMinutes();
+
+      // Filter entries that were consumed up to the current time of day
+      const filteredEntries = day.foodEntries.filter(entry => {
+        const consumedTime = new Date(entry.consumedAt);
+        const entryHour = consumedTime.getHours();
+        const entryMinute = consumedTime.getMinutes();
+
+        return (entryHour < currentHour) ||
+          (entryHour === currentHour && entryMinute <= currentMinute);
+      });
+
+      // Recalculate nutrition totals from filtered entries
+      const recalculatedTotals = filteredEntries.reduce((totals, entry) => ({
+        calories: totals.calories + entry.calories,
+        protein: totals.protein + entry.protein,
+        carbohydrates: totals.carbohydrates + entry.carbohydrates,
+        fat: totals.fat + entry.fat,
+        fiber: totals.fiber + entry.fiber,
+        sugar: totals.sugar + entry.sugar,
+        caffeine: totals.caffeine + entry.caffeine,
+        salt: totals.salt + entry.salt
+      }), {
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fat: 0,
+        fiber: 0,
+        sugar: 0,
+        caffeine: 0,
+        salt: 0
+      });
+
+      // Return updated day with filtered entries and recalculated totals
+      return {
+        ...day,
+        ...recalculatedTotals,
+        foodEntries: filteredEntries
+      };
+    }).filter(day => day.foodEntries.length > 0);
   }
 
   private calculateTodaysNutrition() {
@@ -191,17 +247,31 @@ export class DashboardComponent implements OnInit {
       (sum, entry) => sum + entry.caffeine,
       0,
     );
+    this.todaysSalt = this.todaysFoodEntries.reduce(
+      (sum, entry) => sum + entry.salt,
+      0,
+    );
+  }
+
+  private calculateAverage(metric: keyof DailyTimelineDto): number {
+    if (this.trendData.length === 0) {
+      return 0;
+    }
+
+    const sum = this.trendData.reduce((total, day) => {
+      const value = day[metric];
+      return total + (typeof value === 'number' ? value : 0);
+    }, 0);
+
+    return sum / this.trendData.length;
   }
 
   private calculateTrend(currentValue: number, metric: keyof DailyTimelineDto): { value: number; direction: 'up' | 'down' | 'neutral' } {
-    if (this.timelineData.length === 0) {
+    if (this.trendData.length === 0) {
       return { value: 0, direction: 'neutral' };
     }
 
-    const historicalAverage = this.timelineData.reduce((sum, day) => {
-      const value = day[metric];
-      return sum + (typeof value === 'number' ? value : 0);
-    }, 0) / this.timelineData.length;
+    const historicalAverage = this.calculateAverage(metric);
 
     if (historicalAverage === 0 && currentValue === 0) {
       return { value: 0, direction: 'neutral' };
@@ -224,45 +294,22 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  private calculateMealsTrend(): { value: number; direction: 'up' | 'down' | 'neutral' } {
-    if (this.timelineData.length === 0) {
-      return { value: 0, direction: 'neutral' };
+  private getTimeRangeLabel(): string {
+    switch (this.selectedTimeRange) {
+      case 'last_7_days':
+        return '7 days';
+      case 'last_30_days':
+        return '30 days';
+      case 'last_90_days':
+        return '90 days';
+      default:
+        return '7 days';
     }
-
-    const previousDays = this.timelineData.slice(0, -1);
-    if (previousDays.length === 0) {
-      return { value: 0, direction: 'neutral' };
-    }
-
-    const previousAverage = previousDays.reduce((sum, day) => {
-      return sum + day.foodEntries.length;
-    }, 0) / previousDays.length;
-
-    const currentMeals = this.todaysFoodEntries.length;
-
-    if (previousAverage === 0 && currentMeals === 0) {
-      return { value: 0, direction: 'neutral' };
-    }
-
-    if (previousAverage === 0) {
-      return { value: 100, direction: 'up' };
-    }
-
-    const percentChange = ((currentMeals - previousAverage) / previousAverage) * 100;
-    const absPercentChange = Math.abs(percentChange);
-
-
-    if (absPercentChange < 10) {
-      return { value: absPercentChange, direction: 'neutral' };
-    }
-
-    return {
-      value: absPercentChange,
-      direction: percentChange > 0 ? 'up' : 'down'
-    };
   }
 
   private generateSummaryCards() {
+    const timeRangeLabel = this.getTimeRangeLabel();
+
     this.summaryCards = [
       {
         title: "Today's Calories",
@@ -271,6 +318,10 @@ export class DashboardComponent implements OnInit {
         icon: 'fire',
         color: '#dc3545',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('calories'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysCalories, 'calories'),
       },
       {
@@ -280,6 +331,10 @@ export class DashboardComponent implements OnInit {
         icon: 'egg',
         color: '#198754',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('protein'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysProtein, 'protein'),
       },
       {
@@ -289,6 +344,10 @@ export class DashboardComponent implements OnInit {
         icon: 'tint',
         color: '#ffc107',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('fat'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysFat, 'fat'),
       },
       {
@@ -298,6 +357,10 @@ export class DashboardComponent implements OnInit {
         icon: 'bread-slice',
         color: '#fd7e14',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('carbohydrates'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysCarbohydrates, 'carbohydrates'),
       },
       {
@@ -307,6 +370,10 @@ export class DashboardComponent implements OnInit {
         icon: 'leaf',
         color: '#20c997',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('fiber'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysFiber, 'fiber'),
       },
       {
@@ -316,6 +383,10 @@ export class DashboardComponent implements OnInit {
         icon: 'candy-cane',
         color: '#dc3b86',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('sugar'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysSugar, 'sugar'),
       },
       {
@@ -325,16 +396,24 @@ export class DashboardComponent implements OnInit {
         icon: 'coffee',
         color: '#6f4e37',
         route: '/food/search',
+        average: {
+          value: this.calculateAverage('caffeine'),
+          period: timeRangeLabel
+        },
         trend: this.calculateTrend(this.todaysCaffeine, 'caffeine'),
       },
       {
-        title: "Meals Logged",
-        value: this.todaysFoodEntries.length,
-        unit: '',
-        icon: 'utensils',
-        color: '#6610f2',
-        route: '/food/entries',
-        trend: this.calculateMealsTrend()
+        title: "Today's Salt",
+        value: this.todaysSalt,
+        unit: 'g',
+        icon: 'cubes-stacked',
+        color: '#6c757d',
+        route: '/food/search',
+        average: {
+          value: this.calculateAverage('salt'),
+          period: timeRangeLabel
+        },
+        trend: this.calculateTrend(this.todaysSalt, 'salt'),
       }
     ];
   }

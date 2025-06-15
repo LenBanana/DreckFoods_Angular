@@ -13,6 +13,7 @@ import {
 import {DailyTimelineDto} from '../../core/models/timeline.models';
 import {FoodService} from '../../core/services/food.service';
 import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals} from '../../core/models/food.models';
+import { formatLocalISO } from '../../core/extensions/date.extensions';
 
 @Component({
   selector: 'app-timeline',
@@ -159,7 +160,9 @@ export class TimelineComponent implements OnInit {
     const endDate = this.filterForm.get('endDate')?.value;
 
     const utcStartDate = new Date(startDate);
+    utcStartDate.setUTCHours(0, 0, 0, 0);
     const utcEndDate = new Date(endDate);
+    utcEndDate.setUTCHours(23, 59, 59, 999);
     if (!startDate || !endDate) return;
 
     if (!silent) {
@@ -168,7 +171,7 @@ export class TimelineComponent implements OnInit {
     this.errorMessage = '';
 
     this.timelineService
-      .getTimeline(utcStartDate.toISOString(), utcEndDate.toISOString())
+      .getTimeline(formatLocalISO(utcStartDate), formatLocalISO(utcEndDate))
       .pipe(
         catchError((error) => {
           this.errorMessage = 'Failed to load timeline data. Please try again.';

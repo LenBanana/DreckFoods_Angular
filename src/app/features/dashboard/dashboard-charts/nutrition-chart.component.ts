@@ -1,16 +1,16 @@
-import {Component, inject, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {format} from 'date-fns';
-import {ChartConfiguration, ChartType} from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
+import { Component, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { format } from 'date-fns';
+import { ChartConfiguration, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
-import {DailyTimelineDto} from '../../../core/models/timeline.models';
-import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { DailyTimelineDto } from '../../../core/models/timeline.models';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-nutrition-chart',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, BaseChartDirective],  template: `
+  imports: [CommonModule, LoadingSpinnerComponent, BaseChartDirective], template: `
     <div class="chart-container">
       <div *ngIf="isLoading" class="text-center py-5">
         <app-loading-spinner size="large"></app-loading-spinner>
@@ -20,23 +20,6 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
       <div *ngIf="!isLoading">
         <div class="chart-header mb-3">
           <h3 class="m-0">{{ chartTitle }}</h3>
-          <button
-            class="btn btn-sm btn-outline-secondary toggle-controls-btn"
-            (click)="toggleControls()">
-            <i class="fas" [ngClass]="isControlsCollapsed ? 'fa-bars' : 'fa-times'"></i>
-          </button>
-        </div>
-
-        <div [hidden]="isControlsCollapsed" class="chart-controls">
-          <div class="btn-group">
-            <button
-              *ngFor="let metric of availableMetrics"
-              [class.active]="activeMetrics.includes(metric.value)"
-              class="btn btn-outline-primary"
-              (click)="toggleMetric(metric.value)">
-              {{ metric.label }}
-            </button>
-          </div>
         </div>
 
         <div style="display: block;">
@@ -153,76 +136,72 @@ export class NutritionChartComponent implements OnChanges {
     {
       value: 'calories',
       label: 'Calories',
-      color: 'rgba(255, 99, 132, 1)',
-      borderColor: 'rgba(255, 99, 132, 1)',
-      backgroundColor: 'rgba(255, 99, 132, 0.2)'
+      color: 'rgba(220, 53, 69, 1)',
+      borderColor: 'rgba(220, 53, 69, 1)',
+      backgroundColor: 'rgba(220, 53, 69, 0.2)',
+      hidden: true
     },
     {
       value: 'protein',
       label: 'Protein',
-      color: 'rgba(54, 162, 235, 1)',
-      borderColor: 'rgba(54, 162, 235, 1)',
-      backgroundColor: 'rgba(54, 162, 235, 0.2)'
+      color: 'rgba(25, 135, 84, 1)',
+      borderColor: 'rgba(25, 135, 84, 1)',
+      backgroundColor: 'rgba(25, 135, 84, 0.2)'
     },
     {
       value: 'fat',
       label: 'Fat',
-      color: 'rgba(255, 206, 86, 1)',
-      borderColor: 'rgba(255, 206, 86, 1)',
-      backgroundColor: 'rgba(255, 206, 86, 0.2)'
+      color: 'rgba(255, 193, 7, 1)',
+      borderColor: 'rgba(255, 193, 7, 1)',
+      backgroundColor: 'rgba(255, 193, 7, 0.2)'
     },
     {
       value: 'carbohydrates',
       label: 'Carbs',
-      color: 'rgba(75, 192, 192, 1)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      backgroundColor: 'rgba(75, 192, 192, 0.2)'
+      color: 'rgba(253, 126, 20, 1)',
+      borderColor: 'rgba(253, 126, 20, 1)',
+      backgroundColor: 'rgba(253, 126, 20, 0.2)'
     },
     {
       value: 'fiber',
       label: 'Fiber',
-      color: 'rgba(153, 102, 255, 1)',
-      borderColor: 'rgba(153, 102, 255, 1)',
-      backgroundColor: 'rgba(153, 102, 255, 0.2)'
+      color: 'rgba(32, 201, 151, 1)',
+      borderColor: 'rgba(32, 201, 151, 1)',
+      backgroundColor: 'rgba(32, 201, 151, 0.2)'
     },
     {
       value: 'sugar',
       label: 'Sugar',
-      color: 'rgba(255, 159, 64, 1)',
-      borderColor: 'rgba(255, 159, 64, 1)',
-      backgroundColor: 'rgba(255, 159, 64, 0.2)'
+      color: 'rgba(232, 62, 140, 1)',
+      borderColor: 'rgba(232, 62, 140, 1)',
+      backgroundColor: 'rgba(232, 62, 140, 0.2)'
     },
     {
       value: 'caffeine',
       label: 'Caffeine',
-      color: 'rgba(201, 203, 207, 1)',
-      borderColor: 'rgba(201, 203, 207, 1)',
-      backgroundColor: 'rgba(201, 203, 207, 0.2)'
+      color: 'rgba(111, 78, 55, 1)',
+      borderColor: 'rgba(111, 78, 55, 1)',
+      backgroundColor: 'rgba(111, 78, 55, 0.2)'
+    },
+    {
+      value: 'salt',
+      label: 'Salt',
+      color: 'rgba(108, 117, 125, 1)',
+      borderColor: 'rgba(108, 117, 125, 1)',
+      backgroundColor: 'rgba(108, 117, 125, 0.2)'
     }
   ];
-  activeMetrics: string[] = ['protein', 'fat', 'carbohydrates', 'fiber', 'sugar', 'caffeine'];
 
   timeRanges = [
-    {value: 'last_7_days', label: '7 Days'},
-    {value: 'last_30_days', label: '30 Days'},
-    {value: 'last_90_days', label: '90 Days'}
+    { value: 'last_7_days', label: '7 Days' },
+    { value: 'last_30_days', label: '30 Days' },
+    { value: 'last_90_days', label: '90 Days' }
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['timelineData'] || changes['selectedTimeRange']) {
       this.initializeChartData();
     }
-  }
-
-  toggleMetric(metric: string): void {
-    const index = this.activeMetrics.indexOf(metric);
-    if (index === -1) {
-      this.activeMetrics.push(metric);
-    } else if (this.activeMetrics.length > 1) {
-      this.activeMetrics.splice(index, 1);
-    }
-
-    this.updateChartData();
   }
 
   toggleControls(): void {
@@ -242,12 +221,12 @@ export class NutritionChartComponent implements OnChanges {
   private updateChartData(): void {
     this.lineChartData.datasets = [];
 
-    this.activeMetrics.forEach(metric => {
-      const metricConfig = this.availableMetrics.find(m => m.value === metric);
+    this.availableMetrics.forEach(metric => {
+      const metricConfig = this.availableMetrics.find(m => m.value === metric.value);
       if (!metricConfig) return;
 
       this.lineChartData.datasets.push({
-        data: this.timelineData.map(day => day[metric as keyof DailyTimelineDto] as number),
+        data: this.timelineData.map(day => day[metric.value as keyof DailyTimelineDto] as number),
         label: metricConfig.label,
         borderColor: metricConfig.borderColor,
         backgroundColor: metricConfig.backgroundColor,
@@ -256,7 +235,8 @@ export class NutritionChartComponent implements OnChanges {
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: metricConfig.color,
         fill: false,
-        tension: 0.4
+        tension: 0.4,
+        hidden: metricConfig.hidden
       });
     });
 

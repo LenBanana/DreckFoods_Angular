@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://food.dreckbu.de/api',
+  apiUrl: 'http://localhost:5197/api',
 };

@@ -70,6 +70,8 @@ export class MealFormModalComponent implements OnInit {
         iodine: 0,
       },
       fiber: 0,
+      caffeine: 0,
+      salt: 0,
     };
 
     this.mealItems.forEach((item) => {
@@ -101,6 +103,10 @@ export class MealFormModalComponent implements OnInit {
 
         totalNutrition.fiber +=
           item.food.nutrition.fiber.value * (item.weight / 100);
+        totalNutrition.caffeine +=
+          item.food.nutrition.caffeine?.value * (item.weight / 100);
+        totalNutrition.salt +=
+          item.food.nutrition.minerals.salt.value * (item.weight / 100);
       }
     });
 

@@ -16,6 +16,7 @@ export class MealCardComponent {
   @Output() edit = new EventEmitter<MealResponseDTO>();
   @Output() delete = new EventEmitter<MealResponseDTO>();
   @Output() share = new EventEmitter<MealResponseDTO>();
+  @Output() duplicate = new EventEmitter<MealResponseDTO>();
   @Output() logPortion = new EventEmitter<MealResponseDTO>();
   private alertService = inject(AlertService);
 
@@ -25,6 +26,20 @@ export class MealCardComponent {
 
   onShare() {
     this.share.emit(this.meal);
+  }
+
+  onDuplicate() {
+    this.alertService.confirm({
+      title: 'Duplicate Meal',
+      message: `Are you sure you want to duplicate the meal "${this.meal.name}"?`,
+      confirmLabel: 'Duplicate',
+      confirmButtonType: 'primary',
+      cancelLabel: 'Cancel',
+    }).then((confirmed) => {
+      if (confirmed) {
+        this.duplicate.emit(this.meal);
+      }
+    });
   }
 
   async onDelete() {

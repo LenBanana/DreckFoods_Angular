@@ -30,6 +30,11 @@
             </button>
           </li>
           <li>
+            <button (click)="onDuplicate()" [disabled]="isDeleting" class="dropdown-item">
+              <i class="fas fa-copy me-2"></i>Duplicate
+            </button>
+          </li>
+          <li>
             <button (click)="onDelete()" [disabled]="isDeleting" class="dropdown-item text-danger">
               <i class="fas fa-trash me-2"></i>
               <span *ngIf="isDeleting">Deleting...</span>

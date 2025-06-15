@@ -2,6 +2,7 @@ import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
 import {AddMealPortionDTO, MealResponseDTO,} from '../../../../core/models/meal.models';
+import { formatLocalISO } from '../../../../core/extensions/date.extensions';
 
 @Component({
   selector: 'app-meal-portion-modal',
@@ -26,7 +27,7 @@ export class MealPortionModalComponent implements OnInit {
         '',
         [Validators.required, Validators.min(1), Validators.max(9999)],
       ],
-      consumedAt: [new Date().toISOString().slice(0, 16)],
+      consumedAt: [formatLocalISO(new Date()).slice(0, 16)],
     });
   }
 

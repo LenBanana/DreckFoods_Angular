@@ -1,12 +1,13 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators,} from '@angular/forms';
-import {format} from 'date-fns';
 import {catchError, of} from 'rxjs';
 
 import {FoodService} from '../../../core/services/food.service';
 import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
 import {FoodSearchDto} from '../../../core/models/food.models';
+import { formatLocalISO } from '../../../core/extensions/date.extensions';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-add-food-modal',
@@ -60,10 +61,15 @@ export class AddFoodModalComponent implements OnInit {
       this.isLoading = true;
       this.errorMessage = '';
 
+      var consumedAtValue = this.addFoodForm.get('consumedAt')?.value;
+      var consumedAt = new Date(new Date(consumedAtValue).toISOString());
+      // Ensure consumedAt is in ISO format
+      var entryDate = formatLocalISO(consumedAt);
+
       const request = {
         fddbFoodId: this.food.id,
         gramsConsumed: this.addFoodForm.get('gramsConsumed')?.value,
-        consumedAt: this.addFoodForm.get('consumedAt')?.value,
+        consumedAt: entryDate,
       };
 
       this.foodService

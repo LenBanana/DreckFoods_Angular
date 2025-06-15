@@ -2,7 +2,7 @@ import {Component, ElementRef, inject, OnInit, QueryList, ViewChildren,} from '@
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
-import {format, isToday, isYesterday, parseISO} from 'date-fns';
+import {format, isToday, isYesterday, parse, parseISO} from 'date-fns';
 import {catchError, of} from 'rxjs';
 
 import {FoodService} from '../../../core/services/food.service';
@@ -11,12 +11,8 @@ import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinne
 import {
   NutritionProgressBarsComponent
 } from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
-import {
-  NutritionCardComponent,
-  NutritionCardData,
-} from '../../../shared/components/nutrition-card/nutrition-card.component';
-import {NutritionConfigService} from '../../../shared/services/nutrition-config.service';
 import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals,} from '../../../core/models/food.models';
+import { formatLocalISO } from '../../../core/extensions/date.extensions';
 
 @Component({
   selector: 'app-food-entries',
@@ -27,7 +23,6 @@ import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals,} fro
     ReactiveFormsModule,
     LoadingSpinnerComponent,
     NutritionProgressBarsComponent,
-    NutritionCardComponent,
     FormsModule,
   ],
   templateUrl: './food-entries.component.html',
@@ -58,11 +53,12 @@ export class FoodEntriesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private foodService = inject(FoodService);
   private alertService = inject(AlertService);
-  private nutritionConfigService = inject(NutritionConfigService);
 
   constructor() {
     this.filterForm = this.fb.group({
-      selectedDate: [format(new Date(), 'yyyy-MM-dd')],
+      selectedDate: [        
+        format(new Date(), "yyyy-MM-dd"),
+      ],
     });
   }
 
@@ -105,7 +101,9 @@ export class FoodEntriesComponent implements OnInit {
     if (!this.showingAll) {
       const selectedDate = this.filterForm.get('selectedDate')?.value;
       if (selectedDate) {
-        dateParam = selectedDate;
+        const parsedDate = new Date(selectedDate);
+        parsedDate.setUTCHours(23, 59, 59, 999);
+        dateParam = parsedDate.toISOString();
       }
     }
 
@@ -184,7 +182,7 @@ export class FoodEntriesComponent implements OnInit {
 
   selectToday() {
     this.filterForm.patchValue({
-      selectedDate: format(new Date(), 'yyyy-MM-dd'),
+      selectedDate: format(new Date(), "yyyy-MM-dd"),
     });
     this.showingAll = false;
     this.updateDateFlags();
@@ -195,7 +193,7 @@ export class FoodEntriesComponent implements OnInit {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     this.filterForm.patchValue({
-      selectedDate: format(yesterday, 'yyyy-MM-dd'),
+      selectedDate: format(yesterday, "yyyy-MM-dd"),
     });
     this.showingAll = false;
     this.updateDateFlags();
@@ -320,35 +318,6 @@ export class FoodEntriesComponent implements OnInit {
     if (entry.fiber > 0) count++;
     if (entry.sugar > 0) count++;
     return count;
-  }
-
-  getDailySummaryCards(): NutritionCardData[] {
-    return [
-      this.nutritionConfigService.createNutritionCard(
-        'calories',
-        this.dailyTotals.calories,
-      ),
-      this.nutritionConfigService.createNutritionCard(
-        'protein',
-        this.dailyTotals.protein,
-      ),
-      this.nutritionConfigService.createNutritionCard(
-        'carbs',
-        this.dailyTotals.carbs,
-      ),
-      this.nutritionConfigService.createNutritionCard(
-        'fat',
-        this.dailyTotals.fat,
-      ),
-      this.nutritionConfigService.createNutritionCard(
-        'fiber',
-        this.dailyTotals.fiber,
-      ),
-      this.nutritionConfigService.createNutritionCard(
-        'caffeine',
-        this.dailyTotals.caffeine,
-      ),
-    ];
   }
 
   private updateDateFlags() {

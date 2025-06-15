@@ -38,6 +38,13 @@ export class MealService {
     );
   }
 
+  duplicateMeal(mealId: number): Observable<MealResponseDTO> {
+    return this.http.post<MealResponseDTO>(
+      `${environment.apiUrl}/meal/duplicate/${mealId}`,
+      {},
+    );
+  }
+
   deleteMeal(mealId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/meal/${mealId}`);
   }
