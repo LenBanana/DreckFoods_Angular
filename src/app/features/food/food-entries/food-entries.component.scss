@@ -1,347 +1,188 @@
 :host {
-  .filter-card {
-    border-radius: 16px !important;
-    background-color: var(--bs-body-bg);
 
-    .form-control {
-      border-radius: 12px;
+  .card,
+  .accordion-item {
+    background-color: var(--bs-body-bg) !important;
+    border-radius: 0.75rem;
+  }
 
-      transition: all 0.3s ease;
+  .accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
+  }
 
-      &:focus {
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
-      }
-    }
+  .accordion-button {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color);
+    border-color: var(--card-border);
+    transition: all 0.3s ease;
+  }
 
-    .btn-group {
-      .btn {
-        border-radius: 12px;
-        font-weight: 500;
-        transition: all 0.3s ease;
+  .collapse {
+    transition: all 0.3s ease;
+  }
 
-        &:first-child {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
+  .fa-chevron-down {
+    transition: transform 0.5s ease;
 
-        &:last-child {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-
-        &:not(:first-child):not(:last-child) {
-          border-radius: 0;
-        }
-
-        &.active {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-      }
+    &.fa-rotate-180 {
+      transform: rotate(180deg);
     }
   }
 
-  .summary-card {
-    border-radius: 16px !important;
-    background-color: var(--bs-body-bg);
+  .nutrition-toggle {
+    transition: transform 0.2s ease;
 
-    .summary-item {
-      padding: 1rem;
-      border-radius: 12px;
-
-      border: 1px solid var(--card-border);
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px var(--shadow);
-      }
-
-      i {
-        font-size: 1.2rem;
-        display: block;
-      }
-    }
-
-    .nutrition-breakdown {
-      padding-top: 1rem;
-      margin-top: 1rem;
-
-      h6 {
-        font-weight: 600;
-        margin-bottom: 1rem;
-      }
-
-      .progress-section {
-        .entry-progress {
-          padding: 0.75rem;
-
-          border-radius: 8px;
-          border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
-
-          .fw-semibold {
-            font-size: 0.875rem;
-          }
-
-          img {
-            object-fit: cover;
-          }
-
-          .badge {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-
-            i {
-              font-size: 0.75rem;
-            }
-          }
-
-          &:last-child {
-            margin-bottom: 0 !important;
-          }
-        }
-      }
-    }
-
-    @media (max-width: 767.98px) {
-      .summary-item {
-        padding: 0.75rem;
-
-        i {
-          font-size: 1rem;
-        }
-
-        .fs-5 {
-          font-size: 1.1rem !important;
-        }
-      }
-    }
-  }
-
-  .entries-container {
-    .entry-card {
-      border-radius: 16px !important;
-      background-color: var(--bs-body-bg);
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px var(--shadow) !important;
-      }
-
-      .card-body {
-        border-radius: 16px;
-      }
-    }
-
-    .food-image-container {
-      width: 64px;
-      height: 64px;
-
-      .food-image {
-        width: 100%;
-        height: 64px;
-        object-fit: cover;
-      }
-
-      .food-placeholder {
-        width: 64px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 1.5rem;
-      }
-    }
-
-    .food-details {
-      .food-name {
-        font-weight: 600;
-
-        font-size: 1.1rem;
-        line-height: 1.3;
-      }
-
-      .brand-name {
-        font-size: 0.875rem;
-        font-weight: 500;
-      }
-
-      .consumption-info {
-        font-size: 0.875rem;
-
-        .grams-display {
-          padding: 0.25rem 0.5rem;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          margin-right: 0.5rem;
-        }
-
-        .grams-edit {
-          margin-right: 0.5rem;
-
-          .form-control {
-            width: 80px;
-            display: inline-block;
-            border-radius: 8px;
-          }
-        }
-
-        .time-info {
-          font-weight: 500;
-        }
-
-        .date-info {
-          opacity: 0.8;
-        }
-      }
-    }
-
-    .nutrition-info {
-      text-align: right;
-
-      .calories {
-        font-weight: 700;
-        font-size: 1.1rem;
-
-        margin-bottom: 0.25rem;
-      }
-
-      .macros {
-        .macro {
-          padding: 0.25rem 0.5rem;
-          border-radius: 8px;
-          font-size: 0.75rem;
-          font-weight: 600;
-        }
-      }
-    }
-
-    .btn-outline-danger {
-      border-radius: 12px;
-      padding: 0.5rem 0.75rem;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: scale(1.05);
-      }
-    }
-  }
-
-  .empty-state,
-  .loading-state,
-  .error-state {
-    padding: 3rem 1rem;
-
-    .empty-icon,
-    .error-icon {
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-lg {
-      border-radius: 12px;
-      padding: 0.75rem 2rem;
-      font-weight: 600;
-
-      border: none;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-      }
-    }
-  }
-
-  @media (max-width: 767.98px) {
-    .container-fluid {
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
-    }
-
-    .entry-card {
-      .nutrition-info {
-        text-align: left;
-        margin-top: 1rem;
-
-        .calories {
-          font-size: 1rem;
-        }
-
-        .macros {
-          margin-top: 0.5rem;
-        }
-      }
-
-      .btn-outline-danger {
-        margin-top: 0.5rem;
-        margin-left: 0 !important;
-      }
-    }
-
-    .food-image-container {
-      width: 56px !important;
-      height: 56px !important;
-
-      .food-image,
-      .food-placeholder {
-        width: 100% !important;
-        height: 56px !important;
-      }
-
-      .food-placeholder i {
-        font-size: 1.25rem;
-      }
-    }
-
-    .food-details .food-name {
-      font-size: 1rem;
-    }
-  }
-
-  @media (max-width: 575.98px) {
-    .filter-card .btn-group {
-      .btn {
-        font-size: 0.875rem;
-        padding: 0.5rem 0.75rem;
-      }
-    }
-
-    .entry-card {
-      .card-body {
-        padding: 1rem !important;
-      }
+    &.fa-rotate-180 {
+      transform: rotate(180deg);
     }
   }
 
   .nutrition-details {
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 16px;
-    animation: slideDown 0.3s ease-out;
+    transition: all 0.3s ease;
+    overflow: hidden;
 
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    &.collapsed {
+      max-height: 0;
+      opacity: 0;
+      transform: scaleY(0);
+      transform-origin: top;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
     }
 
-    .text-muted {
-      font-size: 0.8rem;
-      font-weight: 500;
+    &.expanded {
+      max-height: 1000px;
+      opacity: 1;
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+  }
+
+  .btn-outline-secondary {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .fa-chevron-down {
+      transition: transform 0.2s ease;
+    }
+  }
+
+  /* Calories */
+  .bg-calories {
+    background-color: #dc3545 !important;
+  }
+
+  .text-calories {
+    color: #dc3545 !important;
+  }
+
+  .border-calories {
+    border-color: #dc3545 !important;
+  }
+
+  /* Protein */
+  .bg-protein {
+    background-color: #198754 !important;
+  }
+
+  .text-protein {
+    color: #198754 !important;
+  }
+
+  .border-protein {
+    border-color: #198754 !important;
+  }
+
+  /* Fat */
+  .bg-fat {
+    background-color: #ffc107 !important;
+  }
+
+  .text-fat {
+    color: #ffc107 !important;
+  }
+
+  .border-fat {
+    border-color: #ffc107 !important;
+  }
+
+  /* Carbs */
+  .bg-carbs {
+    background-color: #fd7e14 !important;
+  }
+
+  .text-carbs {
+    color: #fd7e14 !important;
+  }
+
+  .border-carbs {
+    border-color: #fd7e14 !important;
+  }
+
+  /* Fiber */
+  .bg-fiber {
+    background-color: #20c997 !important;
+  }
+
+  .text-fiber {
+    color: #20c997 !important;
+  }
+
+  .border-fiber {
+    border-color: #20c997 !important;
+  }
+
+  /* Sugar */
+  .bg-sugar {
+    background-color: #dc3b86 !important;
+  }
+
+  .text-sugar {
+    color: #dc3b86 !important;
+  }
+
+  .border-sugar {
+    border-color: #dc3b86 !important;
+  }
+
+  /* Caffeine (you already have this) */
+  .bg-caffeine {
+    background-color: #6f4e37 !important;
+  }
+
+  .text-caffeine {
+    color: #6f4e37 !important;
+  }
+
+  .border-caffeine {
+    border-color: #6f4e37 !important;
+  }
+
+  /* Salt (you'll need to choose a color for this) */
+  .bg-salt {
+    background-color: #6c757d !important;
+    /* example gray color */
+  }
+
+  .text-salt {
+    color: #6c757d !important;
+  }
+
+  .border-salt {
+    border-color: #6c757d !important;
+  }
+
+
+  [data-theme="dark"] & {
+    .border-dark {
+      border-color: #585e63 !important;
     }
   }
 }

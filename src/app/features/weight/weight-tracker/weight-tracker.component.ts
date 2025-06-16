@@ -42,7 +42,7 @@ export class WeightTrackerComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(1000)],
       ],
       recordedAt: [
-        formatLocalISO(new Date()),
+        format(new Date(), 'yyyy-MM-dd\'T\'HH:mm'),
         Validators.required,
       ],
     });
@@ -81,9 +81,44 @@ export class WeightTrackerComponent implements OnInit {
     if (this.weightForm.valid) {
       this.isSubmitting = true;
       this.errorMessage = '';
+      const weightFormData = this.weightForm.value;
+      weightFormData.recordedAt = formatLocalISO(
+        new Date(weightFormData.recordedAt),
+      );
+      weightFormData.weight = parseFloat(weightFormData.weight);
+      if (isNaN(weightFormData.weight)) {
+        this.errorMessage = 'Invalid weight value. Please enter a valid number.';
+        this.isSubmitting = false;
+        return;
+      }
+      if (weightFormData.weight <= 0) {
+        this.errorMessage = 'Weight must be greater than 0.';
+        this.isSubmitting = false;
+        return;
+      }
+      if (weightFormData.recordedAt === '') {
+        this.errorMessage = 'Please select a valid date and time.';
+        this.isSubmitting = false;
+        return;
+      }
+      if (
+        this.weightEntries.some(
+          (entry) =>
+            entry.recordedAt === weightFormData.recordedAt &&
+            entry.weight === weightFormData.weight,
+        )
+      ) {
+        this.errorMessage =
+          'An entry with the same date and weight already exists.';
+        this.isSubmitting = false;
+        return;
+      }
+      this.errorMessage = '';
 
       this.weightService
-        .addWeightEntry(this.weightForm.value)
+        .addWeightEntry(
+          weightFormData,
+        )
         .pipe(
           catchError((error) => {
             this.errorMessage =
@@ -96,7 +131,7 @@ export class WeightTrackerComponent implements OnInit {
           if (response) {
             this.weightForm.reset({
               weight: '',
-              recordedAt: formatLocalISO(new Date()),
+              recordedAt: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm'),
             });
             this.loadWeightHistory();
           }

@@ -124,7 +124,7 @@ export class DashboardComponent implements OnInit {
 
   private loadAllTimelineData(): void {
     const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
     var isoString = today.toISOString();
     let chartStartDate: string;
 
@@ -142,7 +142,7 @@ export class DashboardComponent implements OnInit {
         chartStartDate = formatLocalISO(subDays(today, 7));
     }
 
-    today.setUTCHours(23, 59, 59, 999);
+    today.setHours(23, 59, 59, 999);
     let chartEndDate: string = formatLocalISO(today);
 
     this.timelineService.getTimeline(chartStartDate, chartEndDate).subscribe({

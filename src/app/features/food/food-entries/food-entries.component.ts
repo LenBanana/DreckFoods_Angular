@@ -1,29 +1,28 @@
-import {Component, ElementRef, inject, OnInit, QueryList, ViewChildren,} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterLink} from '@angular/router';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
-import {format, isToday, isYesterday, parse, parseISO} from 'date-fns';
-import {catchError, of} from 'rxjs';
-
-import {FoodService} from '../../../core/services/food.service';
-import {AlertService} from '../../../core/services/alert.service';
-import {LoadingSpinnerComponent} from '../../../shared/components/loading-spinner/loading-spinner.component';
-import {
-  NutritionProgressBarsComponent
-} from '../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component';
-import {EditFoodEntryRequest, FoodEntryDto, NutritionData, NutritionTotals,} from '../../../core/models/food.models';
-import { formatLocalISO } from '../../../core/extensions/date.extensions';
+import { CommonModule } from "@angular/common";
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, inject } from "@angular/core";
+import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { subDays, format, parseISO } from "date-fns";
+import { catchError, of } from "rxjs";
+import { formatLocalISO } from "../../../core/extensions/date.extensions";
+import { FoodEntryDto, EditFoodEntryRequest, NutritionData, NutritionTotals } from "../../../core/models/food.models";
+import { DailyTimelineDto } from "../../../core/models/timeline.models";
+import { AlertService } from "../../../core/services/alert.service";
+import { FoodService } from "../../../core/services/food.service";
+import { TimelineService } from "../../../core/services/timeline.service";
+import { LoadingSpinnerComponent } from "../../../shared/components/loading-spinner/loading-spinner.component";
+import { NutritionProgressBarsComponent } from "../../../shared/components/nutrition-progress-bars/nutrition-progress-bars.component";
 
 @Component({
   selector: 'app-food-entries',
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     ReactiveFormsModule,
     LoadingSpinnerComponent,
     NutritionProgressBarsComponent,
     FormsModule,
+    RouterLink,
   ],
   templateUrl: './food-entries.component.html',
   styleUrls: ['./food-entries.component.scss'],
@@ -31,111 +30,77 @@ import { formatLocalISO } from '../../../core/extensions/date.extensions';
 export class FoodEntriesComponent implements OnInit {
   @ViewChildren('editInput') editInputs!: QueryList<ElementRef>;
   filterForm: FormGroup;
-  allEntries: FoodEntryDto[] = [];
-  selectedDateEntries: FoodEntryDto[] = [];
-  displayEntries: FoodEntryDto[] = [];
+  timelineData: DailyTimelineDto[] = [];
   isLoading = true;
+  isDeleting = false;
   errorMessage = '';
-  deletingEntryId: number | null = null;
-  showingAll = false;
-  isToday = false;
-  isYesterday = false;
-  dailyTotals = {
+  averagesCollapsed = true;
+  averages = {
     calories: 0,
     protein: 0,
-    carbs: 0,
+    carbohydrates: 0,
     fat: 0,
     fiber: 0,
     sugar: 0,
     caffeine: 0,
     salt: 0,
   };
+  totalEntries = 0;
+  weightEntries = 0;
   private fb = inject(FormBuilder);
+  private timelineService = inject(TimelineService);
   private foodService = inject(FoodService);
   private alertService = inject(AlertService);
+  private openAccordions = new Set<string>();
 
   constructor() {
+    const endDate = new Date();
+    const startDate = subDays(endDate, 7);
+
     this.filterForm = this.fb.group({
-      selectedDate: [        
-        format(new Date(), "yyyy-MM-dd"),
-      ],
+      startDate: [format(startDate, 'yyyy-MM-dd')],
+      endDate: [format(endDate, 'yyyy-MM-dd')],
     });
   }
 
-  get dailyTotalsAsNutritionData(): NutritionData {
-    return {
-      calories: this.dailyTotals.calories,
-      protein: this.dailyTotals.protein,
-      carbohydrates: this.dailyTotals.carbs,
-      fat: this.dailyTotals.fat,
-      fiber: this.dailyTotals.fiber,
-      sugar: this.dailyTotals.sugar,
-      caffeine: this.dailyTotals.caffeine,
-      salt: this.dailyTotals.salt,
-    };
-  }
-
-  get dailyTotalsAsNutritionTotals(): NutritionTotals {
-    return {
-      calories: this.dailyTotals.calories,
-      protein: this.dailyTotals.protein,
-      carbohydrates: this.dailyTotals.carbs,
-      fat: this.dailyTotals.fat,
-      fiber: this.dailyTotals.fiber,
-      caffeine: this.dailyTotals.caffeine,
-      sugar: this.dailyTotals.sugar,
-      salt: this.dailyTotals.salt,
-    };
-  }
-
   ngOnInit() {
-    this.loadEntries();
-    this.updateDateFlags();
+    this.loadTimeline();
+
+    setTimeout(() => {
+      const averagesElement = document.getElementById('averagesCollapse');
+      if (averagesElement && this.averagesCollapsed) {
+        averagesElement.classList.remove('show');
+      }
+    }, 0);
   }
 
-  loadEntries() {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    let dateParam: string | undefined;
-    if (!this.showingAll) {
-      const selectedDate = this.filterForm.get('selectedDate')?.value;
-      if (selectedDate) {
-        const parsedDate = new Date(selectedDate);
-        parsedDate.setUTCHours(23, 59, 59, 999);
-        dateParam = parsedDate.toISOString();
+  storeAccordionState() {
+    this.openAccordions.clear();
+    this.timelineData.forEach((day, index) => {
+      const accordionElement = document.getElementById(`c${index}`);
+      if (accordionElement?.classList.contains('show')) {
+        this.openAccordions.add(day.date);
       }
-    }
+    });
+  }
 
-    this.foodService
-      .getFoodEntries(dateParam)
-      .pipe(
-        catchError((error) => {
-          this.errorMessage = 'Failed to load food entries. Please try again.';
-          this.isLoading = false;
-          return of([]);
-        }),
-      )
-      .subscribe((entries) => {
-        entries.forEach((entry) => {
-          if (entry.showNutrition === undefined) {
-            entry.showNutrition = false;
+  restoreAccordionState() {
+    setTimeout(() => {
+      this.timelineData.forEach((day, index) => {
+        if (this.openAccordions.has(day.date)) {
+          const accordionElement = document.getElementById(`c${index}`);
+          const buttonElement = document.querySelector(
+            `[data-bs-target="#c${index}"]`,
+          ) as HTMLElement;
+
+          if (accordionElement && buttonElement) {
+            accordionElement.classList.add('show');
+            buttonElement.classList.remove('collapsed');
+            buttonElement.setAttribute('aria-expanded', 'true');
           }
-        });
-
-        if (this.showingAll) {
-          this.allEntries = entries;
-          this.displayEntries = entries;
-          this.selectedDateEntries = [];
-        } else {
-          this.allEntries = entries;
-          this.selectedDateEntries = entries;
-          this.displayEntries = entries;
         }
-
-        this.calculateDailyTotals();
-        this.isLoading = false;
       });
+    }, 0);
   }
 
   startEditing(entry: FoodEntryDto) {
@@ -149,12 +114,28 @@ export class FoodEntriesComponent implements OnInit {
     }, 0);
   }
 
-  finishEditing(entry: FoodEntryDto) {
+  finishEditing(entry: FoodEntryDto, day: DailyTimelineDto) {
     entry.editing = false;
-    this.updateEntry(entry);
+    this.updateEntry(day, entry);
   }
 
-  updateEntry(entry: FoodEntryDto) {
+  toggleNutritionDetails(entry: FoodEntryDto) {
+    entry.showNutrition = !entry.showNutrition;
+  }
+
+  toggleAllNutritionDetails(day: DailyTimelineDto) {
+    const anyExpanded = day.foodEntries.some((entry) => entry.showNutrition);
+    day.foodEntries.forEach((entry) => {
+      entry.showNutrition = !anyExpanded;
+    });
+  }
+
+  areAnyNutritionDetailsExpanded(day: DailyTimelineDto): boolean {
+    return day.foodEntries.some((entry) => entry.showNutrition);
+  }
+
+  updateEntry(day: DailyTimelineDto, entry: FoodEntryDto) {
+    this.storeAccordionState();
     let updateRequest: EditFoodEntryRequest = {
       fddbFoodId: entry.id,
       gramsConsumed: entry.gramsConsumed,
@@ -170,109 +151,171 @@ export class FoodEntriesComponent implements OnInit {
       )
       .subscribe((response) => {
         if (!response) return;
-        this.loadEntries();
+        this.loadTimeline(true);
       });
   }
 
-  onDateChange() {
-    this.showingAll = false;
-    this.updateDateFlags();
-    this.loadEntries();
-  }
+  async deleteEntry(entry: FoodEntryDto, day: DailyTimelineDto) {
+    if (this.isDeleting) return;
+    this.isDeleting = true;
+    
+    const confirm = await this.alertService.confirmDelete(
+      'Delete Entry',
+      `Are you sure you want to delete "${entry.foodName}"? This action cannot be undone.`,
+    );
 
-  selectToday() {
-    this.filterForm.patchValue({
-      selectedDate: format(new Date(), "yyyy-MM-dd"),
-    });
-    this.showingAll = false;
-    this.updateDateFlags();
-    this.loadEntries();
-  }
-
-  selectYesterday() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    this.filterForm.patchValue({
-      selectedDate: format(yesterday, "yyyy-MM-dd"),
-    });
-    this.showingAll = false;
-    this.updateDateFlags();
-    this.loadEntries();
-  }
-
-  showAll() {
-    this.showingAll = true;
-    this.updateDateFlags();
-    this.loadEntries();
-  }
-
-  async deleteEntry(entry: FoodEntryDto) {
-    const confirmed = await this.alertService.confirmDelete(entry.foodName);
-
-    if (confirmed) {
-      this.deletingEntryId = entry.id;
-
-      this.foodService
-        .deleteFoodEntry(entry.id)
-        .pipe(
-          catchError((error) => {
-            this.alertService.error(
-              'Failed to delete entry. Please try again.',
-            );
-            this.deletingEntryId = null;
-            return of(null);
-          }),
-        )
-        .subscribe((response) => {
-          this.allEntries = this.allEntries.filter((e) => e.id !== entry.id);
-          this.selectedDateEntries = this.selectedDateEntries.filter(
-            (e) => e.id !== entry.id,
-          );
-          this.displayEntries = this.displayEntries.filter(
-            (e) => e.id !== entry.id,
-          );
-          this.calculateDailyTotals();
-          this.deletingEntryId = null;
-        });
+    if (!confirm) {
+      this.isDeleting = false;
+      return;
     }
+    this.storeAccordionState();
+
+    this.foodService
+      .deleteFoodEntry(entry.id)
+      .pipe(
+        catchError((_) => {
+          this.alertService.error('Failed to delete entry. Please try again.');
+          this.isDeleting = false;
+          return of(null);
+        }),
+      )
+      .subscribe((_) => {
+        this.isDeleting = false;
+        this.loadTimeline(true);
+      });
   }
 
-  getSelectedDateLabel(): string {
-    const selectedDate = this.filterForm.get('selectedDate')?.value;
-    if (!selectedDate) return '';
+  loadTimeline(silent: boolean = false) {
+    const startDate = this.filterForm.get('startDate')?.value;
+    const endDate = this.filterForm.get('endDate')?.value;
 
-    const date = parseISO(selectedDate);
-    if (isToday(date)) return "Today's";
-    if (isYesterday(date)) return "Yesterday's";
-    return format(date, 'MMM d, yyyy');
+    const utcStartDate = new Date(startDate);
+    utcStartDate.setHours(0, 0, 0, 0);
+    const utcEndDate = new Date(endDate);
+    utcEndDate.setHours(23, 59, 59, 999);
+    if (!startDate || !endDate) return;
+
+    if (!silent) {
+      this.isLoading = true;
+    }
+    this.errorMessage = '';
+
+    this.timelineService
+      .getTimeline(formatLocalISO(utcStartDate), formatLocalISO(utcEndDate))
+      .pipe(
+        catchError((error) => {
+          this.errorMessage = 'Failed to load timeline data. Please try again.';
+          if (!silent) {
+            this.isLoading = false;
+          }
+          return of({days: [], totalDays: 0});
+        }),
+      )
+      .subscribe((response) => {
+        this.timelineData = response.days;
+        this.timelineData.forEach((day) => {
+          day.foodEntries.forEach((entry) => {
+            if (entry.showNutrition === undefined) {
+              entry.showNutrition = false;
+            }
+          });
+        });
+        this.calculateAverages();
+        if (!silent) {
+          this.isLoading = false;
+        } else {
+          this.restoreAccordionState();
+        }
+      });
   }
 
-  getEntriesTitle(): string {
-    if (this.showingAll) return 'All Food Entries';
-    return this.getSelectedDateLabel() + ' Entries';
+  onDateRangeChange() {
+    this.loadTimeline();
   }
 
-  getEmptyStateTitle(): string {
-    if (this.showingAll) return 'No food entries found';
-    return `No entries for ${this.getSelectedDateLabel().toLowerCase()}`;
+  setRange(days: number) {
+    const endDate = new Date();
+    const startDate = subDays(endDate, days);
+
+    this.filterForm.patchValue({
+      startDate: format(startDate, 'yyyy-MM-dd'),
+      endDate: format(endDate, 'yyyy-MM-dd'),
+    });
+
+    this.loadTimeline();
   }
 
-  getEmptyStateMessage(): string {
-    if (this.showingAll)
-      return 'Start tracking your nutrition by adding your first food entry.';
-    return "You haven't logged any food for this date yet.";
+  getMacroPercentage(macroCalories: number, totalCalories: number): number {
+    if (totalCalories === 0) return 0;
+    return Math.min((macroCalories / totalCalories) * 100, 100);
   }
 
-  formatTime(dateString: string): string {
-    return format(parseISO(dateString), 'h:mm a');
+  getUnaccountedPercentage(day: DailyTimelineDto): number {
+    if (day.calories === 0) return 0;
+
+    const calculatedCalories =
+      day.protein * 4 + day.carbohydrates * 4 + day.fat * 9;
+
+    const unaccountedCalories = day.calories - calculatedCalories;
+    const percentage = Math.max((unaccountedCalories / day.calories) * 100, 0);
+    return Math.min(percentage, 100);
   }
 
-  formatDate(dateString: string): string {
-    return format(parseISO(dateString), 'MMM d');
+  getEntryNutrientPercentage(entryValue: number, dayTotal: number): number {
+    if (dayTotal === 0) return 0;
+    return Math.min((entryValue / dayTotal) * 100, 100);
   }
 
-  trackByEntryId(index: number, entry: FoodEntryDto): number {
-    return entry.id;
+  getEntryCaloriePercentage(
+    entry: FoodEntryDto,
+    day: DailyTimelineDto,
+  ): number {
+    return this.getEntryNutrientPercentage(entry.calories, day.calories);
+  }
+
+  getEntryProteinPercentage(
+    entry: FoodEntryDto,
+    day: DailyTimelineDto,
+  ): number {
+    return this.getEntryNutrientPercentage(entry.protein, day.protein);
+  }
+
+  getEntryCarbPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(
+      entry.carbohydrates,
+      day.carbohydrates,
+    );
+  }
+
+  getEntryFatPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.fat, day.fat);
+  }
+
+  getEntryFiberPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.fiber, day.fiber);
+  }
+
+  getEntrySugarPercentage(entry: FoodEntryDto, day: DailyTimelineDto): number {
+    return this.getEntryNutrientPercentage(entry.sugar, day.sugar);
+  }
+
+  getNutrientCount(entry: FoodEntryDto): number {
+    let count = 0;
+    if (entry.calories > 0) count++;
+    if (entry.protein > 0) count++;
+    if (entry.carbohydrates > 0) count++;
+    if (entry.fat > 0) count++;
+    if (entry.fiber > 0) count++;
+    if (entry.sugar > 0) count++;
+    return count;
+  }
+
+  formatDayHeader(dateString: string): string {
+    return format(parseISO(dateString), 'EEEE, MMM d, yyyy');
+  }
+
+  trackByDate(index: number, day: DailyTimelineDto): string {
+    return day.date;
   }
 
   onImageError(event: any) {
@@ -292,60 +335,99 @@ export class FoodEntriesComponent implements OnInit {
     };
   }
 
-  toggleNutritionDetails(entry: FoodEntryDto) {
-    entry.showNutrition = !entry.showNutrition;
+  getDayAsNutritionTotals(day: DailyTimelineDto): NutritionTotals {
+    return {
+      calories: day.calories,
+      protein: day.protein,
+      carbohydrates: day.carbohydrates,
+      fat: day.fat,
+      fiber: day.fiber,
+      sugar: day.sugar,
+      caffeine: day.caffeine,
+      salt: day.salt,
+    };
   }
 
-  toggleAllNutritionDetails() {
-    const anyExpanded = this.displayEntries.some(
-      (entry) => entry.showNutrition,
-    );
-    this.displayEntries.forEach((entry) => {
-      entry.showNutrition = !anyExpanded;
-    });
-  }
+  toggleAverages() {
+    this.averagesCollapsed = !this.averagesCollapsed;
 
-  areAnyNutritionDetailsExpanded(): boolean {
-    return this.displayEntries.some((entry) => entry.showNutrition);
-  }
+    const averagesElement = document.getElementById('averagesCollapse');
+    if (averagesElement) {
+      const bsCollapse = new (window as any).bootstrap.Collapse(
+        averagesElement,
+        {
+          toggle: false,
+        },
+      );
 
-  getNutrientCount(entry: FoodEntryDto): number {
-    let count = 0;
-    if (entry.calories > 0) count++;
-    if (entry.protein > 0) count++;
-    if (entry.carbohydrates > 0) count++;
-    if (entry.fat > 0) count++;
-    if (entry.fiber > 0) count++;
-    if (entry.sugar > 0) count++;
-    return count;
-  }
-
-  private updateDateFlags() {
-    const selectedDate = this.filterForm.get('selectedDate')?.value;
-    if (selectedDate && !this.showingAll) {
-      const selected = parseISO(selectedDate);
-      this.isToday = isToday(selected);
-      this.isYesterday = isYesterday(selected);
-    } else {
-      this.isToday = false;
-      this.isYesterday = false;
+      if (this.averagesCollapsed) {
+        bsCollapse.hide();
+      } else {
+        bsCollapse.show();
+      }
     }
   }
 
-  private calculateDailyTotals() {
-    const entriesToSum = this.showingAll
-      ? this.displayEntries
-      : this.selectedDateEntries;
+  private calculateAverages() {
+    const daysWithEntries = this.timelineData.filter(
+      (day) => day.foodEntries.length > 0,
+    );
+    const totalDays = daysWithEntries.length;
 
-    this.dailyTotals = {
-      calories: entriesToSum.reduce((sum, entry) => sum + entry.calories, 0),
-      protein: entriesToSum.reduce((sum, entry) => sum + entry.protein, 0),
-      carbs: entriesToSum.reduce((sum, entry) => sum + entry.carbohydrates, 0),
-      fat: entriesToSum.reduce((sum, entry) => sum + entry.fat, 0),
-      fiber: entriesToSum.reduce((sum, entry) => sum + entry.fiber, 0),
-      sugar: entriesToSum.reduce((sum, entry) => sum + entry.sugar, 0),
-      caffeine: entriesToSum.reduce((sum, entry) => sum + entry.caffeine, 0),
-      salt: entriesToSum.reduce((sum, entry) => sum + entry.salt, 0),
+    if (totalDays === 0) {
+      this.averages = {
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fat: 0,
+        fiber: 0,
+        sugar: 0,
+        caffeine: 0,
+        salt: 0,
+      };
+      this.totalEntries = 0;
+      this.weightEntries = 0;
+      return;
+    }
+
+    const totalCalories = daysWithEntries.reduce(
+      (sum, day) => sum + day.calories,
+      0,
+    );
+    const totalProtein = daysWithEntries.reduce(
+      (sum, day) => sum + day.protein,
+      0,
+    );
+    const totalCarbohydrates = daysWithEntries.reduce(
+      (sum, day) => sum + day.carbohydrates,
+      0,
+    );
+    const totalFat = daysWithEntries.reduce((sum, day) => sum + day.fat, 0);
+    const totalFiber = daysWithEntries.reduce((sum, day) => sum + day.fiber, 0);
+    const totalSugar = daysWithEntries.reduce((sum, day) => sum + day.sugar, 0);
+    const totalCaffeine = daysWithEntries.reduce(
+      (sum, day) => sum + day.caffeine,
+      0,
+    );
+    const totalSalt = daysWithEntries.reduce((sum, day) => sum + day.salt, 0);
+
+    this.averages = {
+      calories: totalCalories / totalDays,
+      protein: totalProtein / totalDays,
+      carbohydrates: totalCarbohydrates / totalDays,
+      fat: totalFat / totalDays,
+      fiber: totalFiber / totalDays,
+      sugar: totalSugar / totalDays,
+      caffeine: totalCaffeine / totalDays,
+      salt: totalSalt / totalDays,
     };
+
+    this.totalEntries = this.timelineData.reduce(
+      (sum, day) => sum + day.foodEntries.length,
+      0,
+    );
+    this.weightEntries = this.timelineData.filter(
+      (day) => day.weightEntry,
+    ).length;
   }
 }

@@ -1,11 +1,11 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {NavigationEnd, Router, RouterLink, RouterLinkActive,} from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, } from '@angular/router';
 
-import {AuthService} from '../../../core/services/auth.service';
-import {Theme, ThemeService} from '../../../core/services/theme.service';
-import {AppRole, User} from '../../../core/models/auth.models';
-import {filter} from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { Theme, ThemeService } from '../../../core/services/theme.service';
+import { AppRole, User } from '../../../core/models/auth.models';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -16,17 +16,11 @@ import {filter} from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   navLinks = [
-    {path: '/dashboard', label: 'Dashboard'},
-    {
-      label: 'Food',
-      children: [
-        {path: '/food/entries', label: 'Food Entries'},
-        {path: '/food/meals', label: 'Meals'},
-        {path: '/food/search', label: 'Food Search'},
-      ],
-    },
-    {path: '/weight', label: 'Weight'},
-    {path: '/timeline', label: 'Timeline'},
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/food/search', label: 'Search' },
+    { path: '/food/entries', label: 'Entries' },
+    { path: '/food/meals', label: 'Meals' },
+    { path: '/weight', label: 'Weight' }
   ];
   AppRole = AppRole;
   currentUser: User | null = null;

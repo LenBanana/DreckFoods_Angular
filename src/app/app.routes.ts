@@ -42,14 +42,6 @@ export const routes: Routes = [
       import('./features/weight/weight.routes').then((m) => m.weightRoutes),
   },
   {
-    path: 'timeline',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/timeline/timeline.component').then(
-        (m) => m.TimelineComponent,
-      ),
-  },
-  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () =>
